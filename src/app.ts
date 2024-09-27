@@ -5,6 +5,8 @@ import { userRouter } from './Routes/userRoutes';
 import { errorHandler } from './framework/middleware/errorHandler';
 import cookieParser from 'cookie-parser';
 
+import { adminRouter } from './Routes/adminRoutes';
+
 const createApp = () => {
   const app = express();
 
@@ -14,9 +16,8 @@ const createApp = () => {
 
   app.use(cookieParser());
 
-
   app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5000', 
+    origin: process.env.FRONTEND_URL || "http://localhost:5000" , 
     credentials: true, 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -24,8 +25,10 @@ const createApp = () => {
   
 
   
-  app.use('/users', userRouter);
+app.use('/users', userRouter);
 
+
+app.use('/admin',adminRouter)
 
  
 
