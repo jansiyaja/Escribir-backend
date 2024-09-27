@@ -9,28 +9,39 @@ const JWT_SECRET: string = process.env.JWT_SECRET as string;
 
 
 
+
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers['authorization'];
+  
 
-    const token = authHeader && authHeader.split(' ')[1];
 
+    const tokenFromCookie = req.cookies.accessToken;
+
+     const token =  tokenFromCookie; 
+      logger.info("getting token successfully",token)
+    
+  
     if (token == null) return res.status(401).json({ error: 'Token is required' });
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+       
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!); 
+       
         (req as any).user = decoded;
         next();
     } catch (error) {
+       
         if (error instanceof jwt.JsonWebTokenError) {
             return res.status(403).json({ error: 'Invalid token' });
         }
         next(new InvalidTokenError('An unexpected error occurred'));
     }
+    
 };
 
 
+
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-logger.info("refresh")
+
 
 
 if (!refreshTokenSecret) {
