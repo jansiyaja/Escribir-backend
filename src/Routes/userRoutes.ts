@@ -22,4 +22,5 @@ import { uploadProfileImage } from '../framework/config/multerConfig';
 
  // after authentication
  userRouter.post('/profileImage',uploadProfileImage,authenticateToken,(req:Request,res:Response)=>userController.profileImageUpload(req,res));
+ userRouter.post('/profile',authenticateToken,(req:Request,res:Response)=>userController.updateProfile(req,res));
  
