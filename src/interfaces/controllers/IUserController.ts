@@ -7,4 +7,5 @@ export interface IUserController {
     verifyToken(req: Request, res: Response): Promise<Response>;
     resendOTP(req: Request, res: Response): Promise<Response>;
     logout(req: Request, res: Response): Promise<Response>;
+    profileImageUpload(req: Request, res: Response): Promise<Response> 
 }
