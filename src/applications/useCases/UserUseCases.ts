@@ -8,9 +8,8 @@ import { generateAccessToken,generateRefreshToken } from "../../framework/servic
 import jwt from 'jsonwebtoken';
 import { IUserUseCase } from "../../interfaces/usecases/IUserUseCase";
 import { logger } from "../../framework/services/logger";
-import { BadRequestError, InvalidTokenError } from "../../framework/errors/customErrors";
-
-
+import { BadRequestError, InvalidTokenError,InternalServerError } from "../../framework/errors/customErrors";
+import { cloudinary } from "../../framework/config/cloudinaryConfig";
 
 export class UserUseCase  implements IUserUseCase{
     constructor(
@@ -20,12 +19,12 @@ export class UserUseCase  implements IUserUseCase{
         private _otpRepository: IOTPVerificationRepository
     ) {}
 
-    async registerUser(userData: Partial<IUser>):Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+    async registerUser(userData: Partial<IUser>):Promise<{ user: IUser;  }> {
         
         logger.info('checking existing user')
 
         const existingUser = await this._userRepository.findByEmail(userData.email!);
-        console.log(existingUser);
+        
         
         if (existingUser) {
            throw new  BadRequestError("User with email already exists")
@@ -44,6 +43,7 @@ export class UserUseCase  implements IUserUseCase{
         } as IUser;
 
         const createUser = await this._userRepository.create(newUser);
+       
 
         if (!createUser.email) {
             throw new Error("Failed to create user: Email is null");
@@ -58,35 +58,52 @@ export class UserUseCase  implements IUserUseCase{
             text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`
         });
 
-        const accessToken = generateAccessToken(createUser._id!);
-        const refreshToken = generateRefreshToken(createUser._id!);
-
         return {
-            user: createUser,
-            accessToken,
-            refreshToken
-        };
+            user:createUser
+        }
+           
+           
+    
     }
+    
+    async verifyOTP({ otp, email }: { otp: string; email: string }): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+        logger.info('Verifying OTP for email', { email });
 
-    async verifyOTP({ otp, email }: { otp: string; email: string }): Promise<boolean> {
-
-       logger.info('Verifying OTP for email', { email });
-        
         const otpVerification = await this._otpRepository.findByUserByEmail(email);
-        
         if (!otpVerification) {
-            throw new BadRequestError("No OTP record found for this email");
+            throw new BadRequestError('No OTP record found for this email');
+        }
+       
+       
+       const otpCreatedAt = otpVerification.createdAt;
+       if (!otpCreatedAt) {
+           throw new InternalServerError('OTP creation time is missing');
+       }
+
+      
+        const currentTime = new Date();
+        const hourDifference = (currentTime.getTime() - otpCreatedAt.getTime()) / (1000 * 60 * 60);
+        if (hourDifference > 1) {
+            await this._userRepository.delete(email);
+            throw new BadRequestError('OTP expired and user deleted');
         }
 
         if (otpVerification.otp !== otp) {
-            throw new BadRequestError("Invalid OTP provided");
+            throw new BadRequestError('Invalid OTP provided');
         }
-
 
         await this._userRepository.markAsVerified(email);
         await this._otpRepository.deleteByUserId(email);
 
-        return true;
+        const user = await this._userRepository.findByEmail(email);
+        if (!user) {
+            throw new InternalServerError('User not found');
+        }
+
+        const accessToken = generateAccessToken(user._id!);
+        const refreshToken = generateRefreshToken(user._id!);
+
+        return { user, accessToken, refreshToken };
     }
 
     async loginUser(userData: Partial<IUser>): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
@@ -177,4 +194,64 @@ export class UserUseCase  implements IUserUseCase{
               });
       
     }
+   
+
+    async saveProfileImage(imageBuffer: Buffer, userId: string): Promise<string> {
+        try {
+            const user = await this._userRepository.findById(userId);
+            if (!user) {
+                throw new Error('User not found');
+            }
+    
+            let existingImageUrl = user.image; 
+            console.log("existing ",existingImageUrl);
+            
+            let existingImageId = null;
+    
+          
+            if (existingImageUrl) {
+                const existingImageParts = existingImageUrl.split('/');
+                existingImageId = existingImageParts[existingImageParts.length - 1].split('.')[0]; 
+            }
+    
+            if (existingImageId) {
+                await cloudinary.uploader.destroy(existingImageId);
+                console.log("Deleted existing image:", existingImageId);
+            }
+    
+            const newImageUrl = await new Promise<string>((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    { resource_type: 'image', folder: 'Escribir_Profile_Images' },
+                    (error, result) => {
+                        if (error) {
+                            logger.error("Cloudinary upload error:", error);
+                            return reject(new Error('Cloudinary upload failed'));
+                        }
+                        if (result && result.secure_url) {
+                            resolve(result.secure_url);
+                        } else {
+                            reject(new Error('Failed to get secure URL from Cloudinary response'));
+                        }
+                    }
+                );
+    
+                uploadStream.end(imageBuffer);
+            });
+    
+          
+            const updateResult = await this._userRepository.updateUserDetails(userId, { image: newImageUrl });
+            console.log("Update Result:", updateResult);
+            
+    
+            return newImageUrl;
+    
+        } catch (error) {
+            logger.info("Error in uploading profile image", error);
+            throw new Error('Failed to upload profile image');
+        }
+    }
+    
+    
+
+    
 }
