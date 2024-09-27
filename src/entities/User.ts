@@ -1,6 +1,6 @@
 
 
-import { ObjectId } from 'mongoose';
+
 
 export interface IUser {
   _id?:string;
@@ -10,9 +10,10 @@ export interface IUser {
   bio?: string | null;
   dob?: Date | null;
   role: 'client' | 'user' | null;
-  image: string | null;
+  image?: string | null;
   isActive: boolean | null;
   isVerified:boolean|null
+  isBlock:boolean|null
   createdAt: Date | null;
   updatedAt: Date | null;
 }
