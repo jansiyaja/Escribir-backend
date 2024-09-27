@@ -29,9 +29,7 @@ export class UserController implements IUserController{
             
              const newUser=await this._userUseCase.registerUser({email,password,username})
 
-             
-            
-            return res.status(HttpStatusCode.CREATED).json(newUser)
+     return res.status(HttpStatusCode.CREATED).json(newUser)
         } catch (error) {
 
 
@@ -44,25 +42,34 @@ export class UserController implements IUserController{
             
         }
     }
-    async verifyOTP(req:Request, res: Response): Promise<Response> {
+  
+
+    async verifyOTP(req: Request, res: Response): Promise<Response> {
         try {
             const { email, otp } = req.body;
-            const isVerified = await this._userUseCase.verifyOTP({ otp, email });
-            
-            
-    
-            if (isVerified) {
-                return res.status(HttpStatusCode.OK).json({ message: "User verified successfully" });
-            } else {
-                throw new BadRequestError("Invalid OTP .Please verify");
-                
-            }
-    
-        } catch (error ) {
+            const { user, accessToken, refreshToken } = await this._userUseCase.verifyOTP({ otp, email });
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000
+            });
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+
+            return res.status(HttpStatusCode.OK).json({ user, });
+        } catch (error) {
             if (error instanceof BadRequestError) {
                 return res.status(error.statusCode).json({ error: error.message });
             }
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
+            logger.error('OTP Verification Error:', error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'An unexpected error occurred' });
         }
     }
     async resendOTP(req: Request, res: Response): Promise<Response> {
@@ -87,9 +94,9 @@ export class UserController implements IUserController{
     async login(req:Request, res: Response): Promise<Response> {
         
         try {
-            console.log("inside the looo");
+          
             
-           logger.info("inside the logger")
+           logger.info("inside the login")
             const {email,password}=req.body;
 
             if ( !email || !password) {
@@ -105,7 +112,7 @@ export class UserController implements IUserController{
            res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "strict",
             maxAge: 15 * 60 * 1000,
           });
           
@@ -179,6 +186,38 @@ export class UserController implements IUserController{
              
             }
         }
+
+      async profileImageUpload(req: Request, res: Response): Promise<Response>  {
+               logger.info("inside the profile image controller")
+        
+        try {
+          
+            const userId = (req as any).user.userId; 
+
+            if (!userId) {
+                return res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+            }
+      
+            
+           const imageBuffer=req.file?.buffer;
+         
+
+           if(!imageBuffer){
+            return res.status(HttpStatusCode.BAD_REQUEST).json({ error: 'No image file provided' });
+           }
+
+                 const secureUrl = await this._userUseCase.saveProfileImage(imageBuffer, userId);
+
+                  return res.status(HttpStatusCode.OK).json({ secureUrl });
+
+
+            
+        } catch (error) {
+           
+      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
+    
+        }
+      }
     }
     
     
