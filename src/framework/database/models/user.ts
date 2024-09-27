@@ -21,10 +21,19 @@ const UserSchema: Schema = new Schema(
     dob: { type: Date,
       require:true
      },
+     
     role: { type: String, enum: ['client', 'user'] },
     image: { type: String },
-    isActive: { type: Boolean, default: true },
+
+    isActive: { 
+      type: Boolean, 
+      default: true },
+
     isVerified: {
+      type: Boolean,
+      default: false, 
+    },
+    isBlock: {
       type: Boolean,
       default: false, 
     },
