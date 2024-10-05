@@ -9,7 +9,11 @@ const AdminSchema: Schema = new Schema({
     type: Boolean,
     default: false, 
   },
-  role: 'admin',
+  role:{
+    type:String,
+    default:"admin"
+
+  }
 },
 {
     timestamps: true, 
