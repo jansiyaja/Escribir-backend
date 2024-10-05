@@ -1,5 +1,8 @@
 
-
+export enum UserRole {
+  CLIENT = 'client',
+  USER = 'user',
+}
 
 
 export interface IUser {
@@ -9,11 +12,15 @@ export interface IUser {
   password: string | null;
   bio?: string | null;
   dob?: Date | null;
-  role: 'client' | 'user' | null;
+  role: UserRole | null;
   image?: string | null;
   isActive: boolean | null;
   isVerified:boolean|null
   isBlock:boolean|null
   createdAt: Date | null;
   updatedAt: Date | null;
+  location?: string;
+  linkedIn?: string;
+  portfolio?: string;
+  github?: string;
 }
