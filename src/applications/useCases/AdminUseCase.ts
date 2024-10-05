@@ -37,10 +37,35 @@ export class AdminUseCase implements IAdminUseCase {
         return { user: existingAdmin, accessToken:accessToken,refreshToken:refreshToken }; 
     }
 
-   async getAllUsers(): Promise<IUser[]> {
+    async getAllUsers(): Promise<IUser[]> {
    
         return await this._adminRepository.getAllUsers();
-     }
+    }
 
+
+    async blockUser(userId: string): Promise<IUser | null> {
+     
+        const user = await this._userRepository.findById(userId);
+
+        if (!user) {
+            return null; 
+        }
+
+     
+        const updatedUser = await this._userRepository.updateUserDetails(userId, { isBlock: true });
+
+        return updatedUser; 
+    }
+    async unblockUser(userId: string): Promise<IUser | null> {
+        const user = await this._userRepository.findById(userId);
+    
+        if (!user) {
+            return null;
+        }
+    
+        const updatedUser = await this._userRepository.updateUserDetails(userId, { isBlock: false });
+        return updatedUser; 
+    }
+    
      
 }
