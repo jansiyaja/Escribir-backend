@@ -22,8 +22,6 @@ export class AdminController implements IAdminController {
             const {  user,accessToken,refreshToken } = await this._adminUseCase.loginAdmin({ email, password });
 
 
-
-              // Set access and refresh tokens in cookies
            res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -76,6 +74,48 @@ export class AdminController implements IAdminController {
         } catch (error) {
             console.error("Error listing users:", error);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+        }
+    }
+    
+    async blockUser(req: Request, res: Response): Promise<Response> {
+        console.log("iam here in the block user ",req.body);
+        
+        try {
+            const { userId } = req.body;
+
+            if (!userId) {
+                return res.status(HttpStatusCode.BAD_REQUEST).json({ error: "User ID is required" });
+            }
+
+            const blockedUser = await this._adminUseCase.blockUser(userId);
+
+            if (!blockedUser) {
+                return res.status(HttpStatusCode.NOT_FOUND).json({ error: "User not found" });
+            }
+
+            return res.status(HttpStatusCode.OK).json({ message: "User blocked successfully", user: blockedUser });
+        } catch (error) {
+          
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to block user" });
+        }
+    }
+
+    async unBlockUser(req: Request, res: Response): Promise<Response> {
+        try {
+            const { userId } = req.body;
+
+            if (!userId) {
+                return res.status(HttpStatusCode.BAD_REQUEST).json({ error: "User ID is required" });
+            }
+            const unblockedUser = await this._adminUseCase.unblockUser(userId);
+
+            if (!unblockedUser) {
+                return res.status(HttpStatusCode.NOT_FOUND).json({ error: "User not found" });
+            }
+            return res.status(HttpStatusCode.OK).json({ message: "User blocked successfully", user: unblockedUser });
+            
+        } catch (error) {
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to unblock user" });  
         }
     }
     
