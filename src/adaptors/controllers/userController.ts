@@ -105,10 +105,7 @@ export class UserController implements IUserController{
 
             const { user, accessToken, refreshToken } = await this._userUseCase.loginUser({ email, password });
 
-            
-            
-
-           // Set access and refresh tokens in cookies
+        
            res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
@@ -128,12 +125,13 @@ export class UserController implements IUserController{
             
         } catch (error) {
             
-            return res.status(HttpStatusCode.UNAUTHORIZED).json({ error: "An unexpected error occurred" }); 
+            return res.status(HttpStatusCode.UNAUTHORIZED).json({ error }); 
         }
     }
   
     async verifyToken(req: Request, res: Response): Promise<Response> {
-
+        console.log("iam inside the verify token");
+        
         try {
 
             const refreshToken = req.cookies.refreshToken;
@@ -141,7 +139,7 @@ export class UserController implements IUserController{
             if (!refreshToken) {
                 return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
             }
-            const { accessToken, newRefreshToken } = await this._userUseCase.verifyToken(refreshToken);
+            const { accessToken } = await this._userUseCase.verifyToken(refreshToken);
           
            res.cookie("accessToken",accessToken,{
             httpOnly:true,
@@ -150,21 +148,15 @@ export class UserController implements IUserController{
             maxAge:15*60*1000
            });
 
-           res.cookie("refreshToken",newRefreshToken,{
-            httpOnly:true,
-            secure:process.env.NODE_ENVv==="production",
-            sameSite:"strict",
-            maxAge:7 * 24 * 60 * 60 * 1000,
-
-           });
+        
             
             return res.status(HttpStatusCode.OK).json({ accessToken });
         } catch (error) {
             return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
         }
-        }
+    }
 
-        async logout(req: Request, res: Response): Promise<Response> {
+    async logout(req: Request, res: Response): Promise<Response> {
             try {
 
                 res.clearCookie("accessToken", {
@@ -185,9 +177,9 @@ export class UserController implements IUserController{
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
              
             }
-        }
+   }
 
-      async profileImageUpload(req: Request, res: Response): Promise<Response>  {
+    async profileImageUpload(req: Request, res: Response): Promise<Response>  {
                logger.info("inside the profile image controller")
         
         try {
@@ -217,8 +209,49 @@ export class UserController implements IUserController{
       return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
     
         }
-      }
+   }
+    async updateProfile(req: Request, res: Response) {
+        try {
+            const userId = (req as any).user.userId; 
+
+            if (!userId) {
+                return res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+            }
+           const profileData=req.body
+
+           const result = await this._userUseCase.updateProfile(userId, profileData);
+
+           return res.status(HttpStatusCode.OK).json({
+            message: 'Profile updated successfully',
+            user: result.user
+        });
+            
+        } catch (error) {
+            logger.error('Error updating profile:', error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to update profile',
+                
+            }); 
+        }
     }
-    
+    async getProfile(req: Request, res: Response): Promise<Response> {
+
+        try {
+            const userId = (req as any).user.userId; 
+
+            if (!userId) {
+                return res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+            }
+            const users = await this._userUseCase.getProfile(userId);
+            return res.status(HttpStatusCode.OK).json(users);
+        } catch (error) {
+            console.error("Error listing users:", error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+        }
+    }
+
+      
+    }
+
     
 
