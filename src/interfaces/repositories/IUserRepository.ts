@@ -7,8 +7,6 @@ export interface IUserRepository{
    findById(id:string):Promise<IUser|null>;
    findByEmail(email:string):Promise<IUser|null>;
     delete(id: string): Promise<void> 
-     
-   update(user:IUser):Promise<IUser>;
    markAsVerified(id: string): Promise<void>;
   
    userRole(id: string, role: 'client' | 'user'): Promise<IUser | null>;

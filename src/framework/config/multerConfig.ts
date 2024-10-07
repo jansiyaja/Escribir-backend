@@ -7,3 +7,6 @@ const upload = multer({
 
 
 export const uploadProfileImage = upload.single('profileImage');
+export const uploadBlogData = upload.single('coverImage');
+export const uploadBlogImage = upload.single('BlogImage');
+

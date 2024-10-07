@@ -1,9 +1,22 @@
 import { IAdmin } from "../../entities/Admin";
+import { ITag } from "../../entities/ITag";
 import { IUser } from "../../entities/User";
 
  export interface IAdminUseCase{
     
     loginAdmin(adminData: Partial<IAdmin>): Promise<{  user: IAdmin ; accessToken: string; refreshToken: string }>
-    getAllUsers(): Promise<IUser[]> 
-   
+    verifyToken(token: string): Promise<{ accessToken: string }> 
+
+    getAllUsers(): Promise<IUser[]> ;
+    blockUser(userId: string): Promise<IUser | null>
+    unblockUser(userId: string): Promise<IUser | null>
+  
+    //----------Realated Tags----------------------------------------------------------//
+
+    createTag(tagData: Partial<ITag>): Promise<ITag>
+    getAllTags(): Promise<ITag[]>  
+    updateTags(tagData:Partial<ITag>): Promise<ITag>;
+    deleteTag(tag_id: string): Promise<ITag> 
+
+    //----------------------------------------------------------------------------------//
  }

@@ -12,7 +12,7 @@ export interface IUser {
   password: string | null;
   bio?: string | null;
   dob?: Date | null;
-  role: UserRole | null;
+  role: UserRole;
   image?: string | null;
   isActive: boolean | null;
   isVerified:boolean|null

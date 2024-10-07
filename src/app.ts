@@ -6,6 +6,7 @@ import { errorHandler } from './framework/middleware/errorHandler';
 import cookieParser from 'cookie-parser';
 
 import { adminRouter } from './Routes/adminRoutes';
+import { blogRouter } from './Routes/blogRoute';
 
 const createApp = () => {
   const app = express();
@@ -29,6 +30,7 @@ app.use('/users', userRouter);
 
 
 app.use('/admin',adminRouter)
+app.use('/blog',blogRouter)
 
  
 

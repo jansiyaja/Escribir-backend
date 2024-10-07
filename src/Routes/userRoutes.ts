@@ -3,7 +3,7 @@
 import express, { Request, Response } from 'express';
 import { userController } from '../framework/utils/dependencyResolver';
 import { authenticateRefreshToken, authenticateToken } from '../framework/middleware/tokenValidator';
-import { uploadProfileImage } from '../framework/config/multerConfig';
+import {  uploadProfileImage } from '../framework/config/multerConfig';
 
  export  const userRouter = express.Router();
 
@@ -23,4 +23,6 @@ import { uploadProfileImage } from '../framework/config/multerConfig';
  // after authentication
  userRouter.post('/profileImage',uploadProfileImage,authenticateToken,(req:Request,res:Response)=>userController.profileImageUpload(req,res));
  userRouter.post('/profile',authenticateToken,(req:Request,res:Response)=>userController.updateProfile(req,res));
+ userRouter.get('/profile',authenticateToken,(req:Request,res:Response)=>userController.getProfile(req,res));
+
  

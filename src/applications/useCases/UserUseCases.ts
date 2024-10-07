@@ -11,6 +11,7 @@ import { logger } from "../../framework/services/logger";
 import { BadRequestError, InvalidTokenError,InternalServerError } from "../../framework/errors/customErrors";
 import { cloudinary } from "../../framework/config/cloudinaryConfig";
 
+
 export class UserUseCase  implements IUserUseCase{
     constructor(
         private _userRepository: IUserRepository,
@@ -99,31 +100,35 @@ export class UserUseCase  implements IUserUseCase{
         if (!user) {
             throw new InternalServerError('User not found');
         }
-
-        const accessToken = generateAccessToken(user._id!);
-        const refreshToken = generateRefreshToken(user._id!);
+       const userRole=user.role
+        const accessToken = generateAccessToken(user._id!,userRole);
+        const refreshToken = generateRefreshToken(user._id!,userRole);
 
         return { user, accessToken, refreshToken };
     }
 
     async loginUser(userData: Partial<IUser>): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
         const existingUser = await this._userRepository.findByEmail(userData.email!);
+       
         if (!existingUser) {
-            throw new Error("User with email not exists");
+            throw new Error("User with email does not exist");
         }
-        
+    
+        if (existingUser.isBlock) {
+            throw new Error("User is blocked by admin");
+        }
         const isMatch = await this._hashService.compare(userData.password!, existingUser.password!);
 
         if (!isMatch) {
             throw new Error("Invalid password");
         }
-           
+         const userRole=existingUser.role  
         const userId = existingUser._id;
         if (!userId) {
           throw new Error("User ID is missing");
         }
-          const accessToken = generateAccessToken(userId);
-          const refreshToken = generateRefreshToken(userId);
+          const accessToken = generateAccessToken(userId,userRole);
+          const refreshToken = generateRefreshToken(userId,userRole);
           
           
 
@@ -134,7 +139,7 @@ export class UserUseCase  implements IUserUseCase{
          }
     }
 
-    async verifyToken(token: string): Promise<{ accessToken: string; newRefreshToken: string }> {
+    async verifyToken(token: string): Promise<{ accessToken: string;}> {
         try {
             logger.info('Starting token verification');
 
@@ -146,16 +151,16 @@ export class UserUseCase  implements IUserUseCase{
                 logger.error('User not found or user ID is missing');
                 throw new Error('User not found or user ID is missing');
             }
-
-            const accessToken = generateAccessToken(user._id);
-            const newRefreshToken = generateRefreshToken(user._id);
+            const userRole=user.role
+            const accessToken = generateAccessToken(user._id,userRole);
+          
 
             logger.info('Token verification successful, returning new tokens');
 
 
             return {
                 accessToken,
-                newRefreshToken
+               
             }
         } catch (error) {
             
@@ -252,6 +257,51 @@ export class UserUseCase  implements IUserUseCase{
     }
     
     
+     async   updateProfile(userId: string, profileData:  Partial<IUser>) : Promise<{user:IUser}>{
 
+        try {
+            const user = await this._userRepository.findById(userId);
+                  if (!user) {
+                       throw new Error('User not found');
+                      }
+
+                      const updatedUserData = {
+                        ...user, 
+                        ...profileData
+                    };   
+                    
+                    await this._userRepository.updateUserDetails(userId, updatedUserData);
+                    const updatedUser = await this._userRepository.findById(userId);
+
+                    if (!updatedUser) {
+                        throw new Error('User is not updated');
+                       }
+
+                    return { user: updatedUser };
+            
+        } catch (error) {
+            logger.error("Error updating user profile", error);
+        throw new Error('Failed to update user profile');
+        }
+            
+      }
+      async getProfile(userId: string): Promise<{ user: IUser }> {
+        try {
+           
+            const user = await this._userRepository.findById(userId);
+            
+          
+            if (!user) {
+                throw new Error('User not found');
+            }
+    
+          
+            return { user };
+        } catch (error) {
+            
+            logger.error("Error fetching user profile:", error);
+            throw new Error('Failed to fetch user profile'); 
+        }
+    }
     
 }

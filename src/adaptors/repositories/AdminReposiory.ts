@@ -1,8 +1,12 @@
+import { ObjectId } from "mongoose";
 import { IAdmin } from "../../entities/Admin";
 import { IUser } from "../../entities/User";
-import AdminModel from "../../framework/database/models/admin";
-import UserModel from "../../framework/database/models/user";
+import AdminModel from "../../framework/models/admin";
+import UserModel from "../../framework/models/user";
 import { IAdminRepository } from "../../interfaces/repositories/IAdminRepository";
+import { ITag } from "../../entities/ITag";
+import TagModel from "../../framework/models/tag";
+import { error } from "console";
 
 
 export class AdminRepository implements IAdminRepository {
@@ -20,9 +24,47 @@ export class AdminRepository implements IAdminRepository {
         return await newAdmin.save() as IAdmin;
     }
 
+    async findById(id: ObjectId): Promise<IAdmin | null> {
+        return await AdminModel.findById(id).lean().exec();
+    }
+
     async getAllUsers(): Promise<IUser[]> {
         return await UserModel.find().lean().exec(); 
     }
-    
+
+    // ------------------Relatd to tag----------------------------------------------------//
+    async findOne(name: string): Promise<ITag | null> {
+        return await TagModel.findOne({ name });
+    }
+
+   
+    async create(tagData: Partial<ITag>): Promise<ITag> {
+        const newTag = new TagModel(tagData);
+        return await newTag.save();
+    }
+    async findAll(): Promise<ITag[]> {
+        return await TagModel.find().sort({ createdAt: -1 }); 
+    }
+    async updateTagById(tagId: string, tagData: { name: string }): Promise<ITag>{
+        const updatedTag = await TagModel.findByIdAndUpdate(
+            tagId, 
+            { $set: tagData }, 
+            { new: true }    
+        );
+
+        if (!updatedTag) {
+            throw new Error("Tag not found");
+        }
+        return updatedTag;
+
+    }
+    async deleteTagById(tagId: string): Promise<ITag> {
+        const deletedTag = await TagModel.findByIdAndDelete(tagId);
+        if(!deletedTag){
+            throw new Error("invalid tagId")
+        }
+        return deletedTag;
+    }
+    //----------------------------------------------------------------------------------------//
 
 }

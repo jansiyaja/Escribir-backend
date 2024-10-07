@@ -1,7 +1,7 @@
 
 import { IOTPVerificationRepository } from "../../interfaces/repositories/IOTPVerificationRepository";
 import { IOTPVerification } from "../../entities/IOTPVerification";
-import OTPVerification from "../../framework/database/models/otp";
+import OTPVerification from "../../framework/models/otp";
 
 export  class OTPVerificationRepository implements  IOTPVerificationRepository{
 

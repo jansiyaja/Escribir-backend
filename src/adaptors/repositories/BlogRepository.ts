@@ -1,6 +1,6 @@
 import { IBlogPost } from "../../entities/Blog.Post";
 import { IBlogRepository } from "../../interfaces/repositories/IBlogRepository";
-import BlogPost from "../../framework/database/models/blog";
+import BlogPost from "../../framework/models/blog";
 
 export class BlogRepositroy implements IBlogRepository{
     async create(blogPostData: Partial<IBlogPost>): Promise<IBlogPost> {

@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { IAdminController } from "../../interfaces/controllers/IAdminController";
 import { IAdminUseCase } from "../../interfaces/usecases/IAdminUseCase";
 import { HttpStatusCode } from "./httpEnums";
+import { BadRequestError } from "../../framework/errors/customErrors";
+import { logger } from "../../framework/services/logger";
 
 export class AdminController implements IAdminController {
     constructor(private _adminUseCase: IAdminUseCase) {}
@@ -66,7 +68,32 @@ export class AdminController implements IAdminController {
          
         }
     }
+    async verifyToken(req: Request, res: Response): Promise<Response> {
+        console.log("iam inside the verify token");
+        
+        try {
 
+            const refreshToken = req.cookies.refreshToken;
+
+            if (!refreshToken) {
+                return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
+            }
+            const { accessToken } = await this._adminUseCase.verifyToken(refreshToken);
+          
+           res.cookie("accessToken",accessToken,{
+            httpOnly:true,
+            secure:process.env.NODE_ENV === "production",
+            sameSite:"strict",
+            maxAge:15*60*1000
+           });
+
+        
+            
+            return res.status(HttpStatusCode.OK).json({ accessToken });
+        } catch (error) {
+            return res.status(HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
+        }
+    }
     async listUsers(req: Request, res: Response): Promise<Response> {
         try {
             const users = await this._adminUseCase.getAllUsers();
@@ -116,6 +143,67 @@ export class AdminController implements IAdminController {
             
         } catch (error) {
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to unblock user" });  
+        }
+    }
+   
+
+    async createTag(req: Request, res: Response): Promise<Response> {
+        logger.info(req.body)
+     try {
+        const { name } = req.body;
+       
+
+        if(!name){
+            throw new BadRequestError("tagName is Required")
+        }
+        const createdTag = await this._adminUseCase.createTag({ name: name });
+        return res.status(HttpStatusCode.CREATED).json({
+            message: "Tag created successfully",
+            tag: createdTag
+        });
+        
+     } catch (error) {
+        logger.error(error)
+        if (error instanceof BadRequestError) {
+            return res.status(HttpStatusCode.BAD_REQUEST).json({ error: error.message });
+        }
+        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to create tag" });   
+     }
+    }
+
+    async listTags(req: Request, res: Response): Promise<Response> {
+      
+        try {
+            const users = await this._adminUseCase.getAllTags();
+            return res.status(HttpStatusCode.OK).json(users);
+        } catch (error) {
+            logger.error("Error listing users:", error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+        }
+    }
+    async updateTag(req: Request, res: Response): Promise<Response> {
+     
+        
+        const { tagId } = req.params;
+        const { name } = req.body;
+      
+        try {
+            const updatedTag = await this._adminUseCase.updateTags({ _id: tagId, name });
+            return res.status(HttpStatusCode.OK).json(updatedTag);
+        } catch (error) {
+            logger.error("Error updating tag:", error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to update tag" });
+        }
+    }
+    async deleteTag(req: Request, res: Response): Promise<Response> {
+        const { tagId } = req.params;
+    
+        try {
+            const deletedTag = await this._adminUseCase.deleteTag(tagId);
+            return res.status(HttpStatusCode.OK).json(deletedTag);
+        } catch (error) {
+            logger.error("Error deleting tag:", error);
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to delete tag" });
         }
     }
     

@@ -8,4 +8,7 @@ export interface IUserController {
     resendOTP(req: Request, res: Response): Promise<Response>;
     logout(req: Request, res: Response): Promise<Response>;
     profileImageUpload(req: Request, res: Response): Promise<Response> 
+    getProfile(req: Request, res: Response): Promise<Response>
+
+    
 }

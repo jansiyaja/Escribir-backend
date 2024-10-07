@@ -17,7 +17,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     const tokenFromCookie = req.cookies.accessToken;
 
      const token =  tokenFromCookie; 
-      logger.info("getting token successfully",token)
+   
     
   
     if (token == null) return res.status(401).json({ error: 'Token is required' });
@@ -53,14 +53,16 @@ interface CustomJwtPayload extends JwtPayload {
 }
 
 export const authenticateRefreshToken = (req: Request, res: Response, next: NextFunction) => {
-    const { token } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
-    if (!token) {
+    if (!refreshToken) {
         return next(new UnauthorizedError('Token is required'));
     }
+      
 
+    
     try {
-        const decoded = jwt.verify(token, refreshTokenSecret) as CustomJwtPayload;
+        const decoded = jwt.verify(refreshToken, refreshTokenSecret) as CustomJwtPayload;
         (req as any).user = decoded;
         next();
     } catch (error) {
@@ -69,5 +71,30 @@ export const authenticateRefreshToken = (req: Request, res: Response, next: Next
         }
         next(new InvalidTokenError('An unexpected error occurred'));
     }
-};
+}
+
+  export const authenticateAdminToken = (req: Request, res: Response, next: NextFunction) => {
+        const tokenFromCookie = req.cookies.accessToken; 
+        const token = tokenFromCookie;
+    
+        if (token == null) return res.status(401).json({ error: 'Token is required' });
+    
+        try {
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as CustomJwtPayload;
+    
+          
+            if (decoded.role !== 'admin') {
+                return res.status(403).json({ error: 'Admin access required' });
+            }
+    
+          
+            next();
+        } catch (error) {
+            if (error instanceof jwt.JsonWebTokenError) {
+                return res.status(403).json({ error: 'Invalid token' });
+            }
+            next(new InvalidTokenError('An unexpected error occurred'));
+        }
+    };
+
 
