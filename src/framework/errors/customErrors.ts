@@ -17,6 +17,18 @@ export class BadRequestError extends CustomError {
     }
 }
  
+export class NotFoundError extends CustomError {
+    statusCode = 404;
+
+    constructor(public message: string) {
+        super(message);
+        Object.setPrototypeOf(this, NotFoundError.prototype);
+    }
+
+    serializeError() {
+        return [{ message: this.message }];
+    }
+}
 
 export class  InternalServerError extends CustomError{
     statusCode = 500;
