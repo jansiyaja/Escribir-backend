@@ -174,8 +174,8 @@ export class AdminController implements IAdminController {
     async listTags(req: Request, res: Response): Promise<Response> {
       
         try {
-            const users = await this._adminUseCase.getAllTags();
-            return res.status(HttpStatusCode.OK).json(users);
+            const tag = await this._adminUseCase.getAllTags();
+            return res.status(HttpStatusCode.OK).json(tag);
         } catch (error) {
             logger.error("Error listing users:", error);
             return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });

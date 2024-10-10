@@ -36,8 +36,7 @@ export class UserController implements IUserController{
             if (error instanceof BadRequestError) {
                 return res.status(error.statusCode).json({ error: error.message });
             }
-           console.log("hdsk",error);
-           
+          
            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
             
         }
