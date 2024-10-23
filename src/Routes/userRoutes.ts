@@ -17,3 +17,23 @@ userRouter.post('/logout',(req: Request, res: Response)=>userController.logout(r
  userRouter.post('/profile',authenticateToken,(req:Request,res:Response)=>userController.updateProfile(req,res));
  userRouter.get('/profile',authenticateToken,(req:Request,res:Response)=>userController.getProfile(req,res));
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+userRouter.get('/connectionProfile/:autherId/', authenticateToken, (req: Request, res: Response) => userController.friendprofile(req, res));
+userRouter.get('/followStatus/:followingId/', authenticateToken, (req: Request, res: Response) => userController.followStatus(req, res));
+userRouter.post('/follow/:followingId/', authenticateToken, (req: Request, res: Response) => userController.followUser(req, res));
+userRouter.post('/unfollow/:followingId/', authenticateToken, (req: Request, res: Response) => userController.unfollowUser(req, res));
+userRouter.post('/followAccept/:followingId/', authenticateToken, (req: Request, res: Response) => userController.followAccept(req, res));
+userRouter.get('/getFollowers', authenticateToken, (req: Request, res: Response) => userController.getFollowers(req, res));
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+userRouter.get('/notifications', authenticateToken, (req: Request, res: Response) => userController.getAllNotifications(req, res));
+userRouter.post('/notificationSend', authenticateToken, (req: Request, res: Response) => userController.sendNotifications(req, res));
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+ 
