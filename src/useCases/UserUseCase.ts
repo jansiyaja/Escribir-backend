@@ -1,10 +1,14 @@
+import { INotification } from "../entities/INotification";
 import { IUser } from "../entities/User";
 import { cloudinary } from "../framework/config/cloudinaryConfig";
 import { BadRequestError, InternalServerError, InvalidTokenError, NotFoundError } from "../framework/errors/customErrors";
+import { FollowStatus, IFollow } from "../framework/models/follow";
 import { HashService } from "../framework/services/hashService";
 import { generateAccessToken, generateRefreshToken } from "../framework/services/jwtService";
 import { logger } from "../framework/services/logger";
 import { IEmailService } from "../interfaces/repositories/IEmailRepository";
+import { IFollowRepository } from "../interfaces/repositories/IFollowRepository";
+import { INotificationRepository } from "../interfaces/repositories/INotificationRepository";
 import { IOTPVerificationRepository } from "../interfaces/repositories/IOTPVerificationRepository";
 import { IUserRepository } from "../interfaces/repositories/IUserRepository";
 import { IUserUseCase } from "../interfaces/usecases/IUserUseCase";
@@ -17,6 +21,9 @@ export class UserUseCase implements IUserUseCase{
         private _hashService: HashService,
         private _emailServices: IEmailService,
         private _otpRepository: IOTPVerificationRepository,
+        private _followRepo:IFollowRepository, 
+        private _notificationRepo: INotificationRepository
+
       
     ) {}
 
@@ -266,10 +273,10 @@ export class UserUseCase implements IUserUseCase{
         logger.info("Error in uploading profile image", error);
         throw new Error('Failed to upload profile image');
     }
-}
+   }
 
     
-     async   updateProfile(userId: string, profileData:  Partial<IUser>) : Promise<{user:IUser}>{
+    async   updateProfile(userId: string, profileData:  Partial<IUser>) : Promise<{user:IUser}>{
 
         try {
             const user = await this._userRepository.findById(userId);
@@ -296,8 +303,9 @@ export class UserUseCase implements IUserUseCase{
         throw new Error('Failed to update user profile');
         }
             
-      }
-      async getProfile(userId: string): Promise<{ user: IUser }> {
+    }
+
+    async getProfile(userId: string): Promise<{ user: IUser }> {
         try {
            
             const user = await this._userRepository.findById(userId);
@@ -315,5 +323,126 @@ export class UserUseCase implements IUserUseCase{
             throw new Error('Failed to fetch user profile'); 
         }
     }
+     async followUser(followerId: string, followingId: string): Promise<string> {
+       
+        if (followerId === followingId) {
+            throw new Error('You cannot follow yourself');
+        }
+
+        const isAlreadyFollowing = await this._followRepo.isFollowing(followerId, followingId);
+        if (isAlreadyFollowing) {
+            throw new Error('You are already following this user');
+        }
+         const follower = await this._userRepository.findById(followerId);
+        if (!follower) {
+            throw new NotFoundError('Follower not found');
+        }
+    
+
+        await this._notificationRepo.sendNotification(followingId, followerId,`${follower.username} has Requested to Follow You!`);
+        
+       
+         await this._followRepo.follow(followerId, followingId);
+        return  "following suucessfully"
+    }
+    
+
+    async getFollowStatus(followerId: string, followingId: string): Promise<'none' | 'requested' | 'following'> {
+        const followRecord = await this._followRepo.checkFollowStatus(followerId,followingId);
+    
+        if (!followRecord) {
+          return 'none'; 
+        }
+    
+        if (followRecord.status === FollowStatus.PENDING) {
+          return 'requested'; 
+        }
+         return 'following'; 
+
+   }
+
+
+    async followAccept(followerId: string, followingId: string): Promise<IFollow | null> {
+
+         const follower = await this._userRepository.findById(followingId);
+        if (!follower) {
+            throw new NotFoundError('Follower not found');
+        }
+    
+         await this._followRepo.updateFollowStatus(followingId, followerId);
+
+        const updateStatus= await this._followRepo.updateFollowStatus(followerId, followingId);
+         await this._notificationRepo.deleteNotification(followingId, followerId,`${follower.username} has Requested to Follow You!`);
+        return updateStatus
+    }
+
+
+    async unfollowUser(followerId: string, followingId: string): Promise<string> {
+        const isFollowing = await this._followRepo.isFollowing(followerId, followingId);
+        if (!isFollowing) {
+            throw new Error('You are not following this user');
+        }
+
+       
+        await this._followRepo.unfollow(followerId, followingId);
+        return 'User unfollowed successfully';
+    }
+
+
+    async getFollowers(userId: string): Promise<any[]> {
+        return await this._followRepo.getFollowers(userId);
+    }
+
+
+  
+    async isFollowing(followerId: string, followingId: string): Promise<boolean> {
+        return await this._followRepo.isFollowing(followerId, followingId);
+
+    }
+
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------//
+
+    async getAllNotifications(userId: string): Promise<INotification[]> {
+        const user = await this._userRepository.findById(userId);
+        
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+    
+   
+        const notifications = await this._notificationRepo.getNotifications(userId);
+     
+          
+        return notifications;
+    }
+    async sendNotifications(followerId: string,  userId: string): Promise<void> {
+        const user = await this._userRepository.findById(userId);
+
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+
+        const follower = await this._userRepository.findById(followerId);
+        if (!follower) {
+            throw new NotFoundError('Follower not found');
+        }
+        
+        const notificationForSender = await this._notificationRepo.sendNotification(
+            followerId,       
+            userId,  
+            `You are now following ${user.username}` 
+            
+        );
+        const notificationForReceiver = await this._notificationRepo.sendNotification(
+            userId,            
+            followerId,       
+            `${follower.username} is now following you` 
+        );
+        return
+
+    }
+    
 
 }
