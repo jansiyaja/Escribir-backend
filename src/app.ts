@@ -3,6 +3,11 @@ import cors from 'cors';
 
 import cookieParser from 'cookie-parser';
 import { userRouter } from './Routes/userRoutes';
+import { adminRouter } from './Routes/adminRoutes';
+import { errorHandler } from './framework/middleWares/errorHandler';
+import { blogRouter } from './Routes/blogRouter';
+
+
 
 
 const createApp = () => {
@@ -18,6 +23,10 @@ const createApp = () => {
   }));
 
  app.use('/users', userRouter);
+  app.use('/admin', adminRouter);
+  app.use('/blog', blogRouter);
+  
+  app.use(errorHandler)
 
   return app;
 };
