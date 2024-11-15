@@ -21,5 +21,16 @@ export class CommentRepository implements ICommentRepository{
         );
         return savedComment; 
     }
-     
+
+    async findComment(blogPostId: string, userId: string, content: string): Promise <string>{
+        
+   const exixst=await Comment.findOne({ postId: blogPostId,
+            content: content,
+       userId: userId
+   })
+        console.log(exixst);
+        
+       return "that is alredyExist" 
+        
+    }   
 }

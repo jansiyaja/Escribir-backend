@@ -47,7 +47,7 @@ export default class FollowRepository implements IFollowRepository {
         return !!follow;
     }
 
-    async getFollowers(userId: string): Promise<any[]> {
+    async getFollowers(userId: string): Promise<IFollow[]> {
         return FollowModel.find({ following: userId }).populate('follower', 'username image');
     }
 

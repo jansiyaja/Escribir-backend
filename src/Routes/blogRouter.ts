@@ -12,7 +12,7 @@ blogRouter.get('/',authenticateToken,(req: Request, res: Response) => blogContro
 blogRouter.get('/tags',authenticateToken,(req: Request, res: Response) => blogController.listTags(req, res))
 blogRouter.get('/singleblog/:id', authenticateToken, (req: Request, res: Response) => blogController.singleBlog(req, res));
 blogRouter.get('/getblog/:id', authenticateToken, (req: Request, res: Response) => blogController.singleBlogEdit(req, res));
-blogRouter.delete('/delete-tag/:id', authenticateToken, (req: Request, res: Response) => blogController.deletePost(req, res));
+blogRouter.delete('/delete-post/:id', authenticateToken, (req: Request, res: Response) => blogController.deletePost(req, res));
 blogRouter.put('/blogeditor/:id', authenticateToken, (req: Request, res: Response) => blogController.updatePost(req, res));
 
 

@@ -12,6 +12,7 @@ import { INotificationRepository } from '../interfaces/repositories/INotificatio
 import { IReaction } from '../entities/IReaction';
 import { IComment } from '../entities/IComment';
 import { ICommentRepository } from '../interfaces/repositories/IRepository';
+import { win32 } from 'path';
 
 
 const reactionEmojis: Record<string, string> = {
@@ -36,6 +37,8 @@ export class BlogPostUseCase implements IBlogUseCase {
     }
 
     async uploadImageToS3(buffer: Buffer, mimeType: string): Promise<string> {
+        console.log("image uploader");
+        
         const key = this.generateRandomKey();
 
         const params = {
@@ -44,11 +47,15 @@ export class BlogPostUseCase implements IBlogUseCase {
             Body: buffer,
             ContentType: mimeType,
         };
-
+  console.log("image uploader PARAMS");
         const command = new PutObjectCommand(params);
 
         try {
             await this._s3.send(command);
+              console.log("image  PARAMS");
+            const image = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+            console.log(image);
+            
             return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
         } catch (error) {
             console.error('Error uploading image to S3:', error);
@@ -212,7 +219,13 @@ export class BlogPostUseCase implements IBlogUseCase {
             throw new Error('Blog post not found');
         }
       
-          await this._notificationRepo.sendNotification(autherId, userId, `reacted to your post with ${blogPost.heading}`,);
+        await this._notificationRepo.sendNotification(autherId, userId, `reacted to your post with ${blogPost.heading}`,);
+        
+        const aleradyExist = await this._commentRepository.findComment(postId, userId, content)
+        if (aleradyExist) {
+            console.log("this comment is already exist with same user");
+            
+        } 
 
         return await this._commentRepository.addComment(postId, userId, content);
 

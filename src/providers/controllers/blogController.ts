@@ -21,6 +21,9 @@ export class BlogController implements IBlogController{
             const { heading, content,tag ,status = BlogStatus.DRAFT} = req.body;
             
             const imageBuffer = req.file?.buffer;
+
+            console.log(req.file );
+            
     
             if (!imageBuffer) {
                 res.status(HttpStatusCode.UNAUTHORIZED).json('No image uploaded.');
@@ -35,7 +38,7 @@ export class BlogController implements IBlogController{
             }
     
             const imageKey = await this._blogUseCase.uploadImageToS3(imageBuffer, userId);
-    
+             console.log("image",imageKey );
             const newBlogPost = await this._blogUseCase.createBlogPost({
                 author_id:userId,
                 heading,
@@ -273,7 +276,8 @@ export class BlogController implements IBlogController{
             const { id } = req.params; 
             const userId = (req as any).user.userId;
             const { comment, autherId } = req.body
-            console.log(req.params,req.body);
+            console.log(req.params, req.body);
+            
             
 
             const newComment = await this._blogUseCase.addComment(id, userId, comment,autherId)

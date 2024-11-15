@@ -9,18 +9,17 @@ export interface IUserController {
      logout(req: Request, res: Response): Promise<void>;
      profileImageUpload(req: Request, res: Response):Promise<void> 
      getProfile(req: Request, res: Response):Promise<void>;
-    friendprofile(req: Request, res: Response): Promise<void> 
+     friendprofile(req: Request, res: Response): Promise<void> 
 
-    followUser(req: Request, res: Response): Promise<void>;
-    followAccept(req: Request, res: Response): Promise<void>;
-    followStatus(req: Request, res: Response): Promise<void> 
-    unfollowUser(req: Request, res: Response): Promise<void>
-    getFollowers(req: Request, res: Response): Promise<void> 
+    
 
 
 
     getAllNotifications(req: Request, res: Response): Promise<void>;
     sendNotifications(req: Request, res: Response): Promise<void>;
+    feedback(req: Request, res: Response): Promise<void>
+
+    
 
     
 }

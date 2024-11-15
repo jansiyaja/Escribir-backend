@@ -18,12 +18,12 @@ export class SMTPService implements IEmailService {
         });
     }
 
-    async sendEmail({ to, subject, text }: { to: string; subject: string; text: string }): Promise<void> {
+    async sendEmail({ from, to, subject, text }: { from: string; to: string; subject: string; text: string }): Promise<void> {
          
          
         try {
             await this.transporter.sendMail({
-                from: process.env.MAIL_EMAIL,
+                from,
                 to,
                 subject,
                 text,

@@ -1,13 +1,18 @@
+
+import { IChat } from "../entities/IChat";
+import { IMessage } from "../entities/IMessage";
 import { INotification } from "../entities/INotification";
 import { IUser } from "../entities/User";
 import { cloudinary } from "../framework/config/cloudinaryConfig";
 import { BadRequestError, InternalServerError, InvalidTokenError, NotFoundError } from "../framework/errors/customErrors";
-import { FollowStatus, IFollow } from "../framework/models/follow";
+import { IFollow } from "../framework/models/follow";
 import { HashService } from "../framework/services/hashService";
 import { generateAccessToken, generateRefreshToken } from "../framework/services/jwtService";
 import { logger } from "../framework/services/logger";
+import { IChatRepository } from "../interfaces/repositories/IChatRepository";
 import { IEmailService } from "../interfaces/repositories/IEmailRepository";
 import { IFollowRepository } from "../interfaces/repositories/IFollowRepository";
+import { IMessageRepository } from "../interfaces/repositories/IMessageRepository";
 import { INotificationRepository } from "../interfaces/repositories/INotificationRepository";
 import { IOTPVerificationRepository } from "../interfaces/repositories/IOTPVerificationRepository";
 import { IUserRepository } from "../interfaces/repositories/IUserRepository";
@@ -21,10 +26,8 @@ export class UserUseCase implements IUserUseCase{
         private _hashService: HashService,
         private _emailServices: IEmailService,
         private _otpRepository: IOTPVerificationRepository,
-        private _followRepo:IFollowRepository, 
-        private _notificationRepo: INotificationRepository
-
-      
+       
+        private _notificationRepo: INotificationRepository, 
     ) {}
 
 
@@ -60,9 +63,13 @@ export class UserUseCase implements IUserUseCase{
         }
 
         const newOtp = { otp: otp, email: createUser.email };
-        await this._otpRepository.create(newOtp);
+          await this._otpRepository.create(newOtp);
+          if (!process.env.MAIL_EMAIL) {
+              throw new BadRequestError("admin email is not getting")
+          }
 
-        await this._emailServices.sendEmail({
+          await this._emailServices.sendEmail({
+            from:process.env.MAIL_EMAIL,
             to: userData.email!,
             subject: "Welcome To Escriber, Our Blog Platform!",
             text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`
@@ -130,9 +137,13 @@ export class UserUseCase implements IUserUseCase{
             
              if(!userData){
                  throw new InvalidTokenError('There is no user  with this email')
-             }
+        }
+         if (!process.env.MAIL_EMAIL) {
+              throw new BadRequestError("admin email is not getting")
+          }
 
-              await this._emailServices.sendEmail({
+        await this._emailServices.sendEmail({
+                  from:process.env.MAIL_EMAIL,
                   to: userData.email!,
                   subject: "Welcome To Escriber, Our Blog Platform!",
                   text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`
@@ -323,80 +334,23 @@ export class UserUseCase implements IUserUseCase{
             throw new Error('Failed to fetch user profile'); 
         }
     }
-     async followUser(followerId: string, followingId: string): Promise<string> {
-       
-        if (followerId === followingId) {
-            throw new Error('You cannot follow yourself');
-        }
-
-        const isAlreadyFollowing = await this._followRepo.isFollowing(followerId, followingId);
-        if (isAlreadyFollowing) {
-            throw new Error('You are already following this user');
-        }
-         const follower = await this._userRepository.findById(followerId);
-        if (!follower) {
-            throw new NotFoundError('Follower not found');
-        }
-    
-
-        await this._notificationRepo.sendNotification(followingId, followerId,`${follower.username} has Requested to Follow You!`);
-        
-       
-         await this._followRepo.follow(followerId, followingId);
-        return  "following suucessfully"
-    }
-    
-
-    async getFollowStatus(followerId: string, followingId: string): Promise<'none' | 'requested' | 'following'> {
-        const followRecord = await this._followRepo.checkFollowStatus(followerId,followingId);
-    
-        if (!followRecord) {
-          return 'none'; 
-        }
-    
-        if (followRecord.status === FollowStatus.PENDING) {
-          return 'requested'; 
-        }
-         return 'following'; 
-
-   }
-
-
-    async followAccept(followerId: string, followingId: string): Promise<IFollow | null> {
-
-         const follower = await this._userRepository.findById(followingId);
-        if (!follower) {
-            throw new NotFoundError('Follower not found');
-        }
-    
-         await this._followRepo.updateFollowStatus(followingId, followerId);
-
-        const updateStatus= await this._followRepo.updateFollowStatus(followerId, followingId);
-         await this._notificationRepo.deleteNotification(followingId, followerId,`${follower.username} has Requested to Follow You!`);
-        return updateStatus
-    }
-
-
-    async unfollowUser(followerId: string, followingId: string): Promise<string> {
-        const isFollowing = await this._followRepo.isFollowing(followerId, followingId);
-        if (!isFollowing) {
-            throw new Error('You are not following this user');
-        }
-
-       
-        await this._followRepo.unfollow(followerId, followingId);
-        return 'User unfollowed successfully';
-    }
-
-
-    async getFollowers(userId: string): Promise<any[]> {
-        return await this._followRepo.getFollowers(userId);
-    }
-
-
   
-    async isFollowing(followerId: string, followingId: string): Promise<boolean> {
-        return await this._followRepo.isFollowing(followerId, followingId);
+  async sendFeedbackEmail(name: string, email: string, message: string): Promise<string> {
+       
+        
+
+         if (!process.env.MAIL_EMAIL) {
+              throw new BadRequestError("admin email is not getting")
+          }
+
+        await this._emailServices.sendEmail({
+                  from:email,
+                  to: process.env.MAIL_EMAIL,
+                  subject: "Feed back From User",
+                  text: `Hi, iam ${name},  ${message}`
+        }); 
+         
+        return "sending email successfully"
 
     }
 
@@ -443,6 +397,8 @@ export class UserUseCase implements IUserUseCase{
         return
 
     }
+   
+
     
 
 }

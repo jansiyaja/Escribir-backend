@@ -80,21 +80,42 @@ export const setupSocket = (server: Server) => {
       const receiverSocket = userSockets.get(receiverId);
       if (receiverSocket) {
         io.to(receiverSocket.socketId).emit("receive_message", message);
-
-        const currentCount = messageNotificationCounts.get(receiverId) || 0;
-        messageNotificationCounts.set(receiverId, currentCount + 1);
-        console.log("count", messageNotificationCounts);
-
-        io.to(receiverSocket.socketId).emit(
-          "notification_count",
-          messageNotificationCounts.get(receiverId)
-        );
       } else {
         console.log(
           `Notification sent to ${receiverId} that ${messageNotificationCounts} followed them.`
         );
       }
     });
+
+socket.on("typing", ({ receiverId }) => {
+  const receiverSocket = userSockets.get(receiverId); 
+
+  if (receiverSocket) {
+    console.log(`User ${receiverId} is typing...`);
+    io.to(receiverSocket.socketId).emit("typing-status", {
+      isTyping: true,
+      receiverId,
+    });
+  } else {
+    console.log(`No socket found for receiverId: ${receiverId}`);
+  }
+});
+
+socket.on("stop-typing", ({ receiverId }) => {
+  const receiverSocket = userSockets.get(receiverId); 
+
+  if (receiverSocket) {
+    console.log(`User ${receiverId} stopped typing.`);
+    io.to(receiverSocket.socketId).emit("typing-status", {
+      isTyping: false,
+      receiverId,
+    });
+  } else {
+    console.log(`No socket found for receiverId: ${receiverId}`);
+  }
+});
+
+  
 
     socket.on("call-user", ({ receiverId, offer, callType }) => {
       const receiverSocket = userSockets.get(receiverId);
@@ -126,6 +147,16 @@ export const setupSocket = (server: Server) => {
         }
       }
     );
+
+    socket.on("end-callactivate", ({ receiverId }) => {
+     
+      const receiverSocket = userSockets.get(receiverId); 
+      
+      if (receiverSocket) {
+        io.to(receiverSocket.socketId).emit("call-ended");
+        console.log("end called", receiverId);
+      }
+    });
 
     socket.on("disconnect", () => {
       userSockets.forEach((value, key) => {

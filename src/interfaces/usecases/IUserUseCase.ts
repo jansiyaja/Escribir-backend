@@ -1,6 +1,7 @@
+
 import { INotification } from "../../entities/INotification";
 import { IUser } from "../../entities/User";
-import { IFollow } from "../../framework/models/follow";
+
 
 export interface IUserUseCase{
 
@@ -21,17 +22,14 @@ export interface IUserUseCase{
 
     getProfile(userId:string): Promise<{user:IUser}>;
 
-   followUser(followerId: string, followingId: string): Promise<string>;
-
-   getFollowStatus(followerId: string, followingId: string): Promise<'none' | 'requested' | 'following'>;
-
-   followAccept(followerId: string, followingId: string):  Promise<IFollow| null>;
-
-   unfollowUser(followerId: string, followingId: string): Promise<string> ;
-
-   getFollowers(userId: string): Promise<any[]> ;
+  sendFeedbackEmail(name: string, email: string, message: string): Promise<string>
 
    getAllNotifications(userId: string): Promise<INotification[]> ;
 
-   sendNotifications(followerId:string,userId:string): Promise<void>
+   sendNotifications(followerId: string, userId: string): Promise<void>
+   
+  
+
+   
 }
+

@@ -11,10 +11,10 @@ export class UserController implements IUserController {
 
     ) { }
 
-    async register(req: Request, res: Response): Promise<void>  {
+    async register(req: Request, res: Response): Promise<void> {
         try {
 
-          const { username, email, password } = req.body;
+            const { username, email, password } = req.body;
 
 
             if (!username || !email || !password) {
@@ -28,15 +28,15 @@ export class UserController implements IUserController {
 
 
             if (error instanceof BadRequestError) {
-             res.status(error.statusCode).json({ error: error.message });
+                res.status(error.statusCode).json({ error: error.message });
             }
 
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
 
         }
     }
 
-    async verifyOTP(req: Request, res: Response):  Promise<void>  {
+    async verifyOTP(req: Request, res: Response): Promise<void> {
         try {
             const { email, otp } = req.body;
             const { user, accessToken, refreshToken } = await this._userUseCase.verifyOTP({ otp, email });
@@ -55,17 +55,17 @@ export class UserController implements IUserController {
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
-             res.status(HttpStatusCode.OK).json({ user, });
+            res.status(HttpStatusCode.OK).json({ user, });
         } catch (error) {
             if (error instanceof BadRequestError) {
-                 res.status(error.statusCode).json({ error: error.message });
+                res.status(error.statusCode).json({ error: error.message });
             }
             logger.error('OTP Verification Error:', error);
             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'An unexpected error occurred' });
         }
     }
 
-    async resendOTP(req: Request, res: Response):  Promise<void>  {
+    async resendOTP(req: Request, res: Response): Promise<void> {
 
         logger.info("resent otp  controller")
         try {
@@ -77,22 +77,22 @@ export class UserController implements IUserController {
         } catch (error) {
 
             if (error instanceof InvalidTokenError) {
-                 res.status(error.statusCode).json({ error: error.message });
+                res.status(error.statusCode).json({ error: error.message });
             }
             logger.error("Internal Server Error:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
         }
     }
 
-    async verifyToken(req: Request, res: Response):  Promise<void> {
-        
+    async verifyToken(req: Request, res: Response): Promise<void> {
+
 
         try {
 
             const refreshToken = req.cookies.refreshToken;
 
             if (!refreshToken) {
-                 res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
             }
             const { accessToken } = await this._userUseCase.verifyToken(refreshToken);
 
@@ -107,11 +107,11 @@ export class UserController implements IUserController {
 
             res.status(HttpStatusCode.OK).json({ accessToken });
         } catch (error) {
-           res.status(HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
+            res.status(HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
         }
     }
 
-    async logout(req: Request, res: Response):Promise<void> {
+    async logout(req: Request, res: Response): Promise<void> {
         try {
 
             res.clearCookie("accessToken", {
@@ -127,9 +127,9 @@ export class UserController implements IUserController {
             });
 
 
-             res.status(HttpStatusCode.OK).json({ message: "Logged out successfully" });
+            res.status(HttpStatusCode.OK).json({ message: "Logged out successfully" });
         } catch (error) {
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
 
         }
     }
@@ -141,9 +141,11 @@ export class UserController implements IUserController {
 
             logger.info("inside the login")
             const { email, password } = req.body;
+            
+            
 
             if (!email || !password) {
-                 res.status(HttpStatusCode.BAD_REQUEST).json({ error: "All fields are required: username, email, and password" });
+                res.status(HttpStatusCode.BAD_REQUEST).json({ error: "All fields are required: username, email, and password" });
             }
 
             const { user, accessToken, refreshToken } = await this._userUseCase.loginUser({ email, password });
@@ -164,7 +166,7 @@ export class UserController implements IUserController {
             });
 
 
-             res.status(HttpStatusCode.OK).json({ user });
+            res.status(HttpStatusCode.OK).json({ user });
 
         } catch (error) {
 
@@ -180,7 +182,7 @@ export class UserController implements IUserController {
             const userId = (req as any).user.userId;
 
             if (!userId) {
-                 res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
             }
 
 
@@ -193,60 +195,62 @@ export class UserController implements IUserController {
             }
 
             const secureUrl = await this._userUseCase.saveProfileImage(imageBuffer, userId);
-           
-            
 
-             res.status(HttpStatusCode.OK).json({ secureUrl });
+
+
+            res.status(HttpStatusCode.OK).json({ secureUrl });
 
 
 
         } catch (error) {
 
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
 
         }
     }
 
-    async updateProfile(req: Request, res: Response):Promise<void> {
+    async updateProfile(req: Request, res: Response): Promise<void> {
         try {
             const userId = (req as any).user.userId;
 
             if (!userId) {
-                 res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
             }
             const profileData = req.body
 
             const result = await this._userUseCase.updateProfile(userId, profileData);
 
-             res.status(HttpStatusCode.OK).json({
+            res.status(HttpStatusCode.OK).json({
                 message: 'Profile updated successfully',
                 user: result.user
             });
 
         } catch (error) {
             logger.error('Error updating profile:', error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
                 error: 'Failed to update profile',
 
             });
         }
     }
 
-    async getProfile(req: Request, res: Response): Promise<void> {
+
+     async getProfile(req: Request, res: Response): Promise<void> {
 
         try {
             const userId = (req as any).user.userId;
 
             if (!userId) {
-                 res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
             }
             const users = await this._userUseCase.getProfile(userId);
-             res.status(HttpStatusCode.OK).json(users);
+            res.status(HttpStatusCode.OK).json(users);
         } catch (error) {
             logger.error("Error listing users:", error);
             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
         }
     }
+     
      async friendprofile(req: Request, res: Response): Promise<void> {
 
         try {
@@ -254,109 +258,26 @@ export class UserController implements IUserController {
 
 
             if (!autherId) {
-                 res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
             }
             const users = await this._userUseCase.getProfile(autherId);
-             res.status(HttpStatusCode.OK).json(users);
+            res.status(HttpStatusCode.OK).json(users);
         } catch (error) {
             logger.error("Error listing users:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
         }
     }
-    async followUser(req: Request, res: Response): Promise<void> {
-
-        try {
-            const { followingId } = req.params;
-
-
-            const followerId = (req as any).user.userId;
-
-            const result = await this._userUseCase.followUser(followerId, followingId);
-             res.status(HttpStatusCode.OK).json(result);
-        } catch (error) {
-            logger.error("Error follow user:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-
-        }
-    }
-
-    async followStatus(req: Request, res: Response): Promise<void> {
-        try {
-            const { followingId } = req.params;
-
-
-            const followerId = (req as any).user.userId;
-
-
-            const followStatus = await this._userUseCase.getFollowStatus(followerId, followingId);
-
-             res.status(HttpStatusCode.OK).json({ followStatus });
-        } catch (error) {
-            logger.error("Error getting follow status:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-        }
-    }
-    async followAccept(req: Request, res: Response): Promise<void> {
-
-        try {
-            const { followingId } = req.params;
-
-            const followerId = (req as any).user.userId;
-
-            const updatedStatus = await this._userUseCase.followAccept(followerId, followingId);
-       
-
-             res.status(HttpStatusCode.OK).json(updatedStatus);
-        } catch (error) {
-            logger.error("Error follow user:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-
-        }
-    }
-
-    async unfollowUser(req: Request, res: Response): Promise<void> {
-        try {
-            const { followingId } = req.params;
-            console.log(followingId);
-
-            const followerId = (req as any).user.userId;
-
-            const result = await this._userUseCase.unfollowUser(followerId, followingId);
-             res.status(HttpStatusCode.OK).json(result);
-        } catch (error) {
-            logger.error("Error unfollow user:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-        }
-    }
-
-    async getFollowers(req: Request, res: Response): Promise<void> {
-       
-        
-        try {
-            const userId = (req as any).user.userId;
-            const followers = await this._userUseCase.getFollowers(userId);
-          
-            
-             res.status(200).json(followers);
-        } catch (error) {
-            logger.error("Error  in getting followers user:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-       
-        }
-    }
-
-    
     async getAllNotifications(req: Request, res: Response): Promise<void> {
         try {
-           
+
 
             const userId = (req as any).user.userId;
             const notifications = await this._userUseCase.getAllNotifications(userId);
 
-             res.status(HttpStatusCode.OK).json({ notifications });
+            res.status(HttpStatusCode.OK).json({ notifications });
         } catch (error) {
             logger.error("Error fetching notifications:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
 
@@ -364,15 +285,45 @@ export class UserController implements IUserController {
         try {
             const userId = (req as any).user.userId;
             const { followerId } = req.body;
-            
-           
-            const notification = await this._userUseCase.sendNotifications(followerId,  userId);
-           
-            
-             res.status(HttpStatusCode.OK).json({ notification });
+
+
+            const notification = await this._userUseCase.sendNotifications(followerId, userId);
+
+
+            res.status(HttpStatusCode.OK).json({ notification });
         } catch (error) {
             logger.error("Error sending notifications:", error);
-             res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
+
+
+
+
+    async feedback(req: Request, res: Response): Promise<void> {
+        try {
+             const { name, email, message } = req.body;
+        console.log(name,email,message);
+            
+          if (!name || !email || !message) {
+                throw new BadRequestError("All fields are required: name, email, and message");
+            }
+
+            const newUser = await this._userUseCase.sendFeedbackEmail(name,email,message)
+           res.status(HttpStatusCode.CREATED).json(newUser)
+        } catch (error) {
+
+
+            if (error instanceof BadRequestError) {
+                res.status(error.statusCode).json({ error: error.message });
+                
+            }
+
+            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new InternalServerError("An unexpected error occurred").serializeError() });
+
+        }
+       
+        
+    }
+ 
 }
