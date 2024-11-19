@@ -1,0 +1,11 @@
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T04:48:58.045Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T04:58:46.562Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:00:36.204Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:15:24.805Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:16:41.374Z"}
+{"level":"info","message":"checking existing user","timestamp":"2024-10-24T05:17:38.900Z"}
+{"email":"snehak@gmail.com","level":"info","message":"Verifying OTP for email","timestamp":"2024-10-24T05:17:51.670Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:18:17.087Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:19:07.189Z"}
+{"level":"info","message":"inside the login","timestamp":"2024-10-24T05:26:05.458Z"}
+{"level":"info","message":"inside the profile image controller","timestamp":"2024-10-24T05:27:45.277Z"}
