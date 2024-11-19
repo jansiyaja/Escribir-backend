@@ -8,6 +8,7 @@ const logDirectory = path.resolve('./logs');
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory, { recursive: true });
 }
+
 export const logger = createLogger({
     level: 'info',
     format: format.combine(
@@ -17,8 +18,8 @@ export const logger = createLogger({
     transports: [
         new DailyRotateFile({
             filename: 'application-%DATE%.log',
-            dirname: './logs',
-            datePattern: 'DD-MM-YYY-HH',
+            dirname: logDirectory, // Use the defined constant
+            datePattern: 'DD-MM-YYYY-HH', 
             zippedArchive: true,
             maxSize: '20m',
             maxFiles: '60d'
