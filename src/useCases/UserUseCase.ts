@@ -1,18 +1,16 @@
 
-import { IChat } from "../entities/IChat";
-import { IMessage } from "../entities/IMessage";
+
 import { INotification } from "../entities/INotification";
 import { IUser } from "../entities/User";
 import { cloudinary } from "../framework/config/cloudinaryConfig";
 import { BadRequestError, InternalServerError, InvalidTokenError, NotFoundError } from "../framework/errors/customErrors";
-import { IFollow } from "../framework/models/follow";
+
 import { HashService } from "../framework/services/hashService";
 import { generateAccessToken, generateRefreshToken } from "../framework/services/jwtService";
 import { logger } from "../framework/services/logger";
-import { IChatRepository } from "../interfaces/repositories/IChatRepository";
+
 import { IEmailService } from "../interfaces/repositories/IEmailRepository";
-import { IFollowRepository } from "../interfaces/repositories/IFollowRepository";
-import { IMessageRepository } from "../interfaces/repositories/IMessageRepository";
+
 import { INotificationRepository } from "../interfaces/repositories/INotificationRepository";
 import { IOTPVerificationRepository } from "../interfaces/repositories/IOTPVerificationRepository";
 import { IUserRepository } from "../interfaces/repositories/IUserRepository";

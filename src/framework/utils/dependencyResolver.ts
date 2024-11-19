@@ -1,3 +1,4 @@
+import { S3Client } from "@aws-sdk/client-s3";
 import { AdminController } from "../../providers/controllers/adminController";
 import { BlogController } from "../../providers/controllers/blogController";
 import { ChatController } from "../../providers/controllers/chatController";
@@ -18,10 +19,10 @@ import { BlogPostUseCase } from "../../useCases/BlogUseCase";
 import { ChatUseCase } from "../../useCases/ChatUseCase";
 import { SocialUseCase } from "../../useCases/SocialUseCase";
 import { UserUseCase } from "../../useCases/UserUseCase";
-import { s3 } from "../config/awsConfig";
+
 import { BcryptHashService } from "../services/hashService";
 import { SMTPService } from "../services/smtpService";
-
+const s3 = new S3Client({});
 const userRepository=new UserRepository()
 const hashService = new  BcryptHashService()
 const emailService = new SMTPService();
