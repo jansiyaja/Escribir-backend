@@ -19,6 +19,7 @@ export class UserController implements IUserController {
 
             if (!username || !email || !password) {
                 throw new BadRequestError("All fields are required: username, email, and password");
+              
             }
 
             const newUser = await this._userUseCase.registerUser({ email, password, username })
@@ -93,6 +94,7 @@ export class UserController implements IUserController {
 
             if (!refreshToken) {
                 res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
+                return;
             }
             const { accessToken } = await this._userUseCase.verifyToken(refreshToken);
 
@@ -138,15 +140,20 @@ export class UserController implements IUserController {
 
         try {
 
-
+            console.log("");
+            
             logger.info("inside the login")
             const { email, password } = req.body;
             
             
 
-            if (!email || !password) {
-                res.status(HttpStatusCode.BAD_REQUEST).json({ error: "All fields are required: username, email, and password" });
-            }
+          if (!email || !password) {
+             res
+                .status(HttpStatusCode.BAD_REQUEST)
+                  .json({ error: "All fields are required: email and password" });
+              return;
+        }
+
 
             const { user, accessToken, refreshToken } = await this._userUseCase.loginUser({ email, password });
 

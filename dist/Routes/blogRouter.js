@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.blogRouter = void 0;
+const express_1 = __importDefault(require("express"));
+const dependencyResolver_1 = require("../framework/utils/dependencyResolver");
+const multerConfig_1 = require("../framework/config/multerConfig");
+const tokenValidator_1 = require("../framework/middleWares/tokenValidator");
+exports.blogRouter = express_1.default.Router();
+exports.blogRouter.post('/blogeditor', multerConfig_1.uploadBlogData, tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.createBlogPost(req, res));
+exports.blogRouter.post('/blogimage', multerConfig_1.uploadBlogImage, tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.blogEditorImage(req, res));
+exports.blogRouter.get('/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.listBlogs(req, res));
+exports.blogRouter.get('/tags', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.listTags(req, res));
+exports.blogRouter.get('/singleblog/:id', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.singleBlog(req, res));
+exports.blogRouter.get('/getblog/:id', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.singleBlogEdit(req, res));
+exports.blogRouter.delete('/delete-post/:id', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.deletePost(req, res));
+exports.blogRouter.put('/blogeditor/:id', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.updatePost(req, res));
+exports.blogRouter.get('/your-blog/:userId/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.userBlog(req, res));
+exports.blogRouter.post('/reportblog/:id/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.reportBlog(req, res));
+exports.blogRouter.post('/react/:id/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.addReaction(req, res));
+exports.blogRouter.delete('/react/:id/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.removeReaction(req, res));
+exports.blogRouter.post('/comment/:id/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.blogController.addComment(req, res));

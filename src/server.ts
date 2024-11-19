@@ -4,6 +4,7 @@ import { connectDB } from './framework/config/dbConfig';
 import { createServer } from 'http'; 
 import { Server as socketIo } from 'socket.io'; 
 import { setupSocket } from './framework/config/socketConfig';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -19,7 +20,7 @@ const server = createServer(app);
 const io = setupSocket(server);
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 
 server.listen(port, () => {
