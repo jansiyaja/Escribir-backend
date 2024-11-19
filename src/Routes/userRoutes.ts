@@ -5,6 +5,10 @@ import { uploadProfileImage } from '../framework/config/multerConfig';
 
 export const userRouter = express.Router();
 
+userRouter.get("/test", (req,res) => {
+    res.send({message : "uccesfully hosted"})
+})
+
 userRouter.post('/register',  (req: Request, res: Response) => userController.register(req,res));
 userRouter.post('/verify-otp', (req: Request, res: Response) => userController.verifyOTP(req, res));
 userRouter.post('/verify-token' ,authenticateRefreshToken,(req: Request, res: Response) => userController.verifyToken(req, res));
