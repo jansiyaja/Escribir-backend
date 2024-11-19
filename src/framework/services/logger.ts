@@ -1,6 +1,13 @@
 import { createLogger, format, transports } from "winston";
 import DailyRotateFile from 'winston-daily-rotate-file';
+import fs from 'fs';
+import path from 'path';
 
+const logDirectory = path.resolve('./logs');
+
+if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory, { recursive: true });
+}
 export const logger = createLogger({
     level: 'info',
     format: format.combine(
