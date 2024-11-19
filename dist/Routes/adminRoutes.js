@@ -8,6 +8,9 @@ const express_1 = __importDefault(require("express"));
 const dependencyResolver_1 = require("../framework/utils/dependencyResolver");
 const tokenValidator_1 = require("../framework/middleWares/tokenValidator");
 exports.adminRouter = express_1.default.Router();
+exports.adminRouter.get("/test", (req, res) => {
+    res.send({ message: "uccesfully hosted" });
+});
 //---------------------UserRouteHandle---------------------------------------------------------------------------------------------------------------------------//
 exports.adminRouter.post('/login', (req, res) => dependencyResolver_1.adminController.login(req, res));
 exports.adminRouter.post('/logout', (req, res) => dependencyResolver_1.adminController.logout(req, res));

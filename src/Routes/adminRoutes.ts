@@ -6,7 +6,9 @@ import { authenticateAdminToken, authenticateToken } from '../framework/middleWa
 export  const adminRouter = express.Router();
 
 
-
+adminRouter.get("/test", (req,res) => {
+    res.send({message : "uccesfully hosted"})
+})
  //---------------------UserRouteHandle---------------------------------------------------------------------------------------------------------------------------//
  
 adminRouter.post('/login', (req: Request, res: Response) => adminController.login(req, res));

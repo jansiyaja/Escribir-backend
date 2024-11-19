@@ -909,6 +909,11 @@
             "date": 1731992380905,
             "name": "logs\\application-19-11-242024-10.log",
             "hash": "09f11eaf3a144871d5525a309084933c9593b899ce88974d412dfc05fce8682f"
+        },
+        {
+            "date": 1731995453822,
+            "name": "logs\\application-19-11-242024-11.log",
+            "hash": "d02d47ab14d80e213746aea386763b18cee2f3d7c5b7f6a11f2084d7255a53f0"
         }
     ],
     "hashType": "sha256"

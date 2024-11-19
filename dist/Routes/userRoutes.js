@@ -9,6 +9,9 @@ const dependencyResolver_1 = require("../framework/utils/dependencyResolver");
 const tokenValidator_1 = require("../framework/middleWares/tokenValidator");
 const multerConfig_1 = require("../framework/config/multerConfig");
 exports.userRouter = express_1.default.Router();
+exports.userRouter.get("/test", (req, res) => {
+    res.send({ message: "uccesfully hosted" });
+});
 exports.userRouter.post('/register', (req, res) => dependencyResolver_1.userController.register(req, res));
 exports.userRouter.post('/verify-otp', (req, res) => dependencyResolver_1.userController.verifyOTP(req, res));
 exports.userRouter.post('/verify-token', tokenValidator_1.authenticateRefreshToken, (req, res) => dependencyResolver_1.userController.verifyToken(req, res));

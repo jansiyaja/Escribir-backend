@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 60
+    },
+    "auditLog": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\.f8219ee21fc0539fa47a8ca20c79c192ab9d8c68-audit.json",
+    "files": [
+        {
+            "date": 1731996849945,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-19-11-2024-11.log",
+            "hash": "fb0dd74077185db568e7b1eaf67a5c3817797bc845aeeafa42f258163d3d3056"
+        }
+    ],
+    "hashType": "sha256"
+}
