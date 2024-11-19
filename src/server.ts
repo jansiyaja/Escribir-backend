@@ -4,7 +4,7 @@ import { connectDB } from './framework/config/dbConfig';
 import { createServer } from 'http'; 
 import { Server as socketIo } from 'socket.io'; 
 import { setupSocket } from './framework/config/socketConfig';
-import cors from 'cors';
+
 
 
 dotenv.config();
