@@ -9,6 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const connectDB = async () => {
     try {
+        console.log("MONGO_URI:", process.env.MONGO_URI);
         const connect = await mongoose_1.default.connect(process.env.MONGO_URI);
         console.log(`MongoDB connected with ${connect.connection.host}`);
     }

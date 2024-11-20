@@ -9,6 +9,10 @@ on:
 env:
   NODE_VERSION: "v20.9.0" 
 
+  env:
+  NODE_VERSION: "v20.9.0"
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

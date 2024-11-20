@@ -19,7 +19,7 @@ class UserUseCase {
         this._notificationRepo = _notificationRepo;
     }
     async registerUser(userData) {
-        logger_1.logger.info('checking existing user');
+        logger_1.logger.info("checking existing user");
         const existingUser = await this._userRepository.findByEmail(userData.email);
         if (existingUser) {
             throw new customErrors_1.BadRequestError("User with email already exists");
@@ -30,7 +30,7 @@ class UserUseCase {
         const newUser = {
             ...userData,
             password: hashedPassword,
-            isVerified: false
+            isVerified: false,
         };
         const createUser = await this._userRepository.create(newUser);
         if (!createUser.email) {
@@ -45,36 +45,36 @@ class UserUseCase {
             from: process.env.MAIL_EMAIL,
             to: userData.email,
             subject: "Welcome To Escriber, Our Blog Platform!",
-            text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`
+            text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
         });
         return {
-            user: createUser
+            user: createUser,
         };
     }
-    async verifyOTP({ otp, email }) {
-        logger_1.logger.info('Verifying OTP for email', { email });
+    async verifyOTP({ otp, email, }) {
+        logger_1.logger.info("Verifying OTP for email", { email });
         const otpVerification = await this._otpRepository.findByUserByEmail(email);
         if (!otpVerification) {
-            throw new customErrors_1.BadRequestError('No OTP record found for this email');
+            throw new customErrors_1.BadRequestError("No OTP record found for this email");
         }
         const otpCreatedAt = otpVerification.createdAt;
         if (!otpCreatedAt) {
-            throw new customErrors_1.InternalServerError('OTP creation time is missing');
+            throw new customErrors_1.InternalServerError("OTP creation time is missing");
         }
         const currentTime = new Date();
         const hourDifference = (currentTime.getTime() - otpCreatedAt.getTime()) / (1000 * 60 * 60);
         if (hourDifference > 1) {
             await this._userRepository.delete(email);
-            throw new customErrors_1.BadRequestError('OTP expired and user deleted');
+            throw new customErrors_1.BadRequestError("OTP expired and user deleted");
         }
         if (otpVerification.otp !== otp) {
-            throw new customErrors_1.BadRequestError('Invalid OTP provided');
+            throw new customErrors_1.BadRequestError("Invalid OTP provided");
         }
         await this._userRepository.markAsVerified(email);
         await this._otpRepository.deleteByUserId(email);
         const user = await this._userRepository.findByEmail(email);
         if (!user) {
-            throw new customErrors_1.InternalServerError('User not found');
+            throw new customErrors_1.InternalServerError("User not found");
         }
         const userRole = user.role;
         const accessToken = (0, jwtService_1.generateAccessToken)(user._id, userRole);
@@ -89,7 +89,7 @@ class UserUseCase {
         const userData = await this._userRepository.findByEmail(email);
         console.log(userData, "user");
         if (!userData) {
-            throw new customErrors_1.InvalidTokenError('There is no user  with this email');
+            throw new customErrors_1.InvalidTokenError("There is no user  with this email");
         }
         if (!process.env.MAIL_EMAIL) {
             throw new customErrors_1.BadRequestError("admin email is not getting");
@@ -98,37 +98,37 @@ class UserUseCase {
             from: process.env.MAIL_EMAIL,
             to: userData.email,
             subject: "Welcome To Escriber, Our Blog Platform!",
-            text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`
+            text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
         });
     }
     async verifyToken(token) {
         try {
-            logger_1.logger.info('Starting token verification');
+            logger_1.logger.info("Starting token verification");
             const decoded = jsonwebtoken_1.default.verify(token, process.env.REFRESH_TOKEN_SECRET);
             const user = await this._userRepository.findById(decoded.userId);
             if (!user || !user._id) {
-                logger_1.logger.error('User not found or user ID is missing');
-                throw new Error('User not found or user ID is missing');
+                logger_1.logger.error("User not found or user ID is missing");
+                throw new Error("User not found or user ID is missing");
             }
             const userRole = user.role;
             const accessToken = (0, jwtService_1.generateAccessToken)(user._id, userRole);
-            logger_1.logger.info('Token verification successful, returning new tokens');
+            logger_1.logger.info("Token verification successful, returning new tokens");
             return {
                 accessToken,
             };
         }
         catch (error) {
             if (error instanceof jsonwebtoken_1.default.TokenExpiredError) {
-                logger_1.logger.error('Token has expired');
-                throw new Error('Refresh token has expired');
+                logger_1.logger.error("Token has expired");
+                throw new Error("Refresh token has expired");
             }
             else if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
-                logger_1.logger.error('Invalid token');
-                throw new Error('Invalid refresh token');
+                logger_1.logger.error("Invalid token");
+                throw new Error("Invalid refresh token");
             }
             else {
-                logger_1.logger.error('Error verifying token:', error);
-                throw new Error('Token verification failed');
+                logger_1.logger.error("Error verifying token:", error);
+                throw new Error("Token verification failed");
             }
         }
     }
@@ -154,21 +154,22 @@ class UserUseCase {
         return {
             user: existingUser,
             accessToken: accessToken,
-            refreshToken: refreshToken
+            refreshToken: refreshToken,
         };
     }
     async saveProfileImage(imageBuffer, userId) {
         try {
             const user = await this._userRepository.findById(userId);
             if (!user) {
-                throw new customErrors_1.NotFoundError('User not found');
+                throw new customErrors_1.NotFoundError("User not found");
             }
             let existingImageUrl = user.image;
             console.log("existing ", existingImageUrl);
             let existingImageId = null;
             if (existingImageUrl) {
-                const existingImageParts = existingImageUrl.split('/');
-                existingImageId = existingImageParts[existingImageParts.length - 1].split('.')[0];
+                const existingImageParts = existingImageUrl.split("/");
+                existingImageId =
+                    existingImageParts[existingImageParts.length - 1].split(".")[0];
             }
             if (existingImageId) {
                 try {
@@ -179,70 +180,72 @@ class UserUseCase {
                 }
             }
             if (!(imageBuffer instanceof Buffer)) {
-                throw new Error('Invalid image buffer');
+                throw new Error("Invalid image buffer");
             }
             const newImageUrl = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinaryConfig_1.cloudinary.uploader.upload_stream({ resource_type: 'image', folder: 'Escribir_Profile_Images' }, (error, result) => {
+                const uploadStream = cloudinaryConfig_1.cloudinary.uploader.upload_stream({ resource_type: "image", folder: "Escribir_Profile_Images" }, (error, result) => {
                     if (error) {
                         logger_1.logger.error("Cloudinary upload error:", error);
-                        return reject(new Error('Cloudinary upload failed'));
+                        return reject(new Error("Cloudinary upload failed"));
                     }
                     if (result && result.secure_url) {
                         resolve(result.secure_url);
                     }
                     else {
-                        reject(new Error('Failed to get secure URL from Cloudinary response'));
+                        reject(new Error("Failed to get secure URL from Cloudinary response"));
                     }
                 });
                 uploadStream.end(imageBuffer);
             });
             try {
-                await this._userRepository.updateUserDetails(userId, { image: newImageUrl });
+                await this._userRepository.updateUserDetails(userId, {
+                    image: newImageUrl,
+                });
             }
             catch (dbError) {
                 logger_1.logger.error("Database update error:", dbError);
-                throw new Error('Failed to update user image in database');
+                throw new Error("Failed to update user image in database");
             }
             return newImageUrl;
         }
         catch (error) {
             logger_1.logger.info("Error in uploading profile image", error);
-            throw new Error('Failed to upload profile image');
+            throw new Error("Failed to upload profile image");
         }
     }
     async updateProfile(userId, profileData) {
         try {
             const user = await this._userRepository.findById(userId);
             if (!user) {
-                throw new Error('User not found');
+                throw new Error("User not found");
             }
             const updatedUserData = {
                 ...user,
-                ...profileData
+                ...profileData,
             };
             await this._userRepository.updateUserDetails(userId, updatedUserData);
             const updatedUser = await this._userRepository.findById(userId);
             if (!updatedUser) {
-                throw new Error('User is not updated');
+                throw new Error("User is not updated");
             }
             return { user: updatedUser };
         }
         catch (error) {
             logger_1.logger.error("Error updating user profile", error);
-            throw new Error('Failed to update user profile');
+            throw new Error("Failed to update user profile");
         }
     }
     async getProfile(userId) {
         try {
             const user = await this._userRepository.findById(userId);
             if (!user) {
-                throw new Error('User not found');
+                throw new Error("User not found");
             }
             return { user };
         }
         catch (error) {
             logger_1.logger.error("Error fetching user profile:", error);
-            throw new Error('Failed to fetch user profile');
+            throw new Error("Failed to fetch user profile");
         }
     }
     async sendFeedbackEmail(name, email, message) {
@@ -253,7 +256,7 @@ class UserUseCase {
             from: email,
             to: process.env.MAIL_EMAIL,
             subject: "Feed back From User",
-            text: `Hi, iam ${name},  ${message}`
+            text: `Hi, iam ${name},  ${message}`,
         });
         return "sending email successfully";
     }
@@ -261,7 +264,7 @@ class UserUseCase {
     async getAllNotifications(userId) {
         const user = await this._userRepository.findById(userId);
         if (!user) {
-            throw new customErrors_1.NotFoundError('User not found');
+            throw new customErrors_1.NotFoundError("User not found");
         }
         const notifications = await this._notificationRepo.getNotifications(userId);
         return notifications;
@@ -269,11 +272,11 @@ class UserUseCase {
     async sendNotifications(followerId, userId) {
         const user = await this._userRepository.findById(userId);
         if (!user) {
-            throw new customErrors_1.NotFoundError('User not found');
+            throw new customErrors_1.NotFoundError("User not found");
         }
         const follower = await this._userRepository.findById(followerId);
         if (!follower) {
-            throw new customErrors_1.NotFoundError('Follower not found');
+            throw new customErrors_1.NotFoundError("Follower not found");
         }
         const notificationForSender = await this._notificationRepo.sendNotification(followerId, userId, `You are now following ${user.username}`);
         const notificationForReceiver = await this._notificationRepo.sendNotification(userId, followerId, `${follower.username} is now following you`);
