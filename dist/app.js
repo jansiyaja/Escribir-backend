@@ -20,7 +20,7 @@ const createApp = () => {
         origin: ["https://escribir-frontend-xtb3.vercel.app", "http://localhost:5000"],
         credentials: true,
     }));
-    app.use('/users', userRoutes_1.userRouter);
+    app.use('/users', () => console.log(), userRoutes_1.userRouter);
     app.use('/admin', adminRoutes_1.adminRouter);
     app.use('/social', socialRoutes_1.socialRoute);
     app.use('/blog', blogRouter_1.blogRouter);
