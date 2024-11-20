@@ -14,15 +14,7 @@ const createApp = () => {
 
   app.use(express.json());
   app.use(cookieParser());
-  app.use(
-    cors({
-      origin: [
-        "https://escribir-frontend-xtb3.vercel.app",
-        "http://localhost:5000",
-      ],
-      credentials: true,
-    })
-  );
+   app.use(cors({ origin: '*' })); 
 
   app.use("/users", () => console.log(), userRouter);
   app.use("/admin", adminRouter);
