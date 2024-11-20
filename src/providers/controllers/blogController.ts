@@ -17,7 +17,7 @@ export class BlogController implements IBlogController{
   async createBlogPost(req: Request, res: Response): Promise<void> {
         try {
             const { heading, content, tag, status = BlogStatus.DRAFT } = req.body;
-            logger.info('Received create blog request with heading:', heading);
+            
 
             const imageBuffer = req.file?.buffer;
             logger.info('Image buffer received:', imageBuffer ? 'Yes' : 'No');
@@ -61,7 +61,7 @@ export class BlogController implements IBlogController{
 
     async blogEditorImage(req: Request, res: Response): Promise<void> {
         const imageBuffer = req.file?.buffer;
-        logger.info('Received image for editor:', imageBuffer ? 'Yes' : 'No');
+      
 
         if (!imageBuffer) {
             logger.warn('No image uploaded.');
@@ -71,7 +71,7 @@ export class BlogController implements IBlogController{
 
         try {
             const userId = (req as any).user.userId;
-            logger.info('User ID:', userId);
+          
 
             if (!userId) {
                 logger.warn('User not authenticated');
@@ -97,7 +97,7 @@ export class BlogController implements IBlogController{
         try {
             logger.info('Fetching all blogs');
             const blogs = await this._blogUseCase.getAllBlogs();
-            logger.info('Blogs fetched:', blogs);
+           
 
             res.status(HttpStatusCode.OK).json(blogs);
         } catch (error) {
@@ -131,7 +131,7 @@ export class BlogController implements IBlogController{
             }
 
             const singleBlog = await this._blogUseCase.getsingleBlog(id);
-            logger.info('Fetched single blog:', singleBlog);
+           
 
             res.status(HttpStatusCode.OK).json(singleBlog);
         } catch (error) {
@@ -210,7 +210,7 @@ export class BlogController implements IBlogController{
             }
 
             const singleBlog = await this._blogUseCase.getsingleBlog(id);
-            logger.info('Fetched single blog for edit:', singleBlog);
+           
 
             res.status(HttpStatusCode.OK).json(singleBlog);
         } catch (error) {

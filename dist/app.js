@@ -17,17 +17,16 @@ const createApp = () => {
     app.use(express_1.default.json());
     app.use((0, cookie_parser_1.default)());
     app.use((0, cors_1.default)({
-        origin: [
-            "https://escribir-frontend-xtb3.vercel.app",
-            "http://localhost:5000",
-        ],
+        origin: process.env.FRONTEND_URL,
         credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     }));
-    app.use("/users", () => console.log(), userRoutes_1.userRouter);
-    app.use("/admin", adminRoutes_1.adminRouter);
-    app.use("/social", socialRoutes_1.socialRoute);
-    app.use("/blog", blogRouter_1.blogRouter);
-    app.use("/chat", chatRoute_1.chatRoute);
+    app.use('/users', userRoutes_1.userRouter);
+    app.use('/admin', adminRoutes_1.adminRouter);
+    app.use('/social', socialRoutes_1.socialRoute);
+    app.use('/blog', blogRouter_1.blogRouter);
+    app.use('/chat', chatRoute_1.chatRoute);
     app.use(errorHandler_1.errorHandler);
     return app;
 };

@@ -12,7 +12,6 @@ class BlogController {
     async createBlogPost(req, res) {
         try {
             const { heading, content, tag, status = Blog_1.BlogStatus.DRAFT } = req.body;
-            logger_1.logger.info('Received create blog request with heading:', heading);
             const imageBuffer = req.file?.buffer;
             logger_1.logger.info('Image buffer received:', imageBuffer ? 'Yes' : 'No');
             if (!imageBuffer) {
@@ -49,7 +48,6 @@ class BlogController {
     }
     async blogEditorImage(req, res) {
         const imageBuffer = req.file?.buffer;
-        logger_1.logger.info('Received image for editor:', imageBuffer ? 'Yes' : 'No');
         if (!imageBuffer) {
             logger_1.logger.warn('No image uploaded.');
             res.status(400).send('No image uploaded.');
@@ -57,7 +55,6 @@ class BlogController {
         }
         try {
             const userId = req.user.userId;
-            logger_1.logger.info('User ID:', userId);
             if (!userId) {
                 logger_1.logger.warn('User not authenticated');
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
@@ -80,7 +77,6 @@ class BlogController {
         try {
             logger_1.logger.info('Fetching all blogs');
             const blogs = await this._blogUseCase.getAllBlogs();
-            logger_1.logger.info('Blogs fetched:', blogs);
             res.status(httpEnums_1.HttpStatusCode.OK).json(blogs);
         }
         catch (error) {
@@ -110,7 +106,6 @@ class BlogController {
                 return;
             }
             const singleBlog = await this._blogUseCase.getsingleBlog(id);
-            logger_1.logger.info('Fetched single blog:', singleBlog);
             res.status(httpEnums_1.HttpStatusCode.OK).json(singleBlog);
         }
         catch (error) {
@@ -181,7 +176,6 @@ class BlogController {
                 return;
             }
             const singleBlog = await this._blogUseCase.getsingleBlog(id);
-            logger_1.logger.info('Fetched single blog for edit:', singleBlog);
             res.status(httpEnums_1.HttpStatusCode.OK).json(singleBlog);
         }
         catch (error) {
