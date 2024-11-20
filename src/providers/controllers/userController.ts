@@ -39,19 +39,7 @@ export class UserController implements IUserController {
 
             const { user, accessToken, refreshToken } = await this._userUseCase.verifyOTP({ otp, email });
 
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
-                maxAge: 15 * 60 * 1000
-            });
-
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
+          
 
             res.status(HttpStatusCode.OK).json({ user });
         } catch (error) {
@@ -94,13 +82,13 @@ export class UserController implements IUserController {
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
                 maxAge: 15 * 60 * 1000
             });
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
+                 sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
@@ -118,13 +106,13 @@ export class UserController implements IUserController {
             res.clearCookie("accessToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                 sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
             });
 
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                 sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
             });
 
             res.status(HttpStatusCode.OK).json({ message: "Logged out successfully" });
@@ -149,14 +137,14 @@ export class UserController implements IUserController {
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
                 maxAge: 15 * 60 * 1000,
             });
 
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                 sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
 
