@@ -15,7 +15,11 @@ class UserController {
             if (!username || !email || !password) {
                 throw new customErrors_1.BadRequestError("All fields are required: username, email, and password");
             }
-            const newUser = await this._userUseCase.registerUser({ email, password, username });
+            const newUser = await this._userUseCase.registerUser({
+                email,
+                password,
+                username,
+            });
             res.status(httpEnums_1.HttpStatusCode.CREATED).json(newUser);
         }
         catch (error) {
@@ -23,7 +27,11 @@ class UserController {
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError() });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({
+                errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError(),
+            });
         }
     }
     async verifyOTP(req, res) {
@@ -31,26 +39,16 @@ class UserController {
             const { email, otp } = req.body;
             logger_1.logger.info("Verifying OTP for email:", email);
             const { user, accessToken, refreshToken } = await this._userUseCase.verifyOTP({ otp, email });
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
-                maxAge: 15 * 60 * 1000
-            });
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ user });
         }
         catch (error) {
-            logger_1.logger.error('OTP Verification Error:', error);
+            logger_1.logger.error("OTP Verification Error:", error);
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'An unexpected error occurred' });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "An unexpected error occurred" });
         }
     }
     async resendOTP(req, res) {
@@ -58,14 +56,20 @@ class UserController {
             const { email } = req.body;
             logger_1.logger.info("Resending OTP for email:", email);
             await this._userUseCase.resendOTP({ email });
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "OTP resent successfully" });
+            res
+                .status(httpEnums_1.HttpStatusCode.OK)
+                .json({ message: "OTP resent successfully" });
         }
         catch (error) {
             logger_1.logger.error("Error resending OTP:", error);
             if (error instanceof customErrors_1.InvalidTokenError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError() });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({
+                errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError(),
+            });
         }
     }
     async verifyToken(req, res) {
@@ -73,27 +77,31 @@ class UserController {
             const refreshToken = req.cookies.refreshToken;
             logger_1.logger.info("Verifying refresh token");
             if (!refreshToken) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ message: "Refresh token is missing" });
                 return;
             }
             const { accessToken } = await this._userUseCase.verifyToken(refreshToken);
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
-                maxAge: 15 * 60 * 1000
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 15 * 60 * 1000,
             });
-            res.cookie('refreshToken', refreshToken, {
+            res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'none',
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ accessToken, refreshToken });
         }
         catch (error) {
             logger_1.logger.error("Error verifying token:", error);
-            res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
+            res
+                .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                .json({ message: "Invalid refresh token" });
         }
     }
     async logout(req, res) {
@@ -101,19 +109,23 @@ class UserController {
             logger_1.logger.info("Logging out user");
             res.clearCookie("accessToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
             res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "Logged out successfully" });
+            res
+                .status(httpEnums_1.HttpStatusCode.OK)
+                .json({ message: "Logged out successfully" });
         }
         catch (error) {
             logger_1.logger.error("Error during logout:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to log out" });
         }
     }
     async login(req, res) {
@@ -121,20 +133,23 @@ class UserController {
             const { email, password } = req.body;
             logger_1.logger.info("Logging in user:", { email });
             if (!email || !password) {
-                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: "All fields are required: email and password" });
+                res
+                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
+                    .json({ error: "All fields are required: email and password" });
                 return;
             }
             const { user, accessToken, refreshToken } = await this._userUseCase.loginUser({ email, password });
+            console.log(process.env.NODE_ENV, "nodeenv");
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 15 * 60 * 1000,
             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "none",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ user });
@@ -149,12 +164,16 @@ class UserController {
             logger_1.logger.info("Uploading profile image");
             const userId = req.user.userId;
             if (!userId) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ error: "User not authenticated" });
                 return;
             }
             const imageBuffer = req.file?.buffer;
             if (!imageBuffer) {
-                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: 'No image file provided' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
+                    .json({ error: "No image file provided" });
                 return;
             }
             const secureUrl = await this._userUseCase.saveProfileImage(imageBuffer, userId);
@@ -162,7 +181,9 @@ class UserController {
         }
         catch (error) {
             logger_1.logger.error("Error uploading profile image:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to upload profile image" });
         }
     }
     async updateProfile(req, res) {
@@ -170,19 +191,23 @@ class UserController {
             logger_1.logger.info("Updating user profile");
             const userId = req.user.userId;
             if (!userId) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ error: "User not authenticated" });
                 return;
             }
             const profileData = req.body;
             const result = await this._userUseCase.updateProfile(userId, profileData);
             res.status(httpEnums_1.HttpStatusCode.OK).json({
-                message: 'Profile updated successfully',
-                user: result.user
+                message: "Profile updated successfully",
+                user: result.user,
             });
         }
         catch (error) {
             logger_1.logger.error("Error updating profile:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to update profile' });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to update profile" });
         }
     }
     async getProfile(req, res) {
@@ -190,7 +215,9 @@ class UserController {
             logger_1.logger.info("Fetching user profile");
             const userId = req.user.userId;
             if (!userId) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ error: "User not authenticated" });
                 return;
             }
             const users = await this._userUseCase.getProfile(userId);
@@ -198,7 +225,9 @@ class UserController {
         }
         catch (error) {
             logger_1.logger.error("Error fetching user profile:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list users" });
         }
     }
     async friendprofile(req, res) {
@@ -206,7 +235,9 @@ class UserController {
             const { autherId } = req.params;
             logger_1.logger.info("Fetching friend profile for ID:", autherId);
             if (!autherId) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ error: "User not authenticated" });
                 return;
             }
             const users = await this._userUseCase.getProfile(autherId);
@@ -214,7 +245,9 @@ class UserController {
         }
         catch (error) {
             logger_1.logger.error("Error fetching friend profile:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list users" });
         }
     }
     async getAllNotifications(req, res) {
@@ -254,7 +287,11 @@ class UserController {
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError() });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({
+                errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError(),
+            });
         }
     }
 }
