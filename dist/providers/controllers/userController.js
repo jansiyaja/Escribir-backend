@@ -11,6 +11,7 @@ class UserController {
     async register(req, res) {
         try {
             const { username, email, password } = req.body;
+            logger_1.logger.info("Registering user: ", { username, email });
             if (!username || !email || !password) {
                 throw new customErrors_1.BadRequestError("All fields are required: username, email, and password");
             }
@@ -18,6 +19,7 @@ class UserController {
             res.status(httpEnums_1.HttpStatusCode.CREATED).json(newUser);
         }
         catch (error) {
+            logger_1.logger.error("Error during user registration:", error);
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
@@ -27,47 +29,49 @@ class UserController {
     async verifyOTP(req, res) {
         try {
             const { email, otp } = req.body;
+            logger_1.logger.info("Verifying OTP for email:", email);
             const { user, accessToken, refreshToken } = await this._userUseCase.verifyOTP({ otp, email });
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: 'none',
                 maxAge: 15 * 60 * 1000
             });
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: 'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ user, });
+            res.status(httpEnums_1.HttpStatusCode.OK).json({ user });
         }
         catch (error) {
+            logger_1.logger.error('OTP Verification Error:', error);
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            logger_1.logger.error('OTP Verification Error:', error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'An unexpected error occurred' });
         }
     }
     async resendOTP(req, res) {
-        logger_1.logger.info("resent otp  controller");
         try {
             const { email } = req.body;
+            logger_1.logger.info("Resending OTP for email:", email);
             await this._userUseCase.resendOTP({ email });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "OTP resent successfully" });
         }
         catch (error) {
+            logger_1.logger.error("Error resending OTP:", error);
             if (error instanceof customErrors_1.InvalidTokenError) {
                 res.status(error.statusCode).json({ error: error.message });
             }
-            logger_1.logger.error("Internal Server Error:", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError() });
         }
     }
     async verifyToken(req, res) {
         try {
             const refreshToken = req.cookies.refreshToken;
+            logger_1.logger.info("Verifying refresh token");
             if (!refreshToken) {
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
                 return;
@@ -76,69 +80,77 @@ class UserController {
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 15 * 60 * 1000
             });
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ accessToken });
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'none',
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            });
+            res.status(httpEnums_1.HttpStatusCode.OK).json({ accessToken, refreshToken });
         }
         catch (error) {
+            logger_1.logger.error("Error verifying token:", error);
             res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
         }
     }
     async logout(req, res) {
         try {
+            logger_1.logger.info("Logging out user");
             res.clearCookie("accessToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
             });
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "Logged out successfully" });
         }
         catch (error) {
+            logger_1.logger.error("Error during logout:", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
         }
     }
     async login(req, res) {
         try {
-            console.log("");
-            logger_1.logger.info("inside the login");
             const { email, password } = req.body;
+            logger_1.logger.info("Logging in user:", { email });
             if (!email || !password) {
-                res
-                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
-                    .json({ error: "All fields are required: email and password" });
+                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: "All fields are required: email and password" });
                 return;
             }
             const { user, accessToken, refreshToken } = await this._userUseCase.loginUser({ email, password });
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 15 * 60 * 1000,
             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                sameSite: "none",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ user });
         }
         catch (error) {
+            logger_1.logger.error("Error during login:", error);
             res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error });
         }
     }
     async profileImageUpload(req, res) {
-        logger_1.logger.info("inside the profile image controller");
         try {
+            logger_1.logger.info("Uploading profile image");
             const userId = req.user.userId;
             if (!userId) {
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                return;
             }
             const imageBuffer = req.file?.buffer;
             if (!imageBuffer) {
@@ -149,14 +161,17 @@ class UserController {
             res.status(httpEnums_1.HttpStatusCode.OK).json({ secureUrl });
         }
         catch (error) {
+            logger_1.logger.error("Error uploading profile image:", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload profile image' });
         }
     }
     async updateProfile(req, res) {
         try {
+            logger_1.logger.info("Updating user profile");
             const userId = req.user.userId;
             if (!userId) {
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                return;
             }
             const profileData = req.body;
             const result = await this._userUseCase.updateProfile(userId, profileData);
@@ -166,37 +181,39 @@ class UserController {
             });
         }
         catch (error) {
-            logger_1.logger.error('Error updating profile:', error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-                error: 'Failed to update profile',
-            });
+            logger_1.logger.error("Error updating profile:", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: 'Failed to update profile' });
         }
     }
     async getProfile(req, res) {
         try {
+            logger_1.logger.info("Fetching user profile");
             const userId = req.user.userId;
             if (!userId) {
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                return;
             }
             const users = await this._userUseCase.getProfile(userId);
             res.status(httpEnums_1.HttpStatusCode.OK).json(users);
         }
         catch (error) {
-            logger_1.logger.error("Error listing users:", error);
+            logger_1.logger.error("Error fetching user profile:", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
         }
     }
     async friendprofile(req, res) {
         try {
             const { autherId } = req.params;
+            logger_1.logger.info("Fetching friend profile for ID:", autherId);
             if (!autherId) {
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ error: 'User not authenticated' });
+                return;
             }
             const users = await this._userUseCase.getProfile(autherId);
             res.status(httpEnums_1.HttpStatusCode.OK).json(users);
         }
         catch (error) {
-            logger_1.logger.error("Error listing users:", error);
+            logger_1.logger.error("Error fetching friend profile:", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
         }
     }
