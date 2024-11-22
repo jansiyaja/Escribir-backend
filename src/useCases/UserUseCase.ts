@@ -133,7 +133,7 @@ export class UserUseCase implements IUserUseCase {
     await this._otpRepository.updateOtp(email, otp);
 
     const userData = await this._userRepository.findByEmail(email);
-    console.log(userData, "user");
+  
 
     if (!userData) {
       throw new InvalidTokenError("There is no user  with this email");
