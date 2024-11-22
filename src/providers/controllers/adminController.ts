@@ -106,7 +106,7 @@ export class AdminController implements IAdminController {
     }
     
     async blockUser(req: Request, res: Response): Promise<void> {
-        console.log("iam here in the block user ",req.body);
+       
         
         try {
             const { userId } = req.body;
