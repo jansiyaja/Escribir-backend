@@ -27,15 +27,15 @@ export class AdminController implements IAdminController {
 
            res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 15 * 60 * 1000,
           });
           
           res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
             
@@ -52,14 +52,14 @@ export class AdminController implements IAdminController {
 
             res.clearCookie("accessToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
               });
         
               res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
               });
 
                  
@@ -83,8 +83,8 @@ export class AdminController implements IAdminController {
           
            res.cookie("accessToken",accessToken,{
             httpOnly:true,
-            secure:process.env.NODE_ENV === "production",
-            sameSite:"strict",
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge:15*60*1000
            });
 
@@ -106,7 +106,7 @@ export class AdminController implements IAdminController {
     }
     
     async blockUser(req: Request, res: Response): Promise<void> {
-       
+        console.log("iam here in the block user ",req.body);
         
         try {
             const { userId } = req.body;
