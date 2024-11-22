@@ -20,7 +20,7 @@ export class BlogController implements IBlogController{
             
 
             const imageBuffer = req.file?.buffer;
-            logger.info('Image buffer received:', imageBuffer ? 'Yes' : 'No');
+          
 
             if (!imageBuffer) {
                 logger.warn('No image uploaded.');
@@ -39,7 +39,7 @@ export class BlogController implements IBlogController{
 
             logger.info('Uploading image to S3');
             const imageKey = await this._blogUseCase.uploadImageToS3(imageBuffer, userId);
-            logger.info('Image uploaded to S3 with key:', imageKey);
+          
 
             logger.info('Creating new blog post');
             const newBlogPost = await this._blogUseCase.createBlogPost({
@@ -51,7 +51,7 @@ export class BlogController implements IBlogController{
                 coverImageUrl: imageKey
             });
 
-            logger.info('New blog post created:', newBlogPost);
+          
             res.status(201).json(newBlogPost);
         } catch (error) {
             logger.error('Error creating blog post:', error);
@@ -110,8 +110,7 @@ export class BlogController implements IBlogController{
         try {
             logger.info('Fetching all tags');
             const tags = await this._blogUseCase.getAllTags();
-            logger.info('Tags fetched:', tags);
-
+         
             res.status(HttpStatusCode.OK).json(tags);
         } catch (error) {
             logger.error('Error listing tags:', error);
@@ -152,7 +151,7 @@ export class BlogController implements IBlogController{
             }
 
             const userBlogs = await this._blogUseCase.userBlogs(userId);
-            logger.info('Fetched user blogs:', userBlogs);
+          
 
             res.status(HttpStatusCode.OK).json(userBlogs);
         } catch (error) {
@@ -173,7 +172,7 @@ export class BlogController implements IBlogController{
 
         try {
             const deletedTag = await this._blogUseCase.deletePost(id);
-            logger.info('Blog post deleted:', deletedTag);
+          
 
             res.status(HttpStatusCode.OK).json(deletedTag);
         } catch (error) {
@@ -189,7 +188,7 @@ export class BlogController implements IBlogController{
 
         try {
             const updatedPost = await this._blogUseCase.updateBlog(id, blogPostData);
-            logger.info('Blog post updated:', updatedPost);
+           
 
             res.status(HttpStatusCode.OK).json(updatedPost);
         } catch (error) {
@@ -227,7 +226,7 @@ export class BlogController implements IBlogController{
 
             const { reason } = req.body;
             const reportedBlog = await this._blogUseCase.reportBlog(id, userId.toString(), reason);
-            logger.info('Blog reported:', reportedBlog);
+           
 
             res.status(200).json(reportedBlog);
         } catch (error) {
