@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserUseCase = void 0;
+const stripe_1 = __importDefault(require("stripe"));
 const cloudinaryConfig_1 = require("../framework/config/cloudinaryConfig");
 const customErrors_1 = require("../framework/errors/customErrors");
 const jwtService_1 = require("../framework/services/jwtService");
@@ -164,7 +165,6 @@ class UserUseCase {
                 throw new customErrors_1.NotFoundError("User not found");
             }
             let existingImageUrl = user.image;
-            console.log("existing ", existingImageUrl);
             let existingImageId = null;
             if (existingImageUrl) {
                 const existingImageParts = existingImageUrl.split("/");
@@ -236,6 +236,7 @@ class UserUseCase {
         }
     }
     async getProfile(userId) {
+        console.log("id", userId);
         try {
             const user = await this._userRepository.findById(userId);
             if (!user) {
@@ -259,6 +260,95 @@ class UserUseCase {
             text: `Hi, iam ${name},  ${message}`,
         });
         return "sending email successfully";
+    }
+    async makePayment(plan, userId, email) {
+        console.log("iam callaing");
+        const key = process.env.SECRETKEY;
+        const stripe = new stripe_1.default(key);
+        const priceMapping = {
+            monthly: { id: 'price_1QPW8BAQCNLhi0WMzi5InXwT', amount: 10 },
+            yearly: { id: 'price_1QPW8BAQCNLhi0WMeTD6XQyF', amount: 100 },
+        };
+        const selectedPlan = priceMapping[plan];
+        if (!selectedPlan) {
+            throw new Error('Invalid plan selected.');
+        }
+        const { id: priceId, amount } = selectedPlan;
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'subscription',
+            line_items: [
+                {
+                    price: priceId,
+                    quantity: 1,
+                },
+            ],
+            customer_email: email,
+            success_url: `http://localhost:5000/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
+            cancel_url: `http://localhost:5000/paymentcancelled`,
+            metadata: { userId },
+        });
+        return session.url || session.id;
+    }
+    async upadateData(plan, userId, orderId, amount, email) {
+        const user = await this._userRepository.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const startDate = new Date();
+        const lastPaymentDate = startDate;
+        let endDate;
+        if (plan === 'monthly') {
+            endDate = new Date(startDate);
+            endDate.setMonth(startDate.getMonth() + 1);
+        }
+        else if (plan === 'yearly') {
+            endDate = new Date(startDate);
+            endDate.setFullYear(startDate.getFullYear() + 1);
+        }
+        else {
+            throw new Error('Invalid plan selected');
+        }
+        const subscription = await this._userRepository.addSubscription(userId, plan, "active", amount, startDate, endDate, lastPaymentDate, orderId);
+        const subscriptionId = subscription._id;
+        await this._userRepository.updateUserDetails(userId, {
+            subscriptionId: subscriptionId.toString(),
+            isPremium: true
+        });
+        if (!process.env.MAIL_EMAIL) {
+            throw new customErrors_1.BadRequestError("admin email is not getting");
+        }
+        await this._emailServices.sendEmail({
+            from: process.env.MAIL_EMAIL,
+            to: email,
+            subject: "Welcome to Escriber Premium Membership",
+            html: `
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+      <h1>Welcome to Escriber Premium Membership</h1>
+      
+      <p style="color: #333;">Dear Madam,</p>
+      
+      <p>We are thrilled to welcome you as a new premium member of Escriber! Enjoy your upgraded experience:</p>
+      
+      <ul style="padding-left: 20px;">
+        <li>Ad-free blog experience</li>
+        <li>Premium customer support</li>
+        <li>Enhanced connection via calls</li>
+      </ul>
+      
+      <p style="color: #0066cc; font-weight: bold;">Thank you for choosing Escriber Premium!</p>
+      
+      <p style="font-size: 14px; color: #666;">Best regards,<br>The Escriber Team</p>
+    </div>
+  `
+        });
+        return "complted sucessfully";
+    }
+    async suscribeUser(userId) {
+        console.log("inside the ssuscribeUser");
+        const suscribeUser = await this._userRepository.findSubscriptionByUserId(userId);
+        console.log(suscribeUser, "suscribeUser");
+        return suscribeUser;
     }
     //-------------------------------------------------------------------------------------------------------------------------------------------//
     async getAllNotifications(userId) {

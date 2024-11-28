@@ -3,6 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupSocket = void 0;
 const socket_io_1 = require("socket.io");
 const userSockets = new Map();
+const offers = [
+// offererUserName
+// offer
+// offerIceCandidates
+// answererUserName
+// answer
+// answererIceCandidates
+];
+const connectedSockets = [
+//username, socketId
+];
 const messageNotificationCounts = new Map();
 const reactionEmojis = {
     Like: "👍",
@@ -14,7 +25,7 @@ const reactionEmojis = {
 const setupSocket = (server) => {
     const io = new socket_io_1.Server(server, {
         cors: {
-            origin: process.env.FRONTEND_URL || "http://localhost:5000",
+            origin: "http://localhost:5000",
             methods: ["GET", "POST"],
             credentials: true,
         },
@@ -23,6 +34,16 @@ const setupSocket = (server) => {
         socket.on("login", (userDetails) => {
             const { userId } = userDetails;
             userSockets.set(userId, { socketId: socket.id, userDetails });
+            const userName = socket.handshake.auth.userName;
+            const password = socket.handshake.auth.password;
+            if (password !== "x") {
+                socket.disconnect(true);
+                return;
+            }
+            connectedSockets.push({
+                socketId: socket.id,
+                userName
+            });
         });
         socket.on("reaction", ({ userId, postAuthorId, reactionType }) => {
             const postAuthorSocket = userSockets.get(postAuthorId);
@@ -88,37 +109,50 @@ const setupSocket = (server) => {
                 console.log(`No socket found for receiverId: ${receiverId}`);
             }
         });
-        socket.on("call-user", ({ receiverId, offer, callType }) => {
+        // Handle incoming call
+        socket.on('call-user', ({ receiverId, offer, callType }) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket) {
-                io.to(receiverSocket.socketId).emit("receive-call", {
-                    from: receiverId,
+                io.to(receiverSocket.socketId).emit('receive-call', {
+                    from: socket.id, // Sending the caller's socket ID
                     offer,
                     callType,
                 });
+                console.log(`Call from ${socket.id} to ${receiverId}`);
             }
             else {
                 console.log(`Receiver ${receiverId} is not connected`);
             }
         });
-        socket.on("answer-call", ({ from, answer, callType }) => {
+        // Handle call answer
+        socket.on('answer-call', ({ from, answer, callType }) => {
             if (!answer) {
                 console.error("Error: Missing answer in 'answer-call' event.");
                 return;
             }
-            socket.to(from).emit("call-answered", { answer });
+            // Emit the answer to the caller
+            socket.to(from).emit('call-answered', { answer });
+            console.log(`Call answered by ${socket.id} from ${from}`);
         });
-        socket.on("ice-candidate", ({ receiverId, candidate }) => {
+        // Handle ICE candidates
+        socket.on('ice-candidate', ({ receiverId, candidate }) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket && candidate) {
-                io.to(receiverSocket.socketId).emit("ice-candidate", { candidate });
+                io.to(receiverSocket.socketId).emit('ice-candidate', { candidate });
+            }
+            else {
+                console.log(`No receiver for ICE candidate: ${receiverId}`);
             }
         });
-        socket.on("end-callactivate", ({ receiverId }) => {
+        // Handle ending the call
+        socket.on('end-call', ({ receiverId }) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket) {
-                io.to(receiverSocket.socketId).emit("call-ended");
-                console.log("end called", receiverId);
+                io.to(receiverSocket.socketId).emit('call-ended');
+                console.log(`Call ended by ${socket.id} with ${receiverId}`);
+            }
+            else {
+                console.log(`Receiver ${receiverId} not found when ending the call`);
             }
         });
         socket.on("disconnect", () => {

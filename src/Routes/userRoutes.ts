@@ -5,9 +5,7 @@ import { uploadProfileImage } from '../framework/config/multerConfig';
 
 export const userRouter = express.Router();
 
-userRouter.get("/test", (req,res) => {
-    res.send({message : "uccesfully hosted"})
-})
+
 
 userRouter.post('/register',  (req: Request, res: Response) => userController.register(req,res));
 userRouter.post('/verify-otp', (req: Request, res: Response) => userController.verifyOTP(req, res));
@@ -21,7 +19,10 @@ userRouter.post('/logout',(req: Request, res: Response)=>userController.logout(r
  userRouter.post('/profile',authenticateToken,(req:Request,res:Response)=>userController.updateProfile(req,res));
  userRouter.get('/profile',authenticateToken,(req:Request,res:Response)=>userController.getProfile(req,res));
  userRouter.post('/feedback', authenticateToken, (req: Request, res: Response) => userController.feedback(req, res));
- userRouter.get('/connectionProfile/:autherId/', authenticateToken, (req: Request, res: Response) => userController.friendprofile(req, res));
+userRouter.get('/connectionProfile/:autherId/', authenticateToken, (req: Request, res: Response) => userController.friendprofile(req, res));
+ userRouter.post('/makePayment',authenticateToken,(req: Request, res: Response) => userController.makePayment(req,res))
+userRouter.post('/paymentUpdate', authenticateToken, (req: Request, res: Response) => userController.paymentSuccess(req, res))
+ userRouter.get('/user-subscription',authenticateToken,(req: Request, res: Response) => userController.user_subscription(req, res))
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 

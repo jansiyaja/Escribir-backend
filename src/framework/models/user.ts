@@ -54,7 +54,13 @@ const UserSchema: Schema = new Schema(
       },
     github: { 
       type: String
-     },
+    },
+     isPremium: { type: Boolean, default: false }, 
+    subscriptionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subscription', 
+      default: null,
+    },
   },
   {
     timestamps: true, 

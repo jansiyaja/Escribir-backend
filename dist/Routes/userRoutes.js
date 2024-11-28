@@ -9,9 +9,6 @@ const dependencyResolver_1 = require("../framework/utils/dependencyResolver");
 const tokenValidator_1 = require("../framework/middleWares/tokenValidator");
 const multerConfig_1 = require("../framework/config/multerConfig");
 exports.userRouter = express_1.default.Router();
-exports.userRouter.get("/test", (req, res) => {
-    res.send({ message: "uccesfully hosted" });
-});
 exports.userRouter.post('/register', (req, res) => dependencyResolver_1.userController.register(req, res));
 exports.userRouter.post('/verify-otp', (req, res) => dependencyResolver_1.userController.verifyOTP(req, res));
 exports.userRouter.post('/verify-token', tokenValidator_1.authenticateRefreshToken, (req, res) => dependencyResolver_1.userController.verifyToken(req, res));
@@ -24,6 +21,9 @@ exports.userRouter.post('/profile', tokenValidator_1.authenticateToken, (req, re
 exports.userRouter.get('/profile', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.getProfile(req, res));
 exports.userRouter.post('/feedback', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.feedback(req, res));
 exports.userRouter.get('/connectionProfile/:autherId/', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.friendprofile(req, res));
+exports.userRouter.post('/makePayment', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.makePayment(req, res));
+exports.userRouter.post('/paymentUpdate', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.paymentSuccess(req, res));
+exports.userRouter.get('/user-subscription', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.user_subscription(req, res));
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 exports.userRouter.get('/notifications', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.getAllNotifications(req, res));

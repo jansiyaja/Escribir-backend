@@ -188,14 +188,8 @@ class UserController {
     }
     async updateProfile(req, res) {
         try {
-            logger_1.logger.info("Updating user profile");
-            const userId = req.user.userId;
-            if (!userId) {
-                res
-                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
-                    .json({ error: "User not authenticated" });
-                return;
-            }
+            const userId = (req.body._id);
+            console.log("updateProfile", userId);
             const profileData = req.body;
             const result = await this._userUseCase.updateProfile(userId, profileData);
             res.status(httpEnums_1.HttpStatusCode.OK).json({
@@ -214,12 +208,7 @@ class UserController {
         try {
             logger_1.logger.info("Fetching user profile");
             const userId = req.user.userId;
-            if (!userId) {
-                res
-                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
-                    .json({ error: "User not authenticated" });
-                return;
-            }
+            console.log("getprofile", userId);
             const users = await this._userUseCase.getProfile(userId);
             res.status(httpEnums_1.HttpStatusCode.OK).json(users);
         }
@@ -292,6 +281,51 @@ class UserController {
                 .json({
                 errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError(),
             });
+        }
+    }
+    async makePayment(req, res) {
+        try {
+            const { plan, email } = req.body;
+            const userId = req.user.userId;
+            if (!plan || !userId) {
+                throw new customErrors_1.BadRequestError("Plan and User ID are required.");
+            }
+            const sessionId = await this._userUseCase.makePayment(plan, userId, email);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(sessionId);
+        }
+        catch (error) {
+            logger_1.logger.error("Error sending session id:", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async paymentSuccess(req, res) {
+        console.log("iam here payment sucess page");
+        try {
+            const { amount, orderId, customerEmail } = req.body;
+            const plan = amount === 10 ? 'monthly' : 'yearly';
+            const userId = req.user.userId;
+            const paymentSuccess = await this._userUseCase.upadateData(plan, userId, orderId, amount, customerEmail);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(paymentSuccess);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in paymentSuccess:", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async user_subscription(req, res) {
+        console.log("user ususususu");
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const user_subscription = await this._userUseCase.suscribeUser(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(user_subscription);
+            console.log("user SUScrtp");
+        }
+        catch (error) {
+            logger_1.logger.error("Error in getting user_subscription", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
 }

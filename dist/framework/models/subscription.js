@@ -24,62 +24,41 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const UserSchema = new mongoose_1.Schema({
-    username: { type: String,
-        require: true
-    },
-    email: { type: String,
-        unique: true,
-        require: true },
-    password: { type: String,
-        require: true
-    },
-    bio: { type: String,
-        require: true
-    },
-    dob: { type: Date,
-        require: true
-    },
-    role: {
-        type: String,
-        enum: ['client', 'user'],
-        default: 'user'
-    },
-    image: {
-        type: String
-    },
-    isActive: {
-        type: Boolean,
-        default: true
-    },
-    isVerified: {
-        type: Boolean,
-        default: false,
-    },
-    isBlock: {
-        type: Boolean,
-        default: false,
-    },
-    location: {
-        type: String
-    },
-    linkedIn: {
-        type: String
-    },
-    portfolio: {
-        type: String
-    },
-    github: {
-        type: String
-    },
-    isPremium: { type: Boolean, default: false },
-    subscriptionId: {
+const SubscriptionSchema = new mongoose_1.Schema({
+    userId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Subscription',
-        default: null,
+        ref: 'User',
+        required: true,
     },
+    plan: {
+        type: String,
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ['active', 'expired', 'none'],
+        required: true,
+        default: "none",
+    },
+    startDate: {
+        type: Date,
+        required: true,
+    },
+    endDate: {
+        type: Date,
+        required: true,
+    },
+    amount: {
+        type: Number,
+        default: 0,
+    },
+    lastPaymentDate: {
+        type: Date,
+    },
+    stripeId: {
+        type: String
+    }
 }, {
     timestamps: true,
 });
-const UserModel = mongoose_1.default.model('User', UserSchema);
-exports.default = UserModel;
+exports.default = mongoose_1.default.model('Subscription', SubscriptionSchema);
