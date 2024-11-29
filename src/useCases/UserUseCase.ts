@@ -25,6 +25,8 @@ import { IUserUseCase } from "../interfaces/usecases/IUserUseCase";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { ISubscription } from "../entities/ISubscription";
+import speakeasy from "speakeasy";
+import QRCode from "qrcode";
 
 export class UserUseCase implements IUserUseCase {
   constructor(
@@ -33,7 +35,7 @@ export class UserUseCase implements IUserUseCase {
     private _emailServices: IEmailService,
     private _otpRepository: IOTPVerificationRepository,
     private _notificationRepo: INotificationRepository
-  ) {}
+  ) { }
 
   async registerUser(userData: Partial<IUser>): Promise<{ user: IUser }> {
     logger.info("checking existing user");
@@ -233,7 +235,6 @@ export class UserUseCase implements IUserUseCase {
       }
 
       let existingImageUrl = user.image;
-     
 
       let existingImageId = null;
 
@@ -292,7 +293,10 @@ export class UserUseCase implements IUserUseCase {
     }
   }
 
-  async updateProfile(userId: string,profileData: Partial<IUser>): Promise<{ user: IUser }> {
+  async updateProfile(
+    userId: string,
+    profileData: Partial<IUser>
+  ): Promise<{ user: IUser }> {
     try {
       const user = await this._userRepository.findById(userId);
       if (!user) {
@@ -319,8 +323,8 @@ export class UserUseCase implements IUserUseCase {
   }
 
   async getProfile(userId: string): Promise<{ user: IUser }> {
-    console.log("id",userId);
-    
+    console.log("id", userId);
+
     try {
       const user = await this._userRepository.findById(userId);
 
@@ -354,85 +358,96 @@ export class UserUseCase implements IUserUseCase {
     return "sending email successfully";
   }
 
-
-  async makePayment(plan: string, userId: string, email: string): Promise<string> {
+  async makePayment(
+    plan: string,
+    userId: string,
+    email: string
+  ): Promise<string> {
     console.log("iam callaing");
-    
-    const key = process.env.SECRETKEY
-   
-    
+
+    const key = process.env.SECRETKEY;
+
     const stripe = new Stripe(key!);
-    
-  
-  const priceMapping: Record<string, { id: string; amount: number }> = {
-    monthly: { id: 'price_1QPW8BAQCNLhi0WMzi5InXwT', amount: 10 }, 
-    yearly: { id: 'price_1QPW8BAQCNLhi0WMeTD6XQyF', amount: 100 }, 
-  };
- const selectedPlan = priceMapping[plan];
-  if (!selectedPlan) {
-    throw new Error('Invalid plan selected.');
-  }
 
-  const { id: priceId, amount } = selectedPlan;
-
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    mode: 'subscription',
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
-    customer_email: email,
-    success_url: `http://localhost:5000/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
-    cancel_url: `http://localhost:5000/paymentcancelled`,
-    metadata: { userId },
-  });
-
-
-  return session.url || session.id;
- 
-  }
-   
-  async upadateData(plan: string, userId: string, orderId: string, amount: number,email:string): Promise<string> {
-
-      const user = await this._userRepository.findById(userId);
-      if (!user) {
-        throw new Error("User not found");
+    const priceMapping: Record<string, { id: string; amount: number }> = {
+      monthly: { id: "price_1QPW8BAQCNLhi0WMzi5InXwT", amount: 10 },
+      yearly: { id: "price_1QPW8BAQCNLhi0WMeTD6XQyF", amount: 100 },
+    };
+    const selectedPlan = priceMapping[plan];
+    if (!selectedPlan) {
+      throw new Error("Invalid plan selected.");
     }
-    
+
+    const { id: priceId, amount } = selectedPlan;
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "subscription",
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      customer_email: email,
+      success_url: `http://localhost:5000/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
+      cancel_url: `http://localhost:5000/paymentcancelled`,
+      metadata: { userId },
+    });
+
+    return session.url || session.id;
+  }
+
+  async upadateData(
+    plan: string,
+    userId: string,
+    orderId: string,
+    amount: number,
+    email: string
+  ): Promise<string> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     const startDate = new Date();
-    const lastPaymentDate= startDate
-     let endDate: Date;
-    if (plan === 'monthly') {
-      
+    const lastPaymentDate = startDate;
+    let endDate: Date;
+    if (plan === "monthly") {
       endDate = new Date(startDate);
       endDate.setMonth(startDate.getMonth() + 1);
-    } else if (plan === 'yearly') {
-   
+    } else if (plan === "yearly") {
       endDate = new Date(startDate);
       endDate.setFullYear(startDate.getFullYear() + 1);
     } else {
-      throw new Error('Invalid plan selected');
+      throw new Error("Invalid plan selected");
     }
-    const subscription= await this._userRepository.addSubscription(userId,plan,"active",amount,startDate,endDate,lastPaymentDate,orderId)
-    const subscriptionId = subscription._id
+    const subscription = await this._userRepository.addSubscription(
+      userId,
+      plan,
+      "active",
+      amount,
+      startDate,
+      endDate,
+      lastPaymentDate,
+      orderId
+    );
+    const subscriptionId = subscription._id;
 
-     await this._userRepository.updateUserDetails(userId, {
-       subscriptionId: subscriptionId.toString(),
-       isPremium:true
-     });
-    
-     if (!process.env.MAIL_EMAIL) {
+    await this._userRepository.updateUserDetails(userId, {
+      subscriptionId: subscriptionId.toString(),
+      isPremium: true,
+    });
+
+    if (!process.env.MAIL_EMAIL) {
       throw new BadRequestError("admin email is not getting");
     }
-    
-  await this._emailServices.sendEmail({
-  from: process.env.MAIL_EMAIL,
-  to: email,
-  subject: "Welcome to Escriber Premium Membership",
-  html: `
+
+    await this._emailServices.sendEmail({
+      from: process.env.MAIL_EMAIL,
+      to: email,
+      subject: "Welcome to Escriber Premium Membership",
+      html: `
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
       <h1>Welcome to Escriber Premium Membership</h1>
       
@@ -450,21 +465,189 @@ export class UserUseCase implements IUserUseCase {
       
       <p style="font-size: 14px; color: #666;">Best regards,<br>The Escriber Team</p>
     </div>
-  `
-});
+  `,
+    });
 
-
-    return "complted sucessfully"
-    
+    return "complted sucessfully";
   }
 
   async suscribeUser(userId: string): Promise<ISubscription | null> {
-     
-      
-    const suscribeUser = await this._userRepository.findSubscriptionByUserId(userId);
-   
-    
-      return suscribeUser
+    const suscribeUser = await this._userRepository.findSubscriptionByUserId(
+      userId
+    );
+
+    return suscribeUser;
+  }
+
+  async passwordUpdate(
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<string> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const isMatch = await this._hashService.compare(
+      currentPassword!,
+      user.password!
+    );
+
+    if (!isMatch) {
+      throw new Error("Invalid password");
+    }
+    const hashedPassword = await this._hashService.hash(newPassword!);
+    await this._userRepository.updateUserDetails(userId, {
+      password: hashedPassword,
+    });
+    return "password updated correctly";
+  }
+
+  async generate2FA(
+    userId: string
+  ): Promise<{
+    secret: string;
+    otpauth_url: string;
+    qrCodeUrl: string | undefined;
+  }> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const secret = speakeasy.generateSecret({
+      name: `escribir(${userId})`,
+      length: 20,
+    });
+
+    await this._userRepository.updateUserDetails(userId, {
+      twoFactorSecret: secret.base32,
+    });
+    const otpauth_url = secret.otpauth_url;
+    if (!otpauth_url) {
+      throw new Error("Invalid otpauth_url");
+    }
+
+    const qrCodeUrl = await QRCode.toDataURL(otpauth_url);
+    return { secret: secret.base32, qrCodeUrl, otpauth_url };
+  }
+
+  async verify2FA(userId: string, token: string): Promise<string> {
+    const user = await this._userRepository.findById(userId);
+
+    if (!user || !user.twoFactorSecret) {
+      throw new Error("User not found or 2FA not set up");
+    }
+    const isVerified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token,
+      window: 1,
+    });
+    if (isVerified) {
+      await this._userRepository.updateUserDetails(userId, {
+        twoFactorEnabled: true,
+      });
+    }
+    return "2FA verification successful";
+  }
+  async disable2FA(userId: string): Promise<string> {
+    const user = await this._userRepository.findById(userId);
+
+    if (!user || !user.twoFactorSecret) {
+      throw new Error("User not found or 2FA not set up");
+    }
+    await this._userRepository.updateUserDetails(userId, {
+      twoFactorEnabled: false,
+      twoFactorSecret: " ",
+    });
+    return "Two-Factor Authentication has been disabled successfully.";
+  }
+
+  async sendingEmail(userId: string): Promise<string> {
+
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const otp = crypto.randomInt(100000, 1000000).toString();
+    console.log(otp);
+    const email = user.email
+    if (!email) throw new Error("User email found");
+
+    const newOtp = { otp: otp, email: email };
+    await this._otpRepository.create(newOtp);
+
+    if (!process.env.MAIL_EMAIL) {
+      throw new BadRequestError("admin email is not getting");
+    }
+
+    await this._emailServices.sendEmail({
+      from: process.env.MAIL_EMAIL,
+      to: user.email!,
+      subject: "Welcome To Escriber, Our Blog Platform!",
+      text: `Hi ${user.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
+    });
+    return "otp sended successfully"
+  }
+  async verifyingOtp(userId: string, otp: string): Promise<string> {
+
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const email = user.email
+    if (!email) throw new Error("User email not found");
+
+    logger.info("Verifying OTP for email", { email });
+
+    const otpVerification = await this._otpRepository.findByUserByEmail(email);
+    if (!otpVerification) {
+      throw new BadRequestError("No OTP record found for this email");
+    }
+
+    const otpCreatedAt = otpVerification.createdAt;
+    if (!otpCreatedAt) {
+      throw new InternalServerError("OTP creation time is missing");
+    }
+
+    const currentTime = new Date();
+    const hourDifference = (currentTime.getTime() - otpCreatedAt.getTime()) / (1000 * 60 * 60);
+    if (hourDifference > 1) {
+
+      throw new BadRequestError("OTP expired. Please request a new OTP.");
+    }
+    console.log("otpVerification", otpVerification.otp);
+    console.log("entered", otp);
+
+
+
+    if (otpVerification.otp !== otp) {
+      throw new BadRequestError("Invalid OTP provided");
+    }
+
+
+    await this._otpRepository.deleteByUserId(email);
+
+
+
+
+
+    return "verified";
+
+
+  }
+  async accountDelete(userId: string): Promise<string> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    await this._userRepository.delete(userId);
+    console.log("deleted");
+    return "user delated successfully"
+
   }
 
   //-------------------------------------------------------------------------------------------------------------------------------------------//
@@ -505,5 +688,4 @@ export class UserUseCase implements IUserUseCase {
       );
     return;
   }
-
 }

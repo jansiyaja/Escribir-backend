@@ -313,7 +313,6 @@ class UserController {
         }
     }
     async user_subscription(req, res) {
-        console.log("user ususususu");
         try {
             const userId = req.user.userId;
             if (!userId) {
@@ -321,10 +320,111 @@ class UserController {
             }
             const user_subscription = await this._userUseCase.suscribeUser(userId);
             res.status(httpEnums_1.HttpStatusCode.CREATED).json(user_subscription);
-            console.log("user SUScrtp");
         }
         catch (error) {
             logger_1.logger.error("Error in getting user_subscription", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async updatePassword(req, res) {
+        try {
+            const { currentPassword, newPassword } = req.body;
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const user_subscription = await this._userUseCase.passwordUpdate(userId, currentPassword, newPassword);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(user_subscription);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in updating password", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async generateqr(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const result = await this._userUseCase.generate2FA(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(result);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in generateqr", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async verify2FA(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const { token } = req.body;
+            const verify2FA = await this._userUseCase.verify2FA(userId, token);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(verify2FA);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in verify2FA", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async disable2FA(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const result = await this._userUseCase.disable2FA(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(result);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in disable2FA", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async sendingEmail(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const sendingEmail = await this._userUseCase.sendingEmail(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(sendingEmail);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in sending Email", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async verifyingOtp(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const { code } = req.body;
+            const verifyingOtp = await this._userUseCase.verifyingOtp(userId, code);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(verifyingOtp);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in verifyingOtp", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async accountDelete(req, res) {
+        console.log("inside accountDelete");
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const accountDelete = await this._userUseCase.accountDelete(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(accountDelete);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in accountDelete", error);
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }

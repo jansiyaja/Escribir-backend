@@ -57,11 +57,11 @@ export const authenticateToken = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Get the access token from cookies or Authorization header
+    
     const tokenFromCookie = req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
 
     if (!tokenFromCookie) {
-      // If no access token, check for refresh token
+      
       const refreshToken = req.cookies.refreshToken;
 
       if (!refreshToken) {
@@ -71,16 +71,15 @@ export const authenticateToken = async (
       }
 
       try {
-        // Verify refresh token
+       
         const decodedRefreshToken = jwt.verify(
           refreshToken,
           process.env.REFRESH_TOKEN_SECRET!
         ) as { userId: string; role: string };
 
-        // Generate a new access token
         const newAccessToken = generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.role);
 
-        // Set the new access token in cookies
+     
        
       res.cookie("accessToken", newAccessToken, {
         httpOnly: true,
@@ -89,7 +88,7 @@ export const authenticateToken = async (
         maxAge: 15 * 60 * 1000,
       });
 
-        // Attach user info to the request
+        
         (req as any).user = decodedRefreshToken;
 
         console.info('New access token generated from refresh token');

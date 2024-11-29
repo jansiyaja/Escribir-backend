@@ -21,6 +21,8 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.7.8",
     "@types/nodemailer": "^6.4.16",
+    "@types/qrcode": "^1.5.5",
+    "@types/speakeasy": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.13.0",
@@ -42,7 +44,9 @@
     "mongoose": "^8.7.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.15",
+    "qrcode": "^1.5.4",
     "socket.io": "^4.8.0",
+    "speakeasy": "^2.0.0",
     "stripe": "^17.4.0",
     "winston": "^3.15.0",
     "winston-daily-rotate-file": "^5.0.0"

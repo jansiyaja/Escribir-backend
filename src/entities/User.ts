@@ -26,7 +26,9 @@ export interface IUser {
   portfolio?: string;
   github?: string;
   isPremium?: boolean;
-  subscriptionId?:string
+  subscriptionId?: string
+  twoFactorSecret: string
+    twoFactorEnabled: boolean
 
  
 }

@@ -11,7 +11,7 @@ import { logger } from "../../framework/services/logger";
 
 
 export class UserController implements IUserController {
-  constructor(private _userUseCase: IUserUseCase) {}
+  constructor(private _userUseCase: IUserUseCase) { }
 
   async register(req: Request, res: Response): Promise<void> {
     try {
@@ -191,14 +191,14 @@ export class UserController implements IUserController {
   }
 
   async profileImageUpload(req: Request, res: Response): Promise<void> {
-    
-     
-   
+
+
+
     try {
       logger.info("Uploading profile image");
 
       const userId = (req as any).user.userId;
-      
+
       if (!userId) {
         res
           .status(HttpStatusCode.UNAUTHORIZED)
@@ -228,16 +228,16 @@ export class UserController implements IUserController {
   }
 
   async updateProfile(req: Request, res: Response): Promise<void> {
-     
-    
+
+
     try {
-      
+
 
       const userId = (req.body._id);
-      console.log("updateProfile",userId);
-    
-      
-      
+      console.log("updateProfile", userId);
+
+
+
 
       const profileData = req.body;
       const result = await this._userUseCase.updateProfile(userId, profileData);
@@ -255,15 +255,15 @@ export class UserController implements IUserController {
   }
 
   async getProfile(req: Request, res: Response): Promise<void> {
-    
+
     try {
       logger.info("Fetching user profile");
 
-       const userId = (req as any).user.userId;
-      console.log("getprofile",userId);
-     
-      
-     
+      const userId = (req as any).user.userId;
+      console.log("getprofile", userId);
+
+
+
       const users = await this._userUseCase.getProfile(userId);
       res.status(HttpStatusCode.OK).json(users);
     } catch (error) {
@@ -285,7 +285,7 @@ export class UserController implements IUserController {
           .json({ error: "User not authenticated" });
         return;
       }
-        
+
       const users = await this._userUseCase.getProfile(autherId);
       res.status(HttpStatusCode.OK).json(users);
     } catch (error) {
@@ -297,7 +297,7 @@ export class UserController implements IUserController {
   }
   async getAllNotifications(req: Request, res: Response): Promise<void> {
     try {
-        const userId = (req as any).user.userId;
+      const userId = (req as any).user.userId;
       const notifications = await this._userUseCase.getAllNotifications(userId);
 
       res.status(HttpStatusCode.OK).json({ notifications });
@@ -357,35 +357,35 @@ export class UserController implements IUserController {
   }
   async makePayment(req: Request, res: Response): Promise<void> {
     try {
-       const { plan ,email} = req.body;
+      const { plan, email } = req.body;
       const userId = (req as any).user.userId;
-    
-     if (!plan || !userId) {
-      throw new BadRequestError("Plan and User ID are required.");
-    }
-  
-     const sessionId = await this._userUseCase.makePayment(plan,userId,email);
-   
-        res.status(HttpStatusCode.CREATED).json(sessionId);
+
+      if (!plan || !userId) {
+        throw new BadRequestError("Plan and User ID are required.");
+      }
+
+      const sessionId = await this._userUseCase.makePayment(plan, userId, email);
+
+      res.status(HttpStatusCode.CREATED).json(sessionId);
     } catch (error) {
-       logger.error("Error sending session id:", error);
+      logger.error("Error sending session id:", error);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-    } 
-      
+    }
+
   }
-  async paymentSuccess(req: Request, res: Response): Promise<void> { 
-     console.log("iam here payment sucess page");
-     
-    
+  async paymentSuccess(req: Request, res: Response): Promise<void> {
+    console.log("iam here payment sucess page");
+
+
     try {
-      
-      const { amount, orderId,customerEmail } = req.body   
+
+      const { amount, orderId, customerEmail } = req.body
       const plan = amount === 10 ? 'monthly' : 'yearly'
-      
-       const userId = (req as any).user.userId;
-      const paymentSuccess = await this._userUseCase.upadateData(plan,userId,orderId,amount,customerEmail);
-      
-        res.status(HttpStatusCode.CREATED).json(paymentSuccess);
+
+      const userId = (req as any).user.userId;
+      const paymentSuccess = await this._userUseCase.upadateData(plan, userId, orderId, amount, customerEmail);
+
+      res.status(HttpStatusCode.CREATED).json(paymentSuccess);
     } catch (error) {
       logger.error("Error in paymentSuccess:", error);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
@@ -394,26 +394,151 @@ export class UserController implements IUserController {
   }
 
   async user_subscription(req: Request, res: Response): Promise<void> {
-  
-    
+
+
     try {
 
       const userId = (req as any).user.userId;
       if (!userId) {
         throw new BadRequestError("userId is required")
       }
-      
+
       const user_subscription = await this._userUseCase.suscribeUser(userId);
       res.status(HttpStatusCode.CREATED).json(user_subscription);
-      
-      
-      
+
+
+
     } catch (error) {
-          logger.error("Error in getting user_subscription", error);
+      logger.error("Error in getting user_subscription", error);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-      
+
     }
-     
-      
+
+
+  }
+
+  async updatePassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+
+      const user_subscription = await this._userUseCase.passwordUpdate(userId, currentPassword, newPassword);
+      res.status(HttpStatusCode.CREATED).json(user_subscription);
+
+
+    } catch (error) {
+      logger.error("Error in updating password", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+
+    }
+  }
+  async generateqr(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+      const result = await this._userUseCase.generate2FA(userId);
+      res.status(HttpStatusCode.CREATED).json(result);
+
+
+
+    } catch (error) {
+      logger.error("Error in generateqr", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+
+    }
+  }
+
+  async verify2FA(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+      const { token } = req.body;
+
+      const verify2FA = await this._userUseCase.verify2FA(userId, token);
+      res.status(HttpStatusCode.CREATED).json(verify2FA);
+
+    } catch (error) {
+      logger.error("Error in verify2FA", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+
+    }
+  }
+  async disable2FA(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+
+      const result = await this._userUseCase.disable2FA(userId);
+      res.status(HttpStatusCode.CREATED).json(result);
+
+
+    } catch (error) {
+      logger.error("Error in disable2FA", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+    }
+  }
+  async sendingEmail(req: Request, res: Response): Promise<void> {
+    try {
+
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+      const sendingEmail = await this._userUseCase.sendingEmail(userId);
+      res.status(HttpStatusCode.CREATED).json(sendingEmail);
+
+    } catch (error) {
+      logger.error("Error in sending Email", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+    }
+  }
+  async verifyingOtp(req: Request, res: Response): Promise<void> {
+   
+
+    try {
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+
+      const { code } = req.body
+
+
+      const verifyingOtp = await this._userUseCase.verifyingOtp(userId, code);
+      res.status(HttpStatusCode.CREATED).json(verifyingOtp);
+
+    } catch (error) {
+      logger.error("Error in verifyingOtp", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+    }
+
+
+  }
+  async accountDelete(req: Request, res: Response): Promise<void> {
+ console.log("inside accountDelete");
+
+    try {
+      const userId = (req as any).user.userId;
+      if (!userId) {
+        throw new BadRequestError("userId is required")
+      }
+
+      const accountDelete = await this._userUseCase.accountDelete(userId);
+      res.status(HttpStatusCode.CREATED).json(accountDelete);
+
+    } catch (error) {
+      logger.error("Error in accountDelete", error);
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+
+    }
   }
 }

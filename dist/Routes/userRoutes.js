@@ -24,6 +24,13 @@ exports.userRouter.get('/connectionProfile/:autherId/', tokenValidator_1.authent
 exports.userRouter.post('/makePayment', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.makePayment(req, res));
 exports.userRouter.post('/paymentUpdate', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.paymentSuccess(req, res));
 exports.userRouter.get('/user-subscription', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.user_subscription(req, res));
+exports.userRouter.post('/update-password', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.updatePassword(req, res));
+exports.userRouter.get('/2fa_generate', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.generateqr(req, res));
+exports.userRouter.post('/verify_2fa', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.verify2FA(req, res));
+exports.userRouter.post('/disable_2fa', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.disable2FA(req, res));
+exports.userRouter.post('/sendverificationEmail', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.sendingEmail(req, res));
+exports.userRouter.post('/verification', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.verifyingOtp(req, res));
+exports.userRouter.post('/account_delete', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.accountDelete(req, res));
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 exports.userRouter.get('/notifications', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.userController.getAllNotifications(req, res));

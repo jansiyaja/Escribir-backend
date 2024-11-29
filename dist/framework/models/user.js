@@ -78,6 +78,8 @@ const UserSchema = new mongoose_1.Schema({
         ref: 'Subscription',
         default: null,
     },
+    twoFactorSecret: { type: String, default: null },
+    twoFactorEnabled: { type: Boolean, default: false },
 }, {
     timestamps: true,
 });

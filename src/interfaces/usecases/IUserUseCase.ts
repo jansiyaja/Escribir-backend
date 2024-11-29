@@ -35,6 +35,21 @@ export interface IUserUseCase{
    upadateData(plan: string, userId: string, orderId: string, amount: number, customerEmail: string): Promise<string>
    
    suscribeUser(userId: string): Promise<ISubscription | null>
+
+   passwordUpdate(userId: string, currentPassword: string, newPassword: string): Promise<string>
+   
+   generate2FA(userId: string): Promise<{ secret: string; otpauth_url: string; qrCodeUrl: string | undefined }>
+   
+   verify2FA(userId: string, token: string): Promise<string>
+   
+   disable2FA(userId: string): Promise<string>
+   
+   sendingEmail(userId: string): Promise<string>
+
+   accountDelete(userId: string): Promise<string>
+   
+   verifyingOtp(userId: string, otp: string): Promise<string>
+   
    
    
 
