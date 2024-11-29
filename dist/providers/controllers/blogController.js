@@ -13,7 +13,6 @@ class BlogController {
         try {
             const { heading, content, tag, status = Blog_1.BlogStatus.DRAFT } = req.body;
             const imageBuffer = req.file?.buffer;
-            logger_1.logger.info('Image buffer received:', imageBuffer ? 'Yes' : 'No');
             if (!imageBuffer) {
                 logger_1.logger.warn('No image uploaded.');
                 res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json('No image uploaded.');
@@ -28,7 +27,6 @@ class BlogController {
             }
             logger_1.logger.info('Uploading image to S3');
             const imageKey = await this._blogUseCase.uploadImageToS3(imageBuffer, userId);
-            logger_1.logger.info('Image uploaded to S3 with key:', imageKey);
             logger_1.logger.info('Creating new blog post');
             const newBlogPost = await this._blogUseCase.createBlogPost({
                 author_id: userId,
@@ -38,7 +36,6 @@ class BlogController {
                 status,
                 coverImageUrl: imageKey
             });
-            logger_1.logger.info('New blog post created:', newBlogPost);
             res.status(201).json(newBlogPost);
         }
         catch (error) {
@@ -88,7 +85,6 @@ class BlogController {
         try {
             logger_1.logger.info('Fetching all tags');
             const tags = await this._blogUseCase.getAllTags();
-            logger_1.logger.info('Tags fetched:', tags);
             res.status(httpEnums_1.HttpStatusCode.OK).json(tags);
         }
         catch (error) {
@@ -123,7 +119,6 @@ class BlogController {
                 return;
             }
             const userBlogs = await this._blogUseCase.userBlogs(userId);
-            logger_1.logger.info('Fetched user blogs:', userBlogs);
             res.status(httpEnums_1.HttpStatusCode.OK).json(userBlogs);
         }
         catch (error) {
@@ -144,7 +139,6 @@ class BlogController {
         logger_1.logger.info('Deleting blog post with ID:', id);
         try {
             const deletedTag = await this._blogUseCase.deletePost(id);
-            logger_1.logger.info('Blog post deleted:', deletedTag);
             res.status(httpEnums_1.HttpStatusCode.OK).json(deletedTag);
         }
         catch (error) {
@@ -158,7 +152,6 @@ class BlogController {
         logger_1.logger.info('Updating blog post with ID:', id, 'and data:', blogPostData);
         try {
             const updatedPost = await this._blogUseCase.updateBlog(id, blogPostData);
-            logger_1.logger.info('Blog post updated:', updatedPost);
             res.status(httpEnums_1.HttpStatusCode.OK).json(updatedPost);
         }
         catch (error) {
@@ -190,7 +183,6 @@ class BlogController {
             logger_1.logger.info('Reporting blog with ID:', id, 'by user:', userId);
             const { reason } = req.body;
             const reportedBlog = await this._blogUseCase.reportBlog(id, userId.toString(), reason);
-            logger_1.logger.info('Blog reported:', reportedBlog);
             res.status(200).json(reportedBlog);
         }
         catch (error) {
@@ -201,7 +193,7 @@ class BlogController {
     async addReaction(req, res) {
         try {
             const { id } = req.params;
-            const userId = req.user.userId;
+            const userId = (req.body._id);
             const { reaction, autherId } = req.body;
             logger_1.logger.info('Adding reaction:', reaction, 'for blog ID:', id, 'by user:', userId);
             const reactionType = reaction.toLowerCase();
@@ -217,7 +209,7 @@ class BlogController {
     async removeReaction(req, res) {
         try {
             const { id } = req.params;
-            const userId = req.user.userId;
+            const userId = (req.body._id);
             const { reaction, autherId } = req.body;
             console.log(reaction, autherId);
             const removeReaction = await this._blogUseCase.removeReaction(id, userId, reaction, autherId);

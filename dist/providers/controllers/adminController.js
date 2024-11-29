@@ -13,44 +13,52 @@ class AdminController {
             const { email, password } = req.body;
             console.log(req.body);
             if (!email || !password) {
-                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: "Email and password are required" });
+                res
+                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
+                    .json({ error: "Email and password are required" });
             }
             const { user, accessToken, refreshToken } = await this._adminUseCase.loginAdmin({ email, password });
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 15 * 60 * 1000,
             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ user });
         }
         catch (error) {
             console.error("Login error:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ message: "Internal server error" });
         }
     }
     async logout(req, res) {
         try {
             res.clearCookie("accessToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
             res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "Logged out successfully" });
+            res
+                .status(httpEnums_1.HttpStatusCode.OK)
+                .json({ message: "Logged out successfully" });
         }
         catch (error) {
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to log out" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to log out" });
         }
     }
     async verifyToken(req, res) {
@@ -58,19 +66,23 @@ class AdminController {
         try {
             const refreshToken = req.cookies.refreshToken;
             if (!refreshToken) {
-                res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: 'Refresh token is missing' });
+                res
+                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                    .json({ message: "Refresh token is missing" });
             }
             const { accessToken } = await this._adminUseCase.verifyToken(refreshToken);
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 15 * 60 * 1000
+                secure: process.env.NODE_ENV !== "development",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                maxAge: 15 * 60 * 1000,
             });
             res.status(httpEnums_1.HttpStatusCode.OK).json({ accessToken });
         }
         catch (error) {
-            res.status(httpEnums_1.HttpStatusCode.UNAUTHORIZED).json({ message: "Invalid refresh token" });
+            res
+                .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
+                .json({ message: "Invalid refresh token" });
         }
     }
     async listUsers(req, res) {
@@ -80,7 +92,9 @@ class AdminController {
         }
         catch (error) {
             console.error("Error listing users:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list users" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list users" });
         }
     }
     async blockUser(req, res) {
@@ -88,32 +102,44 @@ class AdminController {
         try {
             const { userId } = req.body;
             if (!userId) {
-                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: "User ID is required" });
+                res
+                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
+                    .json({ error: "User ID is required" });
             }
             const blockedUser = await this._adminUseCase.blockUser(userId);
             if (!blockedUser) {
                 res.status(httpEnums_1.HttpStatusCode.NOT_FOUND).json({ error: "User not found" });
             }
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "User blocked successfully", user: blockedUser });
+            res
+                .status(httpEnums_1.HttpStatusCode.OK)
+                .json({ message: "User blocked successfully", user: blockedUser });
         }
         catch (error) {
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to block user" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to block user" });
         }
     }
     async unBlockUser(req, res) {
         try {
             const { userId } = req.body;
             if (!userId) {
-                res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: "User ID is required" });
+                res
+                    .status(httpEnums_1.HttpStatusCode.BAD_REQUEST)
+                    .json({ error: "User ID is required" });
             }
             const unblockedUser = await this._adminUseCase.unblockUser(userId);
             if (!unblockedUser) {
                 res.status(httpEnums_1.HttpStatusCode.NOT_FOUND).json({ error: "User not found" });
             }
-            res.status(httpEnums_1.HttpStatusCode.OK).json({ message: "User blocked successfully", user: unblockedUser });
+            res
+                .status(httpEnums_1.HttpStatusCode.OK)
+                .json({ message: "User blocked successfully", user: unblockedUser });
         }
         catch (error) {
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to unblock user" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to unblock user" });
         }
     }
     async createTag(req, res) {
@@ -126,7 +152,7 @@ class AdminController {
             const createdTag = await this._adminUseCase.createTag({ name: name });
             res.status(httpEnums_1.HttpStatusCode.CREATED).json({
                 message: "Tag created successfully",
-                tag: createdTag
+                tag: createdTag,
             });
         }
         catch (error) {
@@ -134,7 +160,9 @@ class AdminController {
             if (error instanceof customErrors_1.BadRequestError) {
                 res.status(httpEnums_1.HttpStatusCode.BAD_REQUEST).json({ error: error.message });
             }
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to create tag" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to create tag" });
         }
     }
     async listTags(req, res) {
@@ -144,19 +172,26 @@ class AdminController {
         }
         catch (error) {
             logger_1.logger.error("Error listing users:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list tags" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list tags" });
         }
     }
     async updateTag(req, res) {
         const { tagId } = req.params;
         const { name } = req.body;
         try {
-            const updatedTag = await this._adminUseCase.updateTags({ _id: tagId, name });
+            const updatedTag = await this._adminUseCase.updateTags({
+                _id: tagId,
+                name,
+            });
             res.status(httpEnums_1.HttpStatusCode.OK).json(updatedTag);
         }
         catch (error) {
             logger_1.logger.error("Error updating tag:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to update tag" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to update tag" });
         }
     }
     async deleteTag(req, res) {
@@ -167,7 +202,9 @@ class AdminController {
         }
         catch (error) {
             logger_1.logger.error("Error deleting tag:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to delete tag" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to delete tag" });
         }
     }
     async listOfReports(req, res) {
@@ -177,7 +214,9 @@ class AdminController {
         }
         catch (error) {
             logger_1.logger.error("Error listing users:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Failed to list Reporedblog" });
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list Reporedblog" });
         }
     }
 }

@@ -28,7 +28,7 @@ export class BlogController implements IBlogController{
                 return;
             }
 
-            const userId = (req as any).user.userId;
+          const userId = (req as any).user.userId;
             logger.info('User ID:', userId);
 
             if (!userId) {
@@ -221,7 +221,7 @@ export class BlogController implements IBlogController{
     async reportBlog(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const userId = (req as any).user.userId;
+         const userId = (req as any).user.userId;
             logger.info('Reporting blog with ID:', id, 'by user:', userId);
 
             const { reason } = req.body;
@@ -238,7 +238,7 @@ export class BlogController implements IBlogController{
     async addReaction(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const userId = (req as any).user.userId;
+         const userId = (req.body._id);
             const { reaction, autherId } = req.body;
             logger.info('Adding reaction:', reaction, 'for blog ID:', id, 'by user:', userId);
 
@@ -258,7 +258,7 @@ export class BlogController implements IBlogController{
             const { id } = req.params;
            
             
-             const userId = (req as any).user.userId; 
+            const userId = (req.body._id);
             const { reaction ,autherId} = req.body;
             console.log(reaction,autherId);
             
@@ -277,7 +277,7 @@ export class BlogController implements IBlogController{
         try {
             
             const { id } = req.params; 
-            const userId = (req as any).user.userId;
+           const userId = (req as any).user.userId;
             const { comment, autherId } = req.body
             console.log(req.params, req.body);
             

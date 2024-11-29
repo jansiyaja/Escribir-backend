@@ -10,6 +10,16 @@ export interface IUserController {
      profileImageUpload(req: Request, res: Response):Promise<void> 
      getProfile(req: Request, res: Response):Promise<void>;
      friendprofile(req: Request, res: Response): Promise<void> 
+    makePayment(req: Request, res: Response): Promise<void> 
+    paymentSuccess(req: Request, res: Response): Promise<void>
+    user_subscription(req: Request, res: Response): Promise<void>
+    updatePassword(req: Request, res: Response): Promise<void>
+    generateqr(req: Request, res: Response): Promise<void>
+    verify2FA(req: Request, res: Response): Promise<void>
+    disable2FA(req: Request, res: Response): Promise<void>
+    sendingEmail(req: Request, res: Response): Promise<void>
+    verifyingOtp(req: Request, res: Response): Promise<void>
+    accountDelete(req: Request, res: Response): Promise<void>
 
     
 

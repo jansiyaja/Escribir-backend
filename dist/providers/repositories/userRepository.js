@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
+const subscription_1 = __importDefault(require("../../framework/models/subscription"));
 const user_1 = __importDefault(require("../../framework/models/user"));
 class UserRepository {
     async create(user) {
@@ -27,6 +28,22 @@ class UserRepository {
     }
     async updateUserDetails(id, userDetails) {
         return await user_1.default.findByIdAndUpdate(id, userDetails, { new: true }).lean().exec();
+    }
+    async addSubscription(userId, plan, status, amount, startDate, endDate, lastPaymentDate, stripeId) {
+        const newSubscription = await subscription_1.default.create({
+            userId,
+            plan,
+            status,
+            amount,
+            startDate,
+            endDate,
+            lastPaymentDate,
+            stripeId
+        });
+        return newSubscription;
+    }
+    async findSubscriptionByUserId(userId) {
+        return subscription_1.default.findOne({ userId, status: 'active' });
     }
 }
 exports.UserRepository = UserRepository;

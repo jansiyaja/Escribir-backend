@@ -18,7 +18,7 @@ const createApp = () => {
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors({
-    origin:"https://escribir-frontend-xtb3.vercel.app",
+    origin:"http://localhost:5000",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

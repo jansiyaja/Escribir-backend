@@ -188,14 +188,8 @@ class UserController {
     }
     async updateProfile(req, res) {
         try {
-            logger_1.logger.info("Updating user profile");
-            const userId = req.user.userId;
-            if (!userId) {
-                res
-                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
-                    .json({ error: "User not authenticated" });
-                return;
-            }
+            const userId = (req.body._id);
+            console.log("updateProfile", userId);
             const profileData = req.body;
             const result = await this._userUseCase.updateProfile(userId, profileData);
             res.status(httpEnums_1.HttpStatusCode.OK).json({
@@ -214,12 +208,7 @@ class UserController {
         try {
             logger_1.logger.info("Fetching user profile");
             const userId = req.user.userId;
-            if (!userId) {
-                res
-                    .status(httpEnums_1.HttpStatusCode.UNAUTHORIZED)
-                    .json({ error: "User not authenticated" });
-                return;
-            }
+            console.log("getprofile", userId);
             const users = await this._userUseCase.getProfile(userId);
             res.status(httpEnums_1.HttpStatusCode.OK).json(users);
         }
@@ -292,6 +281,151 @@ class UserController {
                 .json({
                 errors: new customErrors_1.InternalServerError("An unexpected error occurred").serializeError(),
             });
+        }
+    }
+    async makePayment(req, res) {
+        try {
+            const { plan, email } = req.body;
+            const userId = req.user.userId;
+            if (!plan || !userId) {
+                throw new customErrors_1.BadRequestError("Plan and User ID are required.");
+            }
+            const sessionId = await this._userUseCase.makePayment(plan, userId, email);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(sessionId);
+        }
+        catch (error) {
+            logger_1.logger.error("Error sending session id:", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async paymentSuccess(req, res) {
+        console.log("iam here payment sucess page");
+        try {
+            const { amount, orderId, customerEmail } = req.body;
+            const plan = amount === 10 ? 'monthly' : 'yearly';
+            const userId = req.user.userId;
+            const paymentSuccess = await this._userUseCase.upadateData(plan, userId, orderId, amount, customerEmail);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(paymentSuccess);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in paymentSuccess:", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async user_subscription(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const user_subscription = await this._userUseCase.suscribeUser(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(user_subscription);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in getting user_subscription", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async updatePassword(req, res) {
+        try {
+            const { currentPassword, newPassword } = req.body;
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const user_subscription = await this._userUseCase.passwordUpdate(userId, currentPassword, newPassword);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(user_subscription);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in updating password", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async generateqr(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const result = await this._userUseCase.generate2FA(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(result);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in generateqr", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async verify2FA(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const { token } = req.body;
+            const verify2FA = await this._userUseCase.verify2FA(userId, token);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(verify2FA);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in verify2FA", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async disable2FA(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const result = await this._userUseCase.disable2FA(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(result);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in disable2FA", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async sendingEmail(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const sendingEmail = await this._userUseCase.sendingEmail(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(sendingEmail);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in sending Email", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async verifyingOtp(req, res) {
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const { code } = req.body;
+            const verifyingOtp = await this._userUseCase.verifyingOtp(userId, code);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(verifyingOtp);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in verifyingOtp", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
+        }
+    }
+    async accountDelete(req, res) {
+        console.log("inside accountDelete");
+        try {
+            const userId = req.user.userId;
+            if (!userId) {
+                throw new customErrors_1.BadRequestError("userId is required");
+            }
+            const accountDelete = await this._userUseCase.accountDelete(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(accountDelete);
+        }
+        catch (error) {
+            logger_1.logger.error("Error in accountDelete", error);
+            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
 }

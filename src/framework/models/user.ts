@@ -54,7 +54,15 @@ const UserSchema: Schema = new Schema(
       },
     github: { 
       type: String
-     },
+    },
+     isPremium: { type: Boolean, default: false }, 
+    subscriptionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subscription', 
+      default: null,
+    },
+    twoFactorSecret: { type: String, default: null },
+    twoFactorEnabled: { type: Boolean, default: false }, 
   },
   {
     timestamps: true, 

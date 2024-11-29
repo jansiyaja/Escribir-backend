@@ -3,10 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateAdminToken = exports.authenticateToken = exports.authenticateRefreshToken = exports.refreshTokenSecret = void 0;
+exports.authenticateAdminToken = exports.authenticateToken = exports.authenticateRefreshToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const customErrors_1 = require("../errors/customErrors");
-exports.refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const jwtService_1 = require("../services/jwtService");
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const validateRefreshToken = (token) => {
+    try {
+        return jsonwebtoken_1.default.verify(token, refreshTokenSecret);
+    }
+    catch (error) {
+        throw new Error('Invalid refresh token');
+    }
+};
 const authenticateRefreshToken = (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -14,7 +24,7 @@ const authenticateRefreshToken = (req, res, next) => {
         return;
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(refreshToken, exports.refreshTokenSecret);
+        const decoded = jsonwebtoken_1.default.verify(refreshToken, refreshTokenSecret);
         req.user = decoded;
         next();
     }
@@ -27,24 +37,56 @@ const authenticateRefreshToken = (req, res, next) => {
     }
 };
 exports.authenticateRefreshToken = authenticateRefreshToken;
-const authenticateToken = (req, res, next) => {
-    const tokenFromCookie = req.cookies.accessToken;
-    const token = tokenFromCookie;
-    if (!token) {
-        res.status(401).json({ error: 'Token is required' });
-        return;
-    }
+const authenticateToken = async (req, res, next) => {
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        // Get the access token from cookies or Authorization header
+        const tokenFromCookie = req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
+        if (!tokenFromCookie) {
+            // If no access token, check for refresh token
+            const refreshToken = req.cookies.refreshToken;
+            if (!refreshToken) {
+                console.error('Access and Refresh tokens are missing');
+                res.status(401).json({ error: 'Access and Refresh tokens are required' });
+                return;
+            }
+            try {
+                // Verify refresh token
+                const decodedRefreshToken = jsonwebtoken_1.default.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+                // Generate a new access token
+                const newAccessToken = (0, jwtService_1.generateAccessToken)(decodedRefreshToken.userId, decodedRefreshToken.role);
+                // Set the new access token in cookies
+                res.cookie("accessToken", newAccessToken, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV !== "development",
+                    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+                    maxAge: 15 * 60 * 1000,
+                });
+                // Attach user info to the request
+                req.user = decodedRefreshToken;
+                console.info('New access token generated from refresh token');
+                return next();
+            }
+            catch (error) {
+                console.error('Invalid refresh token', error);
+                res.status(403).json({ error: 'Invalid refresh token' });
+                return;
+            }
+        }
+        // Verify the access token
+        const decoded = jsonwebtoken_1.default.verify(tokenFromCookie, process.env.ACCESS_TOKEN_SECRET);
+        // Attach user info to the request
         req.user = decoded;
-        next();
+        console.info('Access token verified successfully');
+        return next();
     }
     catch (error) {
         if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
-            res.status(403).json({ error: 'Invalid token' });
+            console.error('Access token invalid or expired');
+            res.status(401).json({ error: 'Invalid or expired access token' });
             return;
         }
-        next(new customErrors_1.InvalidTokenError('An unexpected error occurred'));
+        console.error('Unexpected error in token authentication', error);
+        res.status(500).json({ error: 'Unexpected server error' });
     }
 };
 exports.authenticateToken = authenticateToken;

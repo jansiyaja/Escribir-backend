@@ -1,4 +1,6 @@
 
+
+
 export enum UserRole {
   CLIENT = 'client',
   USER = 'user',
@@ -23,4 +25,10 @@ export interface IUser {
   linkedIn?: string;
   portfolio?: string;
   github?: string;
+  isPremium?: boolean;
+  subscriptionId?: string
+  twoFactorSecret: string
+    twoFactorEnabled: boolean
+
+ 
 }

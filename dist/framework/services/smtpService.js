@@ -19,13 +19,14 @@ class SMTPService {
             },
         });
     }
-    async sendEmail({ from, to, subject, text }) {
+    async sendEmail({ from, to, subject, text = '', html = ' ' }) {
         try {
             await this.transporter.sendMail({
                 from,
                 to,
                 subject,
                 text,
+                html
             });
         }
         catch (error) {
