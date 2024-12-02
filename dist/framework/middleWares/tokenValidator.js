@@ -39,10 +39,8 @@ const authenticateRefreshToken = (req, res, next) => {
 exports.authenticateRefreshToken = authenticateRefreshToken;
 const authenticateToken = async (req, res, next) => {
     try {
-        // Get the access token from cookies or Authorization header
         const tokenFromCookie = req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
         if (!tokenFromCookie) {
-            // If no access token, check for refresh token
             const refreshToken = req.cookies.refreshToken;
             if (!refreshToken) {
                 console.error('Access and Refresh tokens are missing');
@@ -50,18 +48,14 @@ const authenticateToken = async (req, res, next) => {
                 return;
             }
             try {
-                // Verify refresh token
                 const decodedRefreshToken = jsonwebtoken_1.default.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-                // Generate a new access token
                 const newAccessToken = (0, jwtService_1.generateAccessToken)(decodedRefreshToken.userId, decodedRefreshToken.role);
-                // Set the new access token in cookies
                 res.cookie("accessToken", newAccessToken, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV !== "development",
                     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
                     maxAge: 15 * 60 * 1000,
                 });
-                // Attach user info to the request
                 req.user = decodedRefreshToken;
                 console.info('New access token generated from refresh token');
                 return next();

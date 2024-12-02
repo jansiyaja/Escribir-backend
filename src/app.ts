@@ -29,6 +29,7 @@ const createApp = () => {
   app.use('/social',socialRoute)
   app.use('/blog', blogRouter);
   app.use('/chat', chatRoute);
+  app.use('/client', chatRoute);
 
   app.use(errorHandler)
 
