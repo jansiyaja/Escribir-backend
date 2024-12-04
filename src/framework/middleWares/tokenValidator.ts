@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { UnauthorizedError, InvalidTokenError } from '../errors/customErrors';
+import { InvalidTokenError } from '../errors/customErrors';
 import { generateAccessToken } from '../services/jwtService';
+import { ObjectId } from 'mongoose';
 
 
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET!;
@@ -75,7 +76,7 @@ export const authenticateToken = async (
         const decodedRefreshToken = jwt.verify(
           refreshToken,
           process.env.REFRESH_TOKEN_SECRET!
-        ) as { userId: string; role: string };
+        ) as { userId: ObjectId; role: string };
 
         const newAccessToken = generateAccessToken(decodedRefreshToken.userId, decodedRefreshToken.role);
 
@@ -101,13 +102,20 @@ export const authenticateToken = async (
       }
     }
 
-    // Verify the access token
+    
     const decoded = jwt.verify(tokenFromCookie, process.env.ACCESS_TOKEN_SECRET!) as {
       userId: string;
       role: string;
     };
 
-    // Attach user info to the request
+  
+     // Check the user's role
+    if (decoded.role !== 'admin' && decoded.role !== 'client' && decoded.role !== 'user') {
+      console.warn(`Unauthorized attempt by user with role: ${decoded.role}`);
+      res.status(403).json({ error: 'Unauthorized access' });
+      return;
+    }
+
     (req as any).user = decoded;
 
     console.info('Access token verified successfully');

@@ -22,6 +22,10 @@ import { UserUseCase } from "../../useCases/UserUseCase";
 
 import { BcryptHashService } from "../services/hashService";
 import { SMTPService } from "../services/smtpService";
+import { ClientUseCase } from "../../useCases/ClientUseCase";
+import { ClientController } from "../../providers/controllers/clientController";
+import { ClientRepository } from "../../providers/repositories/clientRepository";
+import { AdvertisementRepository } from "../../providers/repositories/AdvertisementRepository";
 const s3 = new S3Client({});
 const userRepository=new UserRepository()
 const hashService = new  BcryptHashService()
@@ -34,7 +38,9 @@ const notificationRepository = new  NotificationRepository()
 const followerRepository = new FollowRepository()
 const commentRepository = new CommentRepository()
 const chatRepository =new ChatRepository()
-const messageRepository =new MessageRepository()
+const messageRepository = new MessageRepository()
+const clientRepository = new ClientRepository()
+const advertisementRepository = new AdvertisementRepository()
 
 
 const userUseCases = new UserUseCase(userRepository, hashService, emailService, otpRepository,notificationRepository);
@@ -53,12 +59,17 @@ const adminController = new AdminController(adminUseCase);
 const blogUseCase= new BlogPostUseCase(blogRepository,s3,reactionReopository ,notificationRepository,commentRepository);
 const blogController = new BlogController(blogUseCase)
 
+
+const clientUseCase = new ClientUseCase(userRepository,emailService,clientRepository,advertisementRepository,s3);
+const clientController = new ClientController(clientUseCase);
+
 export {  
     userController,
     adminController,
     blogController,
     socialController,
-    chatController
+    chatController,
+    clientController
    
 
 }

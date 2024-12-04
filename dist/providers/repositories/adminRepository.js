@@ -24,7 +24,7 @@ class AdminRepository {
         return await admin_1.default.findById(id).exec();
     }
     async getAllUsers() {
-        return await user_1.default.find().lean().exec();
+        return await user_1.default.find().exec();
     }
     // ------------------Relatd to tag----------------------------------------------------//
     async findOne(name) {

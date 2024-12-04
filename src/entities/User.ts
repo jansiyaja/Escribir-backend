@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 
 
 
@@ -8,7 +9,7 @@ export enum UserRole {
 
 
 export interface IUser {
-  _id?:string;
+  _id:ObjectId;
   username: string | null;
   email: string | null;
   password: string | null;

@@ -31,8 +31,8 @@ class AdminUseCase {
         }
         const adminRole = existingAdmin.role;
         console.log(adminRole);
-        const accessToken = (0, jwtService_1.generateAccessToken)(existingAdmin._id.toString(), adminRole);
-        const refreshToken = (0, jwtService_1.generateRefreshToken)(existingAdmin._id.toString(), adminRole);
+        const accessToken = (0, jwtService_1.generateAccessToken)(existingAdmin._id, adminRole);
+        const refreshToken = (0, jwtService_1.generateRefreshToken)(existingAdmin._id, adminRole);
         return { user: existingAdmin, accessToken: accessToken, refreshToken: refreshToken };
     }
     async verifyToken(token) {
@@ -45,7 +45,7 @@ class AdminUseCase {
                 throw new Error('Admin not found or user ID is missing');
             }
             const adminRole = admin.role;
-            const accessToken = (0, jwtService_1.generateAccessToken)(admin._id.toString(), adminRole);
+            const accessToken = (0, jwtService_1.generateAccessToken)(admin._id, adminRole);
             logger_1.logger.info('Token verification successful, returning new tokens');
             return {
                 accessToken,

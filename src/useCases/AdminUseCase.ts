@@ -39,8 +39,8 @@ export class AdminUseCase implements IAdminUseCase {
         const adminRole=existingAdmin.role
         console.log(adminRole);
         
-        const accessToken=generateAccessToken(existingAdmin._id .toString(),adminRole)
-        const refreshToken=generateRefreshToken(existingAdmin._id .toString(),adminRole)
+        const accessToken=generateAccessToken(existingAdmin._id ,adminRole)
+        const refreshToken=generateRefreshToken(existingAdmin._id,adminRole)
 
         return { user: existingAdmin, accessToken:accessToken,refreshToken:refreshToken }; 
     }
@@ -58,7 +58,7 @@ export class AdminUseCase implements IAdminUseCase {
                 throw new Error('Admin not found or user ID is missing');
             }
             const adminRole=admin.role
-            const accessToken = generateAccessToken(admin._id.toString(),adminRole);
+            const accessToken = generateAccessToken(admin._id,adminRole);
           
 
             logger.info('Token verification successful, returning new tokens');

@@ -8,6 +8,7 @@ import { errorHandler } from './framework/middleWares/errorHandler';
 import { blogRouter } from './Routes/blogRouter';
 import { socialRoute } from './Routes/socialRoutes';
 import { chatRoute } from './Routes/chatRoute';
+import { clienRoute } from "./Routes/clientRoutes";
 
 
 
@@ -29,7 +30,7 @@ const createApp = () => {
   app.use('/social',socialRoute)
   app.use('/blog', blogRouter);
   app.use('/chat', chatRoute);
-  app.use('/client', chatRoute);
+  app.use('/client',clienRoute);
 
   app.use(errorHandler)
 

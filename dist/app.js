@@ -12,6 +12,7 @@ const errorHandler_1 = require("./framework/middleWares/errorHandler");
 const blogRouter_1 = require("./Routes/blogRouter");
 const socialRoutes_1 = require("./Routes/socialRoutes");
 const chatRoute_1 = require("./Routes/chatRoute");
+const clientRoutes_1 = require("./Routes/clientRoutes");
 const createApp = () => {
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
@@ -27,6 +28,7 @@ const createApp = () => {
     app.use('/social', socialRoutes_1.socialRoute);
     app.use('/blog', blogRouter_1.blogRouter);
     app.use('/chat', chatRoute_1.chatRoute);
+    app.use('/client', clientRoutes_1.clienRoute);
     app.use(errorHandler_1.errorHandler);
     return app;
 };

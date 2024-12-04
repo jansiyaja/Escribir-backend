@@ -30,7 +30,7 @@ export class AdminRepository implements IAdminRepository {
     }
 
     async getAllUsers(): Promise<IUser[]> {
-        return await UserModel.find().lean().exec(); 
+        return await UserModel.find().exec(); 
     }
 
     // ------------------Relatd to tag----------------------------------------------------//

@@ -328,7 +328,7 @@ class UserUseCase {
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
       <h1>Welcome to Escriber Premium Membership</h1>
       
-      <p style="color: #333;">Dear Madam,</p>
+      <p style="color: #333;">Dear Madam/Sir ,</p>
       
       <p>We are thrilled to welcome you as a new premium member of Escriber! Enjoy your upgraded experience:</p>
       

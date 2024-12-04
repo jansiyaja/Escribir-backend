@@ -66,9 +66,13 @@ const authenticateToken = async (req, res, next) => {
                 return;
             }
         }
-        // Verify the access token
         const decoded = jsonwebtoken_1.default.verify(tokenFromCookie, process.env.ACCESS_TOKEN_SECRET);
-        // Attach user info to the request
+        // Check the user's role
+        if (decoded.role !== 'admin' && decoded.role !== 'client' && decoded.role !== 'user') {
+            console.warn(`Unauthorized attempt by user with role: ${decoded.role}`);
+            res.status(403).json({ error: 'Unauthorized access' });
+            return;
+        }
         req.user = decoded;
         console.info('Access token verified successfully');
         return next();

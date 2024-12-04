@@ -47,7 +47,7 @@ export class BlogPostUseCase implements IBlogUseCase {
             Body: buffer,
             ContentType: mimeType,
         };
-  console.log("image uploader PARAMS");
+            console.log("image uploader PARAMS");
         const command = new PutObjectCommand(params);
 
         try {

@@ -12,10 +12,10 @@ class UserRepository {
         return newUser.save();
     }
     async findById(id) {
-        return await user_1.default.findById(id).lean().exec();
+        return await user_1.default.findById(id).exec();
     }
     async findByEmail(email) {
-        return await user_1.default.findOne({ email }).lean().exec();
+        return await user_1.default.findOne({ email }).exec();
     }
     async delete(id) {
         await user_1.default.findByIdAndDelete(id).lean().exec();
@@ -24,10 +24,10 @@ class UserRepository {
         await user_1.default.findOneAndUpdate({ email: email }, { isVerified: true }, { new: true }).exec();
     }
     async userRole(id, role) {
-        return await user_1.default.findByIdAndUpdate(id, { role }, { new: true }).lean().exec();
+        return await user_1.default.findByIdAndUpdate(id, { role }, { new: true }).exec();
     }
     async updateUserDetails(id, userDetails) {
-        return await user_1.default.findByIdAndUpdate(id, userDetails, { new: true }).lean().exec();
+        return await user_1.default.findByIdAndUpdate(id, userDetails, { new: true }).exec();
     }
     async addSubscription(userId, plan, status, amount, startDate, endDate, lastPaymentDate, stripeId) {
         const newSubscription = await subscription_1.default.create({

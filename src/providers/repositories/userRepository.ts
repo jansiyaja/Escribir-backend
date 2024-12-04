@@ -12,11 +12,11 @@ export class UserRepository implements IUserRepository {
     }
 
     async findById(id: string): Promise<IUser | null> {
-        return await UserModel.findById(id).lean().exec();
+        return await UserModel.findById(id).exec();
     }
 
     async findByEmail(email: string): Promise<IUser | null> {
-        return await UserModel.findOne({ email }).lean().exec();
+        return await UserModel.findOne({ email }).exec();
     }
     async delete(id: string): Promise<void> {
         await UserModel.findByIdAndDelete(id).lean().exec();
@@ -30,11 +30,11 @@ export class UserRepository implements IUserRepository {
    
 
     async userRole(id: string, role: 'client' | 'user'): Promise<IUser | null> {
-        return await UserModel.findByIdAndUpdate(id, { role }, { new: true }).lean().exec();
+        return await UserModel.findByIdAndUpdate(id, { role }, { new: true }).exec();
     }
 
     async updateUserDetails(id: string, userDetails: Partial<IUser>): Promise<IUser | null> {
-    return await UserModel.findByIdAndUpdate(id, userDetails, { new: true }).lean().exec();
+    return await UserModel.findByIdAndUpdate(id, userDetails, { new: true }).exec();
     
     }
     async addSubscription(userId: string, plan: string, status: string, amount: number, startDate: Date, endDate: Date, lastPaymentDate: Date, stripeId: string): Promise<ISubscription> {
