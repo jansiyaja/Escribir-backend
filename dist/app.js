@@ -17,11 +17,19 @@ const createApp = () => {
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.use((0, cookie_parser_1.default)());
+    app.use((req, res, next) => {
+        console.log('Origin:', req.headers.origin); // Log the Origin header
+        next(); // Continue with the request processing
+    });
     app.use((0, cors_1.default)({
-        origin: "http://localhost:5000",
+        origin: "https://escribir-frontend.vercel.app",
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
+    app.options('*', (0, cors_1.default)({
+        origin: "https://escribir-frontend.vercel.app",
+        credentials: true,
     }));
     app.use('/users', userRoutes_1.userRouter);
     app.use('/admin', adminRoutes_1.adminRouter);

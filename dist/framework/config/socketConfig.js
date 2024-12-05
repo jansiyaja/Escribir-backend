@@ -25,7 +25,7 @@ const reactionEmojis = {
 const setupSocket = (server) => {
     const io = new socket_io_1.Server(server, {
         cors: {
-            origin: "http://localhost:5000",
+            origin: "https://escribir-frontend.vercel.app",
             methods: ["GET", "POST"],
             credentials: true,
         },
