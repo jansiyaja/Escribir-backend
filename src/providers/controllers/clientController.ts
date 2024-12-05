@@ -88,7 +88,9 @@ async createAdd(req: Request, res: Response): Promise<void> {
     }
     async listAd(req: Request, res: Response): Promise<void> {
         const userId = (req as any).user.userId;
-
+         if ( !userId ) {
+        throw new UnauthorizedError("Plan and User ID are required.");
+        }
         try {
 
       const list_ad = await this._clientUseCase.listAdd(userId);
@@ -100,8 +102,7 @@ async createAdd(req: Request, res: Response): Promise<void> {
         }
 
     }
-    async listAdUser(req: Request, res: Response): Promise<void> {
-            console.log("iam called user");
+        async listAdUser(req: Request, res: Response): Promise<void> {
             
         const userId = (req as any).user.userId;
          if ( !userId ) {
