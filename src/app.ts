@@ -24,6 +24,11 @@ const createApp = () => {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
+  app.options('*', cors({
+  origin: "https://escribir-frontend.vercel.app",
+  credentials: true,
+}));
+
 
  app.use('/users', userRouter);
   app.use('/admin', adminRouter);
