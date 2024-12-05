@@ -149,7 +149,27 @@ export class UserUseCase implements IUserUseCase {
       from: process.env.MAIL_EMAIL,
       to: userData.email!,
       subject: "Welcome To Escriber, Our Blog Platform!",
-      text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
+       html: `
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+      <h1>Welcome to Escriber</h1>
+      
+      <p style="color: #333;">Dear Madam/Sir ,</p>
+      
+      <p>We are thrilled to welcome You! Enjoy your upgraded experience:</p>
+
+      <h2>Your Otp For verifying the Process is ${otp}</h2>
+      
+      <ul style="padding-left: 20px;">
+        <li>Ad-free blog experience</li>
+        <li>Premium customer support</li>
+        <li>Enhanced connection via calls</li>
+      </ul>
+      
+      <p style="color: #0066cc; font-weight: bold;">Thank you for choosing Escriber Premium!</p>
+      
+      <p style="font-size: 14px; color: #666;">Best regards,<br>The Escriber Team</p>
+    </div>
+  `,
     });
   }
 
