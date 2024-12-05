@@ -18,6 +18,11 @@ const createApp = () => {
 
   app.use(express.json());
   app.use(cookieParser());
+  app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin);  // Log the Origin header
+  next();  // Continue with the request processing
+});
+
   app.use(cors({
     origin:"https://escribir-frontend.vercel.app",
     credentials: true,
