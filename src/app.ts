@@ -19,7 +19,7 @@ const createApp = () => {
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors({
-    origin:"https://escribir-frontend.vercel.app/",
+    origin:"https://escribir-frontend.vercel.app",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
