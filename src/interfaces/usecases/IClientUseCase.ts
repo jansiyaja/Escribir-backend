@@ -7,6 +7,8 @@ export interface IClientUseCase {
      uploadVideoToS3(buffer: Buffer|null, mimeType: string|undefined): Promise<string> 
      createAdvertisement(adDetails: IAdvertisement, imageBuffer: string, userId: string): Promise<IAdvertisement>
      listAdd(userId: string): Promise<IAdvertisement[]> 
+     listAdUser(userId: string): Promise<IAdvertisement[]> 
+     pauseAd(adId: string,userId: string): Promise<IAdvertisement|null> 
      
 
 }

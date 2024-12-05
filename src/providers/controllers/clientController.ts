@@ -86,23 +86,59 @@ async createAdd(req: Request, res: Response): Promise<void> {
         res.status(500).send('Error creating advertisement');
     }
     }
-    async listAdd(req: Request, res: Response): Promise<void> {
+    async listAd(req: Request, res: Response): Promise<void> {
         const userId = (req as any).user.userId;
          if ( !userId ) {
         throw new UnauthorizedError("Plan and User ID are required.");
         }
         try {
 
-            const list_ad = await this._clientUseCase.listAdd(userId);
-            
-            
-        res.status(HttpStatusCode.CREATED).json(list_ad);    
+      const list_ad = await this._clientUseCase.listAdd(userId);
+       res.status(HttpStatusCode.CREATED).json(list_ad);    
             
         } catch (error) {
           logger.error('Error listing advertisement:', error);
         res.status(500).send('Error listing advertisement');   
         }
 
+    }
+    async listAdUser(req: Request, res: Response): Promise<void> {
+            console.log("iam called user");
+            
+        const userId = (req as any).user.userId;
+         if ( !userId ) {
+        throw new UnauthorizedError("Plan and User ID are required.");
+        }
+        try {
+
+      const list_ad = await this._clientUseCase.listAdUser(userId);
+       res.status(HttpStatusCode.CREATED).json(list_ad);    
+            
+        } catch (error) {
+          logger.error('Error listing advertisement:', error);
+        res.status(500).send('Error listing advertisement');   
+        }
+
+    }
+    async pauseAd(req: Request, res: Response): Promise<void> {
+         const userId = (req as any).user.userId;
+         if ( !userId ) {
+        throw new UnauthorizedError("Plan and User ID are required.");
+        }
+        try {
+            const { adId } = req.body
+
+        const pauseAd = await this._clientUseCase.pauseAd(adId,userId);
+       res.status(HttpStatusCode.CREATED).json(pauseAd);    
+            
+            
+        } catch (error) {
+            logger.error('Error listing advertisement:', error);
+        res.status(500).send('Error listing advertisement');   
+         
+        }
+       
+        
     }
 
 }

@@ -29,5 +29,9 @@ adminRouter.delete('/delete-tag/:tagId', authenticateToken, (req: Request, res: 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------------------------------------------------------------------------//
-adminRouter.get('/list-reportedBlog',authenticateToken,(req: Request, res: Response) => adminController.listOfReports(req, res))
+adminRouter.get('/list-reportedBlog', authenticateToken, (req: Request, res: Response) => adminController.listOfReports(req, res))
+adminRouter.get('/blogs', authenticateToken,(req: Request, res: Response) => adminController.listBlogs(req, res))
+//------------------------------------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------------------------------------------//
+adminRouter.get('/client', authenticateToken,(req: Request, res: Response) => adminController.listClient(req, res))
 //------------------------------------------------------------------------------------------------------------------------------------------------//

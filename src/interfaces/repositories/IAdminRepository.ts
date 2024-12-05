@@ -3,6 +3,8 @@ import { IAdmin } from "../../entities/Admin";
 import { IUser } from "../../entities/User";
 import { ITag } from "../../entities/ITag"; 
 import { IReport } from "../../entities/IReport"; 
+import { IBlogPost } from "../../entities/Blog";
+import { IClient } from "../../entities/IClient";
  
 
 
@@ -20,7 +22,11 @@ export interface IAdminRepository{
 
  //-----------------------------------------------------------------------------------//
  //-----------------------------------------------------------------------------------//
- findAllReportedBlog(): Promise<IReport[]>;
-
+    findAllReportedBlog(): Promise<IReport[]>;
+    getAllBlog(): Promise<IBlogPost[]>
+    //-----------------------------------------------------------------------------------//
+    
+    //-----------------------------------------------------------------------------------//
+    getAllClient(): Promise<IClient[]> 
  //-----------------------------------------------------------------------------------//
 }

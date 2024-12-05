@@ -1,0 +1,32 @@
+{"level":"info","message":"Logging out user","timestamp":"2024-12-04T16:30:53.429Z"}
+{"email":"fidahibrahim2@gmail.com","level":"info","message":"Logging in user:","timestamp":"2024-12-04T16:31:00.624Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:31:00.763Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:31:02.007Z"}
+{"level":"info","message":"Fetching friend profile for ID:","timestamp":"2024-12-04T16:31:09.074Z"}
+{"level":"info","message":"Fetching friend profile for ID:","timestamp":"2024-12-04T16:31:09.533Z"}
+{"level":"info","message":"Fetching blogs for user with ID:","timestamp":"2024-12-04T16:31:09.539Z"}
+{"level":"info","message":"Fetching blogs for user with ID:","timestamp":"2024-12-04T16:31:10.718Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:37:44.598Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:37:45.726Z"}
+{"level":"info","message":"Fetching blogs for user with ID:","timestamp":"2024-12-04T16:37:47.927Z"}
+{"level":"error","message":"Error in fetching user blogs: No blogs found for the provided user ID.","stack":"Error: No blogs found for the provided user ID.\n    at BlogPostUseCase.userBlogs (C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\dist\\useCases\\BlogUseCase.js:68:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BlogController.userBlog (C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\dist\\providers\\controllers\\blogController.js:121:31)","statusCode":404,"timestamp":"2024-12-04T16:37:48.126Z"}
+{"level":"info","message":"Fetching blogs for user with ID:","timestamp":"2024-12-04T16:37:48.129Z"}
+{"level":"error","message":"Error in fetching user blogs: No blogs found for the provided user ID.","stack":"Error: No blogs found for the provided user ID.\n    at BlogPostUseCase.userBlogs (C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\dist\\useCases\\BlogUseCase.js:68:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BlogController.userBlog (C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\dist\\providers\\controllers\\blogController.js:121:31)","statusCode":404,"timestamp":"2024-12-04T16:37:48.332Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:37:52.346Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:37:53.322Z"}
+{"level":"info","message":"Logging out user","timestamp":"2024-12-04T16:41:50.849Z"}
+{"level":"info","message":"Logging out user","timestamp":"2024-12-04T16:41:52.281Z"}
+{"email":"jansiyajahan8@gmail.com","level":"info","message":"Logging in user:","timestamp":"2024-12-04T16:41:55.316Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:41:55.475Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:41:56.644Z"}
+{"email":"fidahibrahim2@gmail.com","level":"info","message":"Logging in user:","timestamp":"2024-12-04T16:42:00.340Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:42:00.713Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T16:42:02.861Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:02:28.506Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:02:29.196Z"}
+{"email":"fidahibrahim2@gmail.com","level":"info","message":"Logging in user:","timestamp":"2024-12-04T17:16:24.579Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:16:24.881Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:16:25.482Z"}
+{"email":"jansiyajahan8@gmail.com","level":"info","message":"Logging in user:","timestamp":"2024-12-04T17:16:29.333Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:16:29.864Z"}
+{"level":"info","message":"Fetching all blogs","timestamp":"2024-12-04T17:16:31.217Z"}

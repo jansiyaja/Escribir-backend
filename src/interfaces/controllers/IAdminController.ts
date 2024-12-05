@@ -13,4 +13,9 @@ export  interface  IAdminController{
     updateTag(req: Request, res: Response): Promise<void>;
     deleteTag(req: Request, res: Response): Promise<void> 
     
+
+    listBlogs(req: Request, res: Response): Promise<void>
+    
+    listClient(req: Request, res: Response): Promise<void>
+
 }

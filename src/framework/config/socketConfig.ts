@@ -1,6 +1,7 @@
 import { Server } from "http";
 import { Server as SocketIo } from "socket.io";
 import { IUser } from "../../entities/User";
+import { v4 as uuidv4 } from 'uuid';
 
 interface CallPayload {
   from: string;
@@ -36,30 +37,21 @@ const reactionEmojis: Record<string, string> = {
 };
 
 export const setupSocket = (server: Server) => {
-  const io = new SocketIo(server, {
+const io = new SocketIo(server, {
     cors: {
-      origin: "http://localhost:5000",
-      methods: ["GET", "POST"],
-      credentials: true,
+        origin: "http://localhost:5000",  
+        methods: ["GET", "POST"],
+        credentials: true,
     },
-  });
+});
+
 
   io.on("connection", (socket) => {
     socket.on("login", (userDetails) => {
       const { userId } = userDetails;
       userSockets.set(userId, { socketId: socket.id, userDetails });
 
-         const userName = socket.handshake.auth.userName;
-    const password = socket.handshake.auth.password;
-
-    if(password !== "x"){
-        socket.disconnect(true);
-        return;
-    }
-    connectedSockets.push({
-        socketId: socket.id,
-        userName
-    })
+   
     });
 
     socket.on("reaction", ({ userId, postAuthorId, reactionType }) => {
@@ -101,6 +93,8 @@ export const setupSocket = (server: Server) => {
     });
 
     socket.on("send_message", ({ message, receiverId }) => {
+  
+      
       const receiverSocket = userSockets.get(receiverId);
       if (receiverSocket) {
         io.to(receiverSocket.socketId).emit("receive_message", message);
@@ -116,6 +110,7 @@ socket.on("typing", ({ receiverId }) => {
 
   if (receiverSocket) {
     console.log(`User ${receiverId} is typing...`);
+    // Emit typing status to the receiver socket
     io.to(receiverSocket.socketId).emit("typing-status", {
       isTyping: true,
       receiverId,
@@ -130,6 +125,7 @@ socket.on("stop-typing", ({ receiverId }) => {
 
   if (receiverSocket) {
     console.log(`User ${receiverId} stopped typing.`);
+    // Emit stop typing status to the receiver socket
     io.to(receiverSocket.socketId).emit("typing-status", {
       isTyping: false,
       receiverId,
@@ -138,15 +134,12 @@ socket.on("stop-typing", ({ receiverId }) => {
     console.log(`No socket found for receiverId: ${receiverId}`);
   }
 });
-
-  
-
   // Handle incoming call
   socket.on('call-user', ({ receiverId, offer, callType }) => {
     const receiverSocket = userSockets.get(receiverId);
     if (receiverSocket) {
       io.to(receiverSocket.socketId).emit('receive-call', {
-        from: socket.id, // Sending the caller's socket ID
+        from: socket.id, 
         offer,
         callType,
       });
@@ -157,25 +150,23 @@ socket.on("stop-typing", ({ receiverId }) => {
   });
 
   // Handle call answer
-  socket.on('answer-call', ({ from, answer, callType }) => {
-    if (!answer) {
+    socket.on('call-answer', ({ from, answer, callType }) => {
+   if (!answer) {
       console.error("Error: Missing answer in 'answer-call' event.");
       return;
     }
-
-    // Emit the answer to the caller
     socket.to(from).emit('call-answered', { answer });
+   
+    
     console.log(`Call answered by ${socket.id} from ${from}`);
   });
 
   // Handle ICE candidates
-  socket.on('ice-candidate', ({ receiverId, candidate }) => {
-    const receiverSocket = userSockets.get(receiverId);
-    if (receiverSocket && candidate) {
-      io.to(receiverSocket.socketId).emit('ice-candidate', { candidate });
-    } else {
-      console.log(`No receiver for ICE candidate: ${receiverId}`);
-    }
+  socket.on('ice-candidate', ({ candidate }) => {
+   
+    console.log("candidate",candidate);
+    
+   
   });
 
   // Handle ending the call
@@ -200,6 +191,8 @@ socket.on("stop-typing", ({ receiverId }) => {
       });
     });
   });
+
+
 
   return io;
 };

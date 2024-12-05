@@ -34,16 +34,6 @@ const setupSocket = (server) => {
         socket.on("login", (userDetails) => {
             const { userId } = userDetails;
             userSockets.set(userId, { socketId: socket.id, userDetails });
-            const userName = socket.handshake.auth.userName;
-            const password = socket.handshake.auth.password;
-            if (password !== "x") {
-                socket.disconnect(true);
-                return;
-            }
-            connectedSockets.push({
-                socketId: socket.id,
-                userName
-            });
         });
         socket.on("reaction", ({ userId, postAuthorId, reactionType }) => {
             const postAuthorSocket = userSockets.get(postAuthorId);
@@ -87,6 +77,7 @@ const setupSocket = (server) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket) {
                 console.log(`User ${receiverId} is typing...`);
+                // Emit typing status to the receiver socket
                 io.to(receiverSocket.socketId).emit("typing-status", {
                     isTyping: true,
                     receiverId,
@@ -100,6 +91,7 @@ const setupSocket = (server) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket) {
                 console.log(`User ${receiverId} stopped typing.`);
+                // Emit stop typing status to the receiver socket
                 io.to(receiverSocket.socketId).emit("typing-status", {
                     isTyping: false,
                     receiverId,
@@ -114,7 +106,7 @@ const setupSocket = (server) => {
             const receiverSocket = userSockets.get(receiverId);
             if (receiverSocket) {
                 io.to(receiverSocket.socketId).emit('receive-call', {
-                    from: socket.id, // Sending the caller's socket ID
+                    from: socket.id,
                     offer,
                     callType,
                 });
@@ -125,24 +117,17 @@ const setupSocket = (server) => {
             }
         });
         // Handle call answer
-        socket.on('answer-call', ({ from, answer, callType }) => {
+        socket.on('call-answer', ({ from, answer, callType }) => {
             if (!answer) {
                 console.error("Error: Missing answer in 'answer-call' event.");
                 return;
             }
-            // Emit the answer to the caller
             socket.to(from).emit('call-answered', { answer });
             console.log(`Call answered by ${socket.id} from ${from}`);
         });
         // Handle ICE candidates
-        socket.on('ice-candidate', ({ receiverId, candidate }) => {
-            const receiverSocket = userSockets.get(receiverId);
-            if (receiverSocket && candidate) {
-                io.to(receiverSocket.socketId).emit('ice-candidate', { candidate });
-            }
-            else {
-                console.log(`No receiver for ICE candidate: ${receiverId}`);
-            }
+        socket.on('ice-candidate', ({ candidate }) => {
+            console.log("candidate", candidate);
         });
         // Handle ending the call
         socket.on('end-call', ({ receiverId }) => {

@@ -12,4 +12,6 @@ exports.clienRoute = express_1.default.Router();
 exports.clienRoute.post('/makePayment', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.makePayment(req, res));
 exports.clienRoute.post('/paymentUpdate', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.paymentSuccess(req, res));
 exports.clienRoute.post('/createAdd', tokenValidator_1.authenticateToken, multerConfig_1.uploadAdd, (req, res) => dependencyResolver_1.clientController.createAdd(req, res));
-exports.clienRoute.get('/listAdd', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.listAdd(req, res));
+exports.clienRoute.get('/listAdd', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.listAd(req, res));
+exports.clienRoute.get('/listUserAdd', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.listAdUser(req, res));
+exports.clienRoute.post('/pauseAdd', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.clientController.pauseAd(req, res));

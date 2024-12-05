@@ -11,6 +11,8 @@ import { ITag } from "../entities/ITag";
 import { BadRequestError } from "../framework/errors/customErrors"; 
 import { IReport } from "../entities/IReport"; 
 import { generateAccessToken, generateRefreshToken } from "../framework/services/jwtService";
+import { IBlogPost } from "../entities/Blog";
+import { IClient } from "../entities/IClient";
 export class AdminUseCase implements IAdminUseCase {
     constructor(
         private _adminRepository: IAdminRepository,
@@ -165,5 +167,24 @@ export class AdminUseCase implements IAdminUseCase {
    async getAlReports(): Promise<IReport[]> {
     return this._adminRepository.findAllReportedBlog()
    }
+   
+    async getAllBlogs(): Promise<IBlogPost[]> {
+      return this._adminRepository.getAllBlog()   
+    }
+ //-------------------------------------------------------------------------------------------------------------------------------//
+    
 
+    //-------------------------------------------------------------------------------------------------------------------------------//
+    
+    async getAllClient(): Promise<IClient[]> {
+      
+      const client = await this._adminRepository.getAllClient()  
+      return client
+      
+  }
+
+
+        //-------------------------------------------------------------------------------------------------------------------------------//
+        //-------------------------------------------------------------------------------------------------------------------------------//
+        //-------------------------------------------------------------------------------------------------------------------------------//
 }

@@ -122,5 +122,14 @@ class AdminUseCase {
     async getAlReports() {
         return this._adminRepository.findAllReportedBlog();
     }
+    async getAllBlogs() {
+        return this._adminRepository.getAllBlog();
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------//
+    //-------------------------------------------------------------------------------------------------------------------------------//
+    async getAllClient() {
+        const client = await this._adminRepository.getAllClient();
+        return client;
+    }
 }
 exports.AdminUseCase = AdminUseCase;

@@ -252,4 +252,37 @@ export class ClientUseCase implements IClientUseCase {
 
         return ad;
     }
+        async listAdUser(userId: string): Promise<IAdvertisement[]> {
+      
+      
+        const user = await this._userRepository.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+            const ad = await this._addRepository.findAllUserAds(user._id);
+            
+            
+
+        return ad;
+    }
+    async pauseAd(adId: string,userId: string): Promise<IAdvertisement|null> {
+      const user = await this._userRepository.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        
+        const AdData = await this._addRepository.findById(adId);
+  if (!AdData) {
+    throw new Error("Ad not found with this adId");
+  }
+   const newStatus = AdData.status === "active" ? "inactive" : "active";
+
+ 
+  const updatedAd = await this._addRepository.update(adId, { status: newStatus }); 
+   
+
+
+       return updatedAd 
+    }
 }

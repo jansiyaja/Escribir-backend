@@ -27,4 +27,8 @@ exports.adminRouter.delete('/delete-tag/:tagId', tokenValidator_1.authenticateTo
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 exports.adminRouter.get('/list-reportedBlog', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listOfReports(req, res));
+exports.adminRouter.get('/blogs', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listBlogs(req, res));
+//------------------------------------------------------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------------------------------------------------------//
+exports.adminRouter.get('/client', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listClient(req, res));
 //------------------------------------------------------------------------------------------------------------------------------------------------//

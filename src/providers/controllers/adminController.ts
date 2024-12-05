@@ -227,6 +227,19 @@ export class AdminController implements IAdminController {
         .json({ error: "Failed to delete tag" });
     }
   }
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    async listBlogs(req: Request, res: Response): Promise<void> {
+    try {
+      const blog = await this._adminUseCase.getAllBlogs();
+      res.status(HttpStatusCode.OK).json(blog);
+    } catch (error) {
+      console.error("Error listing users:", error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: "Failed to list users" });
+    }
+  }
   async listOfReports(req: Request, res: Response): Promise<void> {
     try {
       const reports = await this._adminUseCase.getAlReports();
@@ -238,4 +251,24 @@ export class AdminController implements IAdminController {
         .json({ error: "Failed to list Reporedblog" });
     }
   }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  async listClient(req: Request, res: Response): Promise<void> {
+     
+     
+    try {
+      const client = await this._adminUseCase.getAllClient();
+    
+      
+      res.status(HttpStatusCode.OK).json(client);
+    } catch (error) {
+      console.error("Error listing users:", error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: "Failed to list users" });
+    }
+  }
+
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

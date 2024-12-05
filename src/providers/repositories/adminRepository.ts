@@ -8,7 +8,10 @@ import { ITag } from "../../entities/ITag";
 import TagModel from "../../framework/models/tag"; 
 import { IReport } from "../../entities/IReport";
 import Report from "../../framework/models/report"; 
-
+import { IBlogPost } from "../../entities/Blog";
+import BlogPost from "../../framework/models/blog";
+import { IClient } from "../../entities/IClient";
+import Client from "../../framework/models/client";
 
 export class AdminRepository implements IAdminRepository {
     async findByEmail(email: string): Promise<IAdmin | null> {
@@ -30,7 +33,7 @@ export class AdminRepository implements IAdminRepository {
     }
 
     async getAllUsers(): Promise<IUser[]> {
-        return await UserModel.find().exec(); 
+        return await UserModel.find().populate('subscriptionId').exec(); 
     }
 
     // ------------------Relatd to tag----------------------------------------------------//
@@ -71,6 +74,19 @@ export class AdminRepository implements IAdminRepository {
     async findAllReportedBlog(): Promise<IReport[]> {
         return await Report.find().sort({ createdAt: -1 });  
     }
+
+    async getAllBlog(): Promise<IBlogPost[]> {
+     return await BlogPost.find().sort({ createdAt: -1 });      
+    }
+       
+    
     //----------------------------------------------------------------------------------------//
+
+    //----------------------------------------------------------------------------------------//
+       async getAllClient(): Promise<IClient[]> {
+         return await Client.find().sort({ createdAt: -1 });    
+       }
+    //----------------------------------------------------------------------------------------//
+
 
 }

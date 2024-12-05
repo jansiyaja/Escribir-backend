@@ -109,16 +109,11 @@ export const authenticateToken = async (
     };
 
   
-     // Check the user's role
-    if (decoded.role !== 'admin' && decoded.role !== 'client' && decoded.role !== 'user') {
-      console.warn(`Unauthorized attempt by user with role: ${decoded.role}`);
-      res.status(403).json({ error: 'Unauthorized access' });
-      return;
-    }
+   
 
     (req as any).user = decoded;
 
-    console.info('Access token verified successfully');
+    
     return next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

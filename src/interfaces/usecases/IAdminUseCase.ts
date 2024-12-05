@@ -2,6 +2,8 @@ import { IAdmin } from "../../entities/Admin";
 import { ITag } from "../../entities/ITag";
 import { IReport } from "../../entities/IReport";
 import { IUser } from "../../entities/User";
+import { IBlogPost } from "../../entities/Blog";
+import { IClient } from "../../entities/IClient";
 
  export interface IAdminUseCase{
     
@@ -21,7 +23,12 @@ import { IUser } from "../../entities/User";
 
     //----------------------------------------------------------------------------------//
     //----------------------------------------------------------------------------------//
-    getAlReports(): Promise<IReport[]>  
+    getAlReports(): Promise<IReport[]> 
+   getAllBlogs(): Promise<IBlogPost[]> ;
 
+    //----------------------------------------------------------------------------------//
+
+    //----------------------------------------------------------------------------------//
+      getAllClient(): Promise<IClient[]> 
     //----------------------------------------------------------------------------------//
  }

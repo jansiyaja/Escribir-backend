@@ -207,6 +207,19 @@ class AdminController {
                 .json({ error: "Failed to delete tag" });
         }
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async listBlogs(req, res) {
+        try {
+            const blog = await this._adminUseCase.getAllBlogs();
+            res.status(httpEnums_1.HttpStatusCode.OK).json(blog);
+        }
+        catch (error) {
+            console.error("Error listing users:", error);
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list users" });
+        }
+    }
     async listOfReports(req, res) {
         try {
             const reports = await this._adminUseCase.getAlReports();
@@ -217,6 +230,19 @@ class AdminController {
             res
                 .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
                 .json({ error: "Failed to list Reporedblog" });
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async listClient(req, res) {
+        try {
+            const client = await this._adminUseCase.getAllClient();
+            res.status(httpEnums_1.HttpStatusCode.OK).json(client);
+        }
+        catch (error) {
+            console.error("Error listing users:", error);
+            res
+                .status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR)
+                .json({ error: "Failed to list users" });
         }
     }
 }

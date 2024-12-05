@@ -67,7 +67,7 @@ class ClientController {
             res.status(500).send('Error creating advertisement');
         }
     }
-    async listAdd(req, res) {
+    async listAd(req, res) {
         const userId = req.user.userId;
         if (!userId) {
             throw new customErrors_1.UnauthorizedError("Plan and User ID are required.");
@@ -75,6 +75,36 @@ class ClientController {
         try {
             const list_ad = await this._clientUseCase.listAdd(userId);
             res.status(httpEnums_1.HttpStatusCode.CREATED).json(list_ad);
+        }
+        catch (error) {
+            logger_1.logger.error('Error listing advertisement:', error);
+            res.status(500).send('Error listing advertisement');
+        }
+    }
+    async listAdUser(req, res) {
+        console.log("iam called user");
+        const userId = req.user.userId;
+        if (!userId) {
+            throw new customErrors_1.UnauthorizedError("Plan and User ID are required.");
+        }
+        try {
+            const list_ad = await this._clientUseCase.listAdUser(userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(list_ad);
+        }
+        catch (error) {
+            logger_1.logger.error('Error listing advertisement:', error);
+            res.status(500).send('Error listing advertisement');
+        }
+    }
+    async pauseAd(req, res) {
+        const userId = req.user.userId;
+        if (!userId) {
+            throw new customErrors_1.UnauthorizedError("Plan and User ID are required.");
+        }
+        try {
+            const { adId } = req.body;
+            const pauseAd = await this._clientUseCase.pauseAd(adId, userId);
+            res.status(httpEnums_1.HttpStatusCode.CREATED).json(pauseAd);
         }
         catch (error) {
             logger_1.logger.error('Error listing advertisement:', error);

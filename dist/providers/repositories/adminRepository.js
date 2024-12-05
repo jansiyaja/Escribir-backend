@@ -8,6 +8,8 @@ const admin_1 = __importDefault(require("../../framework/models/admin"));
 const user_1 = __importDefault(require("../../framework/models/user"));
 const tag_1 = __importDefault(require("../../framework/models/tag"));
 const report_1 = __importDefault(require("../../framework/models/report"));
+const blog_1 = __importDefault(require("../../framework/models/blog"));
+const client_1 = __importDefault(require("../../framework/models/client"));
 class AdminRepository {
     async findByEmail(email) {
         return await admin_1.default.findOne({ email }).lean().exec();
@@ -24,7 +26,7 @@ class AdminRepository {
         return await admin_1.default.findById(id).exec();
     }
     async getAllUsers() {
-        return await user_1.default.find().exec();
+        return await user_1.default.find().populate('subscriptionId').exec();
     }
     // ------------------Relatd to tag----------------------------------------------------//
     async findOne(name) {
@@ -55,6 +57,14 @@ class AdminRepository {
     //---------Report-------------------------------------------------------------------------------//
     async findAllReportedBlog() {
         return await report_1.default.find().sort({ createdAt: -1 });
+    }
+    async getAllBlog() {
+        return await blog_1.default.find().sort({ createdAt: -1 });
+    }
+    //----------------------------------------------------------------------------------------//
+    //----------------------------------------------------------------------------------------//
+    async getAllClient() {
+        return await client_1.default.find().sort({ createdAt: -1 });
     }
 }
 exports.AdminRepository = AdminRepository;

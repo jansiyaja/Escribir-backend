@@ -195,5 +195,26 @@ class ClientUseCase {
         const ad = await this._addRepository.findAllAds();
         return ad;
     }
+    async listAdUser(userId) {
+        const user = await this._userRepository.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const ad = await this._addRepository.findAllUserAds(user._id);
+        return ad;
+    }
+    async pauseAd(adId, userId) {
+        const user = await this._userRepository.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        const AdData = await this._addRepository.findById(adId);
+        if (!AdData) {
+            throw new Error("Ad not found with this adId");
+        }
+        const newStatus = AdData.status === "active" ? "inactive" : "active";
+        const updatedAd = await this._addRepository.update(adId, { status: newStatus });
+        return updatedAd;
+    }
 }
 exports.ClientUseCase = ClientUseCase;
