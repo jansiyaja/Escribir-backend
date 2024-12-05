@@ -39,7 +39,7 @@ const reactionEmojis: Record<string, string> = {
 export const setupSocket = (server: Server) => {
 const io = new SocketIo(server, {
     cors: {
-        origin: "http://localhost:5000",  
+        origin: "https://escribir-frontend.vercel.app/",  
         methods: ["GET", "POST"],
         credentials: true,
     },
