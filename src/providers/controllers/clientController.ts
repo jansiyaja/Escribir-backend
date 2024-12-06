@@ -63,6 +63,17 @@ async createAdd(req: Request, res: Response): Promise<void> {
     let mediaKey = '';
 
     try {
+        // Validate required files based on the format
+        if (format === 'Image Ad' && !imageBuffer) {
+            res.status(400).json({ message: 'Image file is required for Image Ads.' });
+            return;
+        }
+
+        if (format === 'Video Ad' && !videoBuffer) {
+            res.status(400).json({ message: 'Video file is required for Video Ads.' });
+            return;
+        }
+
         // Upload the media to S3 based on format
         if (format === 'Image Ad' && imageBuffer) {
             mediaKey = await this._clientUseCase.uploadImageToS3(imageBuffer, userId);
@@ -73,13 +84,13 @@ async createAdd(req: Request, res: Response): Promise<void> {
         // Construct contents array
         const contents = [];
         if (textContent) {
-            contents.push({ type: 'text', value: textContent }); // Lowercase 'text'
+            contents.push({ type: 'text', value: textContent });
         }
         if (format === 'Image Ad' && mediaKey) {
-            contents.push({ type: 'image', value: mediaKey }); // Lowercase 'image'
+            contents.push({ type: 'image', value: mediaKey });
         }
         if (format === 'Video Ad' && mediaKey) {
-            contents.push({ type: 'video', value: mediaKey }); // Lowercase 'video'
+            contents.push({ type: 'video', value: mediaKey });
         }
 
         // Ensure at least one valid content type exists
@@ -98,6 +109,7 @@ async createAdd(req: Request, res: Response): Promise<void> {
         res.status(500).send('Error creating advertisement');
     }
 }
+
 
     async listAd(req: Request, res: Response): Promise<void> {
         const userId = (req as any).user.userId;
