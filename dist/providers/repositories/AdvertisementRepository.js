@@ -18,7 +18,7 @@ class AdvertisementRepository {
         return ad;
     }
     async findAllAds() {
-        return await advertisement_1.default.find({ status: "active" }).sort({ createdAt: -1 });
+        return await advertisement_1.default.find().sort({ createdAt: -1 });
     }
     async findAllUserAds(userId) {
         return await advertisement_1.default.find({ userId: userId });
