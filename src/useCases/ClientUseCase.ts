@@ -204,43 +204,46 @@ export class ClientUseCase implements IClientUseCase {
         }
     }
 
-    async createAdvertisement(
-        adDetails: IAdvertisement,
-        imageKey: string,
-        userId: string
-    ): Promise<IAdvertisement> {
-        const user = await this._userRepository.findById(userId);
-        if (!user) {
-            throw new Error("User not found");
-        }
+async createAdvertisement(
+    adDetails: IAdvertisement,
+    imageKey: string,
+    userId: string
+): Promise<IAdvertisement> {
+    const user = await this._userRepository.findById(userId);
+    if (!user) {
+        throw new Error("User not found");
+    }
 
-        const contents: IAdContent[] =
-            adDetails.contents?.length > 0
-                ? adDetails.contents
-                : [{ type: AdContent.IMAGE, value: imageKey }];
+    const contents: IAdContent[] = adDetails.contents?.length
+        ? adDetails.contents
+        : imageKey
+        ? [{ type: AdContent.IMAGE, value: imageKey }]
+        : [];
 
-        const advertisement: IAdvertisement = {
+    if (contents.length === 0) {
+        throw new Error('At least one advertisement content must be provided.');
+    }
 
-            title: adDetails.title,
-            targetAudience: adDetails.targetAudience,
-            format: adDetails.format,
-            industry: adDetails.industry,
-            link: adDetails.link,
-            contents,
-            userId: user._id,
-            status: "active",
-        };
-            const advertisementId = advertisement._id;
+    const advertisement: IAdvertisement = {
+        title: adDetails.title,
+        targetAudience: adDetails.targetAudience,
+        format: adDetails.format,
+        industry: adDetails.industry,
+        link: adDetails.link,
+        contents,
+        userId: user._id,
+        status: "active",
+    };
 
     await this._clientRepository.updateClientDetails(userId, {
-     activeAds: 1 , 
-    advertisements :advertisementId?.toString() , 
-});
+        activeAds: 1,
+        advertisements: advertisement._id?.toString(),
+    });
 
+    const ad = await this._addRepository.create(advertisement);
+    return ad;
+}
 
-        const add = await this._addRepository.create(advertisement);
-        return add;
-    }
 
     async listAdd(userId: string): Promise<IAdvertisement[]> {
       

@@ -167,9 +167,14 @@ class ClientUseCase {
         if (!user) {
             throw new Error("User not found");
         }
-        const contents = adDetails.contents?.length > 0
+        const contents = adDetails.contents?.length
             ? adDetails.contents
-            : [{ type: IAdvertisement_1.AdContent.IMAGE, value: imageKey }];
+            : imageKey
+                ? [{ type: IAdvertisement_1.AdContent.IMAGE, value: imageKey }]
+                : [];
+        if (contents.length === 0) {
+            throw new Error('At least one advertisement content must be provided.');
+        }
         const advertisement = {
             title: adDetails.title,
             targetAudience: adDetails.targetAudience,
@@ -180,13 +185,12 @@ class ClientUseCase {
             userId: user._id,
             status: "active",
         };
-        const advertisementId = advertisement._id;
         await this._clientRepository.updateClientDetails(userId, {
             activeAds: 1,
-            advertisements: advertisementId?.toString(),
+            advertisements: advertisement._id?.toString(),
         });
-        const add = await this._addRepository.create(advertisement);
-        return add;
+        const ad = await this._addRepository.create(advertisement);
+        return ad;
     }
     async listAdd(userId) {
         const user = await this._userRepository.findById(userId);

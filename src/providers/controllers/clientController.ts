@@ -49,43 +49,56 @@ export class ClientController implements IClientController {
     }
     
 async createAdd(req: Request, res: Response): Promise<void> {
-    const { textContent } = req.body;
-    const imageBuffer = req.file?.mimetype?.startsWith('image/') ? req.file?.buffer : null; 
-    const videoBuffer = req.file?.mimetype?.startsWith('video/') ? req.file?.buffer : null;  
-    const videoMimeType = req.file?.mimetype;
+    const { textContent, format, title, targetAudience } = req.body;
     const userId = (req as any).user.userId;
-  console.log(textContent, imageBuffer, videoBuffer, videoMimeType);
-    
-   if (!textContent && !imageBuffer && !videoBuffer) {
-    logger.warn('At least one of text content, image, or video must be uploaded.');
-    res.status(400).send('At least one of text content, image, or video must be uploaded.');
-    return;
-}
+
+    if (!title || !targetAudience || !format) {
+        res.status(400).json({ message: 'Missing required fields: title, targetAudience, or format.' });
+        return;
+    }
+
+    const imageBuffer = req.file?.mimetype?.startsWith('image/') ? req.file?.buffer : null;
+    const videoBuffer = req.file?.mimetype?.startsWith('video/') ? req.file?.buffer : null;
+    const videoMimeType = req.file?.mimetype;
+    let mediaKey = '';
 
     try {
-        let mediaKey = ''; 
-
-  
-        if (req.body.format === 'Image Ad' && imageBuffer) {
-            logger.info('Uploading image to S3');
+        // Upload the media to S3 based on format
+        if (format === 'Image Ad' && imageBuffer) {
             mediaKey = await this._clientUseCase.uploadImageToS3(imageBuffer, userId);
+        } else if (format === 'Video Ad' && videoBuffer) {
+            mediaKey = await this._clientUseCase.uploadVideoToS3(videoBuffer, videoMimeType!);
         }
 
-    
-        if (req.body.format === 'Video Ad' && videoBuffer) {
-            logger.info('Uploading video to S3');
-            mediaKey = await this._clientUseCase.uploadVideoToS3(videoBuffer, videoMimeType!);  // Pass the mimetype for video upload
+        // Construct contents array
+        const contents = [];
+        if (textContent) {
+            contents.push({ type: 'Text', value: textContent });
+        }
+        if (format === 'Image Ad' && mediaKey) {
+            contents.push({ type: 'Image', value: mediaKey });
+        }
+        if (format === 'Video Ad' && mediaKey) {
+            contents.push({ type: 'Video', value: mediaKey });
         }
 
-      
-        const ad = await this._clientUseCase.createAdvertisement(req.body, mediaKey, userId);
-        res.status(HttpStatusCode.CREATED).json(ad);
+        // Ensure at least one valid content type exists
+        if (contents.length === 0) {
+            res.status(400).json({ message: 'At least one content type must be provided.' });
+            return;
+        }
 
+        // Create the ad details
+        const adDetails = { ...req.body, contents };
+        const ad = await this._clientUseCase.createAdvertisement(adDetails, mediaKey, userId);
+
+        res.status(201).json(ad);
     } catch (error) {
         logger.error('Error creating advertisement:', error);
         res.status(500).send('Error creating advertisement');
     }
-    }
+}
+
     async listAd(req: Request, res: Response): Promise<void> {
         const userId = (req as any).user.userId;
          if ( !userId ) {
