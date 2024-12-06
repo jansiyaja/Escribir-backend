@@ -49,6 +49,7 @@ class UserUseCase {
             to: userData.email,
             subject: "Welcome To Escriber, Our Blog Platform!",
             text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
+            html: "<p>THank you.</p>",
         });
         return {
             user: createUser,
@@ -101,6 +102,7 @@ class UserUseCase {
             from: process.env.MAIL_EMAIL,
             to: userData.email,
             subject: "Welcome To Escriber, Our Blog Platform!",
+            text: "Welcome To Escriber",
             html: `
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
       <h1>Welcome to Escriber</h1>
@@ -280,6 +282,7 @@ class UserUseCase {
             to: process.env.MAIL_EMAIL,
             subject: "Feed back From User",
             text: `Hi, iam ${name},  ${message}`,
+            html: "<p>Thank You.</p>",
         });
         return "sending email successfully";
     }
@@ -344,6 +347,7 @@ class UserUseCase {
             from: process.env.MAIL_EMAIL,
             to: email,
             subject: "Welcome to Escriber Premium Membership",
+            text: "Welcome to Escriber ",
             html: `
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
       <h1>Welcome to Escriber Premium Membership</h1>
@@ -439,7 +443,7 @@ class UserUseCase {
             throw new Error("User not found");
         }
         const otp = crypto_1.default.randomInt(100000, 1000000).toString();
-        console.log(otp);
+        console.log("twoFactor", otp);
         const email = user.email;
         if (!email)
             throw new Error("User email found");
@@ -452,7 +456,8 @@ class UserUseCase {
             from: process.env.MAIL_EMAIL,
             to: user.email,
             subject: "Welcome To Escriber, Our Blog Platform!",
-            text: `Hi ${user.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
+            text: `Hi ${user.username}, welcome to our platform! We're excited to have you here.Your Otp  verfying Two Factor Uatherntication is Is ${otp}`,
+            html: "<p>Welcome To Escriber Thank YOU.</p>",
         });
         return "otp sended successfully";
     }

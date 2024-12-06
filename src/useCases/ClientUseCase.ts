@@ -90,6 +90,7 @@ export class ClientUseCase implements IClientUseCase {
             from: process.env.MAIL_EMAIL,
             to: email,
             subject: "Welcome to Escriber Advertisement Client",
+            text:"Welcome to Escriber",
             html: `
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
       <h1>Thank You for Becoming an Escriber Advertisement Client!</h1>

@@ -18,7 +18,7 @@ export class SMTPService implements IEmailService {
         });
     }
 
-    async sendEmail({ from, to, subject, text='', html=' ' }: { from: string; to: string; subject: string; text?: string,html?:string }): Promise<void> {
+    async sendEmail({ from, to, subject, text='', html=' ' }: { from: string; to: string; subject: string; text: string,html:string }): Promise<void> {
          
          
         try {
