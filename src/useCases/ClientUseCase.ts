@@ -46,8 +46,8 @@ export class ClientUseCase implements IClientUseCase {
                 },
             ],
             customer_email: email,
-            success_url: `http://localhost:5000/advertisement-payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}&businessName=${businessName}`,
-            cancel_url: `http://localhost:5000/paymentcancelled`,
+            success_url: `https://escribir-frontend.vercel.app/advertisement-payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}&businessName=${businessName}`,
+            cancel_url: `https://escribir-frontend.vercel.app/paymentcancelled`,
             metadata: { userId },
         });
 

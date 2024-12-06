@@ -343,8 +343,8 @@ class UserUseCase {
                 },
             ],
             customer_email: email,
-            success_url: `http://localhost:5000/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
-            cancel_url: `http://localhost:5000/paymentcancelled`,
+            success_url: `https://escribir-frontend.vercel.app/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
+            cancel_url: `https://escribir-frontend.vercel.app/paymentcancelled`,
             metadata: { userId },
         });
         return session.url || session.id;
