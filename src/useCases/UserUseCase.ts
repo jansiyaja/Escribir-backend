@@ -75,7 +75,25 @@ export class UserUseCase implements IUserUseCase {
       to: userData.email!,
       subject: "Welcome To Escriber, Our Blog Platform!",
       text: `Hi ${userData.username}, welcome to our platform! We're excited to have you here.Your Otp Is ${otp}`,
-      html: "<p>THank you.</p>",
+      html: `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <p style="font-size: 16px; color: #333;">Hi ${userData.username},</p>
+    <p style="font-size: 14px; color: #333;">
+      Welcome to our platform! We're excited to have you here.
+    </p>
+    <p style="font-size: 14px; color: #333;">
+      Your OTP for verifying Two-Factor Authentication is:
+      <strong style="color: #0066cc; font-size: 18px;">${otp}</strong>
+    </p>
+    <p style="font-size: 14px; color: #333;">
+      Thank you for joining Escriber. We’re thrilled to have you on board!
+    </p>
+    <p style="font-size: 12px; color: #666;">
+      Best regards,<br>The Escriber Team
+    </p>
+  </div>
+`
+
     });
 
     return {
@@ -375,7 +393,25 @@ export class UserUseCase implements IUserUseCase {
       to: process.env.MAIL_EMAIL,
       subject: "Feed back From User",
       text: `Hi, iam ${name},  ${message}`,
-       html: "<p>Thank You.</p>",
+      html: `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+    <h2 style="color: #333;">User Feedback</h2>
+    <p style="font-size: 16px; color: #333;">
+      <strong>From:</strong> ${name} (${email})
+    </p>
+    <p style="font-size: 16px; color: #333;">
+      <strong>Message:</strong> ${message}
+    </p>
+    <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+    <p style="font-size: 14px; color: #666; text-align: center;">
+      Thank you for sharing your feedback with us. We appreciate your input and will get back to you if necessary.
+    </p>
+    <p style="font-size: 12px; color: #999; text-align: center;">
+      This is an automated email. Please do not reply.
+    </p>
+  </div>
+`
+
     });
 
     return "sending email successfully";
@@ -614,7 +650,24 @@ export class UserUseCase implements IUserUseCase {
       to: user.email!,
       subject: "Welcome To Escriber, Our Blog Platform!",
       text: `Hi ${user.username}, welcome to our platform! We're excited to have you here.Your Otp  verfying Two Factor Uatherntication is Is ${otp}`,
-      html: "<p>Welcome To Escriber Thank YOU.</p>",
+      html: `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <p style="font-size: 16px; color: #333;">Hi ${user.username},</p>
+    <p style="font-size: 14px; color: #333;">
+      Welcome to our platform! We're excited to have you here.
+    </p>
+    <p style="font-size: 14px; color: #333;">
+      Your OTP for verifying Two-Factor Authentication is:
+      <strong style="color: #0066cc; font-size: 18px;">${otp}</strong>
+    </p>
+    <p style="font-size: 14px; color: #333;">
+      Thank you for joining Escriber. We’re thrilled to have you on board!
+    </p>
+    <p style="font-size: 12px; color: #666;">
+      Best regards,<br>The Escriber Team
+    </p>
+  </div>
+`
     });
     return "otp sended successfully"
   }
