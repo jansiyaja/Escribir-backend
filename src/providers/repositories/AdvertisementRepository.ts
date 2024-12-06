@@ -25,6 +25,7 @@ export class AdvertisementRepository implements IAdvertisementRepository {
     return await AdvertisementModel.find({ status: "active" }).sort({ createdAt: -1 });
    }
     async findAllUserAds(userId: ObjectId): Promise<IAdvertisement[]> {
+        
       return await AdvertisementModel.find({ userId: userId })  
     }
     async update(id: string, adData: Partial<IAdvertisement>): Promise<IAdvertisement | null> {
