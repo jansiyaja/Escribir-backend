@@ -59,13 +59,13 @@ class ClientController {
             // Construct contents array
             const contents = [];
             if (textContent) {
-                contents.push({ type: 'Text', value: textContent });
+                contents.push({ type: 'text', value: textContent }); // Lowercase 'text'
             }
             if (format === 'Image Ad' && mediaKey) {
-                contents.push({ type: 'Image', value: mediaKey });
+                contents.push({ type: 'image', value: mediaKey }); // Lowercase 'image'
             }
             if (format === 'Video Ad' && mediaKey) {
-                contents.push({ type: 'Video', value: mediaKey });
+                contents.push({ type: 'video', value: mediaKey }); // Lowercase 'video'
             }
             // Ensure at least one valid content type exists
             if (contents.length === 0) {
