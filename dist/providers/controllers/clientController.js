@@ -23,6 +23,11 @@ class ClientController {
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
+
+
+
+
+    
     async paymentSuccess(req, res) {
         console.log("iam here payment sucess page");
         try {
