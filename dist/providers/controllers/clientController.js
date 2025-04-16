@@ -24,9 +24,6 @@ class ClientController {
         }
     }
 
-
-
-
     
     async paymentSuccess(req, res) {
         console.log("iam here payment sucess page");
