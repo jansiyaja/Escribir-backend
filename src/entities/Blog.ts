@@ -8,6 +8,7 @@ export enum BlogStatus {
 export interface IBlogPost  {
     _id: string
     author_id:ObjectId
+    viewedBy:ObjectId[]
     heading: string;
     tag: string;
     content: object; 

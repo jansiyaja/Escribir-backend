@@ -449,8 +449,9 @@ export class UserUseCase implements IUserUseCase {
         },
       ],
       customer_email: email,
-      success_url: `https://escribir-frontend.vercel.app/payment-success?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
-      cancel_url: `https://escribir-frontend.vercel.app/paymentcancelled`,
+     success_url: `${process.env.FRONTEND_URL}?amount=${amount}&orderId={CHECKOUT_SESSION_ID}&customerEmail=${email}`,
+
+      cancel_url: `${process.env.FRONTEND_URL}/paymentcancelled`,
       metadata: { userId },
     });
 

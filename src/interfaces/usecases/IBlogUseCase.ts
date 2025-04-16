@@ -1,22 +1,24 @@
-
 import { IBlogPost } from "../../entities/Blog"
-import { IComment } from "../../entities/IComment";
-import { IReaction } from "../../entities/IReaction"; 
+import { IReaction } from "../../entities/IReaction";
 import { ITag } from "../../entities/ITag";
 
-export interface IBlogUseCase{
+export interface IBlogUseCase {
 
-createBlogPost(blogPostData: Partial<IBlogPost>): Promise<IBlogPost>
-uploadImageToS3(buffer: Buffer, userId:string): Promise<string>;
-getAllBlogs(): Promise<IBlogPost[]>  
-getAllTags(): Promise<ITag[]>;
-getsingleBlog(blogId:string): Promise<{blog:IBlogPost}>
-userBlogs(userId: string): Promise<{ blogs: IBlogPost[] }>;
-deletePost(postId: string): Promise<IBlogPost>;
-updateBlog( id:string,blogData: Partial<IBlogPost>): Promise<IBlogPost> 
+    createBlogPost(blogPostData: Partial<IBlogPost>): Promise<IBlogPost>
+    uploadImageToS3(buffer: Buffer, userId: string): Promise<string>;
+    getAllBlogs(): Promise<IBlogPost[]>
+
+    getsingleBlog(blogId: string ,userId:string): Promise<{ blog: IBlogPost }>
+    userBlogs(userId: string): Promise<{ blogs: IBlogPost[] }>;
+    deletePost(postId: string): Promise<IBlogPost>;
+    updateBlog(id: string, blogData: Partial<IBlogPost>): Promise<IBlogPost>
     reportBlog(id: string, userId: string, reason: string): Promise<IBlogPost>;
     addReaction(blogPostId: string, userId: string, reactionType: string, autherId: string): Promise<IReaction>;
-    removeReaction(reactionId: string,userId: string, reactionType: string,autherId:string):Promise<void>
-    addComment(postId: string,userId: string, content:string,autherId:string):Promise<IComment>
+    removeReaction(reactionId: string, userId: string, reactionType: string, autherId: string): Promise<void>
+  
 
+    getAllTags(): Promise<ITag[]>;
+    getTagBYBlogs(tag:string | string[] | undefined): Promise<IBlogPost[]>
+    getTrendingTags(): Promise<{ tag: string, views: number }[]>
+   getTrendingBlogs(): Promise<(IBlogPost & { views: number })[]>
 }

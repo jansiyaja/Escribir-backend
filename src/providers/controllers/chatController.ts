@@ -43,22 +43,6 @@ export class ChatController implements IChatController{
     }
 
 
-    // async getMessages(req: Request, res: Response): Promise<void> {
-    //     try {
-    //         const { recieverId } = req.params;
-
-    //         const userId = (req as any).user.userId;
-    //       const messages = await this._chatUseCase.getChatMessages(recieverId, userId);
-            
-
-
-    //          res.status(HttpStatusCode.OK).json({ messages });
-    //     } catch (error) {
-    //         logger.error("Error retriving message", error);
-    //         res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-
-    //     }
-    // }
 
       async getMessagesByChatId (req: Request, res: Response) :Promise<void>{
      const { chatId } = req.params; 

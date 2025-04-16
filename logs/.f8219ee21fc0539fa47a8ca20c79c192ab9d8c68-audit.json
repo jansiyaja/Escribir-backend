@@ -6,479 +6,129 @@
     "auditLog": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\.f8219ee21fc0539fa47a8ca20c79c192ab9d8c68-audit.json",
     "files": [
         {
-            "date": 1731996849945,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-19-11-2024-11.log",
-            "hash": "fb0dd74077185db568e7b1eaf67a5c3817797bc845aeeafa42f258163d3d3056"
+            "date": 1742286615122,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-18-03-2025-14.log",
+            "hash": "af0135eceffde76d13608095ef89947dc62600d0e40bfbaeedfd9f5fb4b5f56e"
         },
         {
-            "date": 1732060956034,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-20-11-2024-05.log",
-            "hash": "5c660a4108b2944ae0124bf7009059109f60d87a4f03b41cf82e560c89d302b5"
+            "date": 1742377379355,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-19-03-2025-15.log",
+            "hash": "bf7e424bca2d6b606f32ac08d793acc6f94f15235ed69edc1fbf0d03d15458c3"
         },
         {
-            "date": 1732096795281,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-20-11-2024-15.log",
-            "hash": "6dc4214bd3c43d81e3e36d8f532cf63be9e1fbd9444e44cb21938ff4ca629338"
+            "date": 1744435846127,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-12-04-2025-11.log",
+            "hash": "717ba0aa3710beeb0ae3bf3c73d67faaa8c4041e817b5fabc2d812ca0de9421d"
         },
         {
-            "date": 1732098759417,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-20-11-2024-16.log",
-            "hash": "24d78383a495edea02461b83cbaae90b08f8c01cb46d1447b4a3249fc5f7c8eb"
+            "date": 1744690174672,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-09.log",
+            "hash": "2727e7fdc7df1648442a3a75ee65e90160398dc110f2ca9fd6d410ffc24d074c"
         },
         {
-            "date": 1732186922423,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-21-11-2024-16.log",
-            "hash": "779afa5a6307528dbcebfacd1f85d50892833ead4adbed7cbb464bedbe5d101a"
+            "date": 1744691508240,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-10.log",
+            "hash": "e3e8d9d9a95ffe692b6130eb17610d10d12bc15fa7a606e8dba074b3f5235e89"
         },
         {
-            "date": 1732506409804,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-25-11-2024-09.log",
-            "hash": "2d9804dac9b075e72e0e97df85b477a223f8c2b76a97d8260b3bf617b4a2b35a"
+            "date": 1744695033057,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-11.log",
+            "hash": "411fc3ebc479ce7b956076615ab61b7463224d2acca8a213118a27d01722ac55"
         },
         {
-            "date": 1732514470003,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-25-11-2024-11.log",
-            "hash": "92adce98c0f994d0fc750b7e7f07c00a1d7ead4bf0ea126de93da0458415cb65"
+            "date": 1744698763439,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-12.log",
+            "hash": "cc67c5a824940a8ae6cd08e83a4e7c521cd20d113238325167a8336941e13001"
         },
         {
-            "date": 1732516760190,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-25-11-2024-12.log",
-            "hash": "d0cfeb0f3f258ed42fc24c9b0a62b4c71cdc3ec3b48d5712b8f7f07452db61eb"
+            "date": 1744702506830,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-13.log",
+            "hash": "46456ddf690516e33cf0791ce5b2b61bce8ef5d273c600d0de2de7457a34e4e5"
         },
         {
-            "date": 1732591365059,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-08.log",
-            "hash": "7e81f9dd4e5788b5ea79ee2e36d2392c96cb0f0c2398ddea09d6622f3ed0f831"
+            "date": 1744706419214,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-14.log",
+            "hash": "7460ed7f5617d4eeafee305fc19369188c79749a9ea252deb612af3648f9a7d7"
         },
         {
-            "date": 1732594775236,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-09.log",
-            "hash": "2b73ba8e898bf68c409e8270542c9eb59449c872019be7f8ecb162c661cda635"
+            "date": 1744711064656,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-15.log",
+            "hash": "bbea529b18e6d1417fb54d3fcf7a568c8eddca7caf5dd88e83723decefa5ae1b"
         },
         {
-            "date": 1732595787153,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-10.log",
-            "hash": "1e0889b194021eefc6419603ce050364770269feb437858f95fbf3562bafcbc1"
+            "date": 1744713034852,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-16.log",
+            "hash": "26e167a55d409d826ee8e53c9fac6e7a748573dbf5ccca7154e94e8c8b7e0ec1"
         },
         {
-            "date": 1732601906067,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-11.log",
-            "hash": "52a8889fee30e0331b7521fd860708bfcadd528931bb6f17c407507063d309fa"
+            "date": 1744717010837,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-17.log",
+            "hash": "c4e02c093b096632853658163908183b044413ea863a4ba8423c13f7b9e1d15d"
         },
         {
-            "date": 1732604367302,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-12.log",
-            "hash": "5ebea23c7a08cc69e8ef56b2d21b780f3cee5182f94ad158104cab2dbf855636"
+            "date": 1744720469210,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-18.log",
+            "hash": "cca995c5c07f76bfd2dae43dba9dc2ca61243ed2beba75a9163133d7e035a08d"
         },
         {
-            "date": 1732606262420,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-13.log",
-            "hash": "5640f874fe88c34e6c553adcace828808b79f17a7a9b7acbfd657522674da9f5"
+            "date": 1744728431102,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-20.log",
+            "hash": "6e377b8c2b59e89f080c1ce7f5f6ca51e0ae4be3f40d8736bf545a1d907696bd"
         },
         {
-            "date": 1732610239730,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-14.log",
-            "hash": "22035edcfd94d19f10ad630697589eb693f20de35d69444fbd11266d203ae8ad"
+            "date": 1744731003121,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-21.log",
+            "hash": "54780c30b7f6ab6439f77cf4400acb1ab7935a230e7c7d56a739678d50131f6a"
         },
         {
-            "date": 1732616568669,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-15.log",
-            "hash": "6f0206f1d5ba964cea4b0a1d19074f17fa25dd3db304c62dbe6f19f629a5b755"
+            "date": 1744737240072,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-15-04-2025-22.log",
+            "hash": "3c4664bb361efa052cbe2a73915e70018259ea37e943116a599294d6a9a75b28"
         },
         {
-            "date": 1732617279057,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-16.log",
-            "hash": "1a1edd4a4ce883a5e836764931d205fda022b5b7723fe431e2e2cf970b616897"
+            "date": 1744748056814,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-01.log",
+            "hash": "f34f01ce5464a7031aa937d83a2a6fbb936d1898d8da2cf8df56d4afbb6181b5"
         },
         {
-            "date": 1732630293544,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-19.log",
-            "hash": "2e126cb5d708477ee64f45140c438d567c1c6893ebead444627355c858db2241"
+            "date": 1744774700353,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-09.log",
+            "hash": "970758b223004c5c77935d4ee30b43e5543cefc224dd227c8c4d487702359235"
         },
         {
-            "date": 1732632348370,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-26-11-2024-20.log",
-            "hash": "37f64aef9f538c8d44a9d1aa5a4579f949006bda02b91fe1e3d9a20971d2e77c"
+            "date": 1744777823608,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-10.log",
+            "hash": "8736c51f620c155a9732daffca2ca18715915c70c6aa3849c0ffb44d51fad981"
         },
         {
-            "date": 1732656456656,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-02.log",
-            "hash": "761e4347ff99be3998b9160d5d6c5faa03aa1d4143034520974537f7e012b5a6"
+            "date": 1744781494181,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-11.log",
+            "hash": "179a5c68ced2ec0c88bbd01fc34a653254a269e7b190e73743d104057638199f"
         },
         {
-            "date": 1732656699332,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-03.log",
-            "hash": "e70f5e9430e89887a6bf1fdf6058fc14ddc991bba15e53801cbec1f527e36f37"
+            "date": 1744785231185,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-12.log",
+            "hash": "d1933dc86dcf5b5a5a58d0b4b9e6bf143ceaee3e6156f460aa23e74b64d707fe"
         },
         {
-            "date": 1732679832017,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-09.log",
-            "hash": "022e78153257a4fdf8d7f5200370f2ac19d0873bc6179aa44afe55d59ef2c61b"
+            "date": 1744788614419,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-13.log",
+            "hash": "a607f66201e6f2f469728fef8310d1f159e842b2ea5e9c3f03f383d938610c36"
         },
         {
-            "date": 1732681839111,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-10.log",
-            "hash": "da42041d877ae5f9e3b4489c0fb9a5f1d7e92697a55d00b5e91396573475de18"
+            "date": 1744792880729,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-14.log",
+            "hash": "4ac26696e1de9094c796a504723c66c7afd6455ca7826a54f969cd87e51e5287"
         },
         {
-            "date": 1732688293737,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-11.log",
-            "hash": "eda14edddca23b64118a2b4a46450439f77c80e8a0a53b05c4825837deaf2c92"
+            "date": 1744797407301,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-15.log",
+            "hash": "11f13a279077fcd679185cf374eb157456244a894b9c452868f16478cc48f710"
         },
         {
-            "date": 1732690548243,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-12.log",
-            "hash": "b726c2e2fb3f81fa6211628f69af0033a32428deb25c23462a9e86ca99a4dc07"
-        },
-        {
-            "date": 1732700450876,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-15.log",
-            "hash": "9915b0522e1991ebd90798c250b639c36dd41dd8be01b35d9a96640881f77664"
-        },
-        {
-            "date": 1732708805481,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-27-11-2024-17.log",
-            "hash": "cefb9532483c9ccecaa23dbf3f5f3881351236b50cf8286b0c72995a59f052f2"
-        },
-        {
-            "date": 1732752616817,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-05.log",
-            "hash": "85cbd89434011f5e7eb8e58a832b65170170912df2276011604fcb2fdac085be"
-        },
-        {
-            "date": 1732764727014,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-09.log",
-            "hash": "c90c09257080e49e0e8fb0640574891ba4fdcac698a9554f72874690a8b7b3c0"
-        },
-        {
-            "date": 1732768409518,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-10.log",
-            "hash": "d5e6b2ac96a3f4bc5a2d64e7ed2ca1e806768149711ffaa2bd83e753d8d00bf1"
-        },
-        {
-            "date": 1732772041384,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-11.log",
-            "hash": "6a43d11ca8a4740b46cea5b20821f9271bab8ef86b26a9fc957b1a51fea8b532"
-        },
-        {
-            "date": 1732776839403,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-12.log",
-            "hash": "a23b5c4869dba91cc3e969c9d6d1828d23b6110613f2b4c1d98e586c1b82e89f"
-        },
-        {
-            "date": 1732783855303,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-14.log",
-            "hash": "2755b9a21ff566ec8164ce7e939ffcf26b49c0638b210912154f27342abe2ce2"
-        },
-        {
-            "date": 1732788716837,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-15.log",
-            "hash": "160215351458fed12a75db42db41ab78740ab1fe000520a8288c5181238f854b"
-        },
-        {
-            "date": 1732789889677,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-16.log",
-            "hash": "d2704a89d478413448ca53fd739265ecc2d9e65f5121daa6eba190b0c07df831"
-        },
-        {
-            "date": 1732810704584,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-21.log",
-            "hash": "6d32c1ccc447371868b0ebfd6ff71be7d3f7ae5ed029def8e8809379bbb82ca0"
-        },
-        {
-            "date": 1732811510341,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-28-11-2024-22.log",
-            "hash": "d54b7f65ec2a6147ee4d7ec26e1df2d4803a9a931ec63772f372a188db6d78c2"
-        },
-        {
-            "date": 1732850944592,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-08.log",
-            "hash": "3ace5fddd3130c3b1ce240211f38bd815c3fa16c2093dda290e802298ddec607"
-        },
-        {
-            "date": 1732855895505,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-10.log",
-            "hash": "8a22acbe2459146b7395d8dfed3bf222cae4c609bf58c1d978bb60bdf1b1269e"
-        },
-        {
-            "date": 1732858434507,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-11.log",
-            "hash": "d3fe39d55475053bbf619f4607d3aeae4fa7ca3cbb2a60fe5f79aff2ff68f565"
-        },
-        {
-            "date": 1732861840125,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-12.log",
-            "hash": "0eec7fd6d4f329aff768065fd96e60835a90367efcb8a3163173363d313bdb66"
-        },
-        {
-            "date": 1732868880153,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-13.log",
-            "hash": "92da9a37df33af245a53d051bcb76b0dcf9a09949e9c2c61de5b13a4aa3a7284"
-        },
-        {
-            "date": 1732870818902,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-14.log",
-            "hash": "93b60cb43c5e2f9ee863ad21c4923e1a6c686cb33e7f9665f6f4206608760270"
-        },
-        {
-            "date": 1732887832784,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-19.log",
-            "hash": "8c33482fd929504a8bcfb320af649668d2b7e178ba204e856590101ab546d5f0"
-        },
-        {
-            "date": 1732895635051,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-21.log",
-            "hash": "d55c3608e304e89af98526f2f1385927681a2b0ee30106ac2a786e0dba1312db"
-        },
-        {
-            "date": 1732898219006,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-29-11-2024-22.log",
-            "hash": "e50b0e4f824a59eb356add9b66dae5213afb1dba57e4da6aeaeabf99466d61b5"
-        },
-        {
-            "date": 1732941669904,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-30-11-2024-10.log",
-            "hash": "0fdc5a4193e9de1cb9dd5045ae075cc3622777f57dfb2faaef70f084c28a1921"
-        },
-        {
-            "date": 1732946767379,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-30-11-2024-11.log",
-            "hash": "5618a9e728c2f72e657195f3cf23e1b714ed705daec3fbc00f40ae653a26e01c"
-        },
-        {
-            "date": 1732966578909,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-30-11-2024-17.log",
-            "hash": "1841f753f508d9cc78e51018dc0376a6578655475ca08e1e2cffb0e87213fe5e"
-        },
-        {
-            "date": 1733110830808,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-09.log",
-            "hash": "e868ebed25802aeae3648971522dc9e6d2069f661ae4271fecae675eb16d2624"
-        },
-        {
-            "date": 1733118619000,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-11.log",
-            "hash": "695948c7a5dc4f5cf14f2bbe011a5c7fc1d08bf76ea7fec034e07401429d43de"
-        },
-        {
-            "date": 1733124396185,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-12.log",
-            "hash": "9d7827823a728621c2174fe4c9bacf5a1924913714fe2e1310e6b5dc0b0f093a"
-        },
-        {
-            "date": 1733124738997,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-13.log",
-            "hash": "aee01b57e7ad1e95d0800778fa5d08b7cd46d75f261692c8b4b66c4dd4bdd96c"
-        },
-        {
-            "date": 1733128312754,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-14.log",
-            "hash": "4f15ea755a9724313f1563d40979952eb6529eac6205f883ea40e4a892768eb1"
-        },
-        {
-            "date": 1733138555174,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-16.log",
-            "hash": "544183641e57cea22f603a7721704110b29f42add6a1e2cbfee6891711ed52f6"
-        },
-        {
-            "date": 1733139673457,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-02-12-2024-17.log",
-            "hash": "eb2138b1a729f3e799f9546196e4bf7ed5589fd924526b9bc3805aac45389139"
-        },
-        {
-            "date": 1733184407519,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-05.log",
-            "hash": "0fe59735ee3759649ce2bd8908278bc165feb6a1393f7e72a944a16d42d2b290"
-        },
-        {
-            "date": 1733201555207,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-10.log",
-            "hash": "5a8ac10598ff1f624296fdf7b17e02268d89be1e64ee2e445079beb331a1fd6b"
-        },
-        {
-            "date": 1733203920734,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-11.log",
-            "hash": "bc102f4acbcf23fb02c17e851cc0eb7bc566c8be26914f6ec637640fae07132c"
-        },
-        {
-            "date": 1733207755768,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-12.log",
-            "hash": "adc5aef5abf131fe06f05e80c1514bceea6abedc0e46c466b5d49dacdaf6358e"
-        },
-        {
-            "date": 1733213055631,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-13.log",
-            "hash": "fa82382fcbf535bb8c040c6eb9820dae07db28f0f0f49b57b86488d2a0c90ea0"
-        },
-        {
-            "date": 1733214605203,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-14.log",
-            "hash": "374f5671f902eb710de90005463aceffd1be0aae28bd164f56168799413eb8f1"
-        },
-        {
-            "date": 1733218233036,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-15.log",
-            "hash": "a86fdf7e004f7ce2f16b4bc118b7ff2dc9ed52e2b5a5f9b4491063218d7bcef3"
-        },
-        {
-            "date": 1733222226227,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-16.log",
-            "hash": "016762e53710e6fce90a76d355350931191366db6c5015b6d2261d870c9f4956"
-        },
-        {
-            "date": 1733225823247,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-17.log",
-            "hash": "d4bbb0fd12a911a5e2058c1430822a9c1f482eb3138feff37ad4f9b620bbefa4"
-        },
-        {
-            "date": 1733234165584,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-19.log",
-            "hash": "10bbd95201bb845ebfc562499ba3bc4dc28fd5460f57da4b7d1792ec7826cfb8"
-        },
-        {
-            "date": 1733236274791,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-20.log",
-            "hash": "feab78db05ba737b6b8a6801d911291c8be07d4b19af1ad891500c440f9eee55"
-        },
-        {
-            "date": 1733240101644,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-03-12-2024-21.log",
-            "hash": "5b6d89d98accb1d33e594f713e59db3f881863e62ff343bc9853f9f16f6694df"
-        },
-        {
-            "date": 1733254352396,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-01.log",
-            "hash": "360e7cfa30a2b0f5602fc0b9da737b03f3653180e96b90b7c1ceb9ed3bf1595f"
-        },
-        {
-            "date": 1733265101890,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-04.log",
-            "hash": "07cffdafcbb4e7f02c027fb8a576eba033b965df6eba5dfbcb28885d172e902e"
-        },
-        {
-            "date": 1733270751733,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-05.log",
-            "hash": "d5e693e121113a240afed3f535fc8fe4b464cd90c9ce69751d498717b3587577"
-        },
-        {
-            "date": 1733272559272,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-06.log",
-            "hash": "3abb520463190a58c5fd34791ca880a5a687c069f7d08aa02f2ee19e9e921204"
-        },
-        {
-            "date": 1733282602260,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-08.log",
-            "hash": "f287d44b11e9b5d32f5d0a5bf4de67d1736cea16c3c4b403c0fb44f4ed28217b"
-        },
-        {
-            "date": 1733283372635,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-09.log",
-            "hash": "8d48d2d068dc012f7c89200139ecded0bf6bf8e0d94aa9c75cbf8cb4f38351d8"
-        },
-        {
-            "date": 1733288120087,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-10.log",
-            "hash": "4bdaa56fbb3c3a87c06ee73ba678319113794f15b14233e7ae8911a88b27e1a8"
-        },
-        {
-            "date": 1733290673562,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-11.log",
-            "hash": "093a23fe34744be2ca57f67d87b3edef0a08fd52905a1d23f4a3f5ed84db5b67"
-        },
-        {
-            "date": 1733294376410,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-12.log",
-            "hash": "4a70559568964de169f7119d8ae490501a7ed4d2a1fb5f3b01ee2f9456c18ea3"
-        },
-        {
-            "date": 1733300125729,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-13.log",
-            "hash": "88319a5522264541db0c52d3b0e570d0c49dde10c481fbaac1129b5a3c767bea"
-        },
-        {
-            "date": 1733305155274,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-15.log",
-            "hash": "1156b274e1b4e3bc915b436a118bc29f66bc93fc54df4a1561593bd4393b5d50"
-        },
-        {
-            "date": 1733309880464,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-16.log",
-            "hash": "b3a12509784a449357716c5ec2bf2a4f3bea8741b73bfacef5ec98b74a8e9e11"
-        },
-        {
-            "date": 1733311878663,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-17.log",
-            "hash": "99db393642fee5a88eab797384a2110fd1d095638513b3d498a92d05831e6675"
-        },
-        {
-            "date": 1733315740155,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-18.log",
-            "hash": "ada4eaa54d112d98dc5aef72bc3e74771ba9d9f76a18639dbb435a0ca3c585c8"
-        },
-        {
-            "date": 1733322221491,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-19.log",
-            "hash": "2d72bb36beee42510919f8c86d8f877f97616d76db25f1bce9f9d58aac0bd803"
-        },
-        {
-            "date": 1733322688414,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-20.log",
-            "hash": "04018c1821eacd910171fc02f1804991b48f86656c5c6ccc9c758b5167b7ce03"
-        },
-        {
-            "date": 1733326228612,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-21.log",
-            "hash": "666035b2ef21b7a4a1d74f73aacba3ad539eb473a7acf9d09342c490eb4fde5d"
-        },
-        {
-            "date": 1733329853430,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-22.log",
-            "hash": "0860bd777d6682747e058ac09e6d79d36ac6e5a3d42effbbb346e32d2c1afc52"
-        },
-        {
-            "date": 1733334069416,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-04-12-2024-23.log",
-            "hash": "d7ee98e7a173d0cc06c6427dcb10912e4177d6289736cd324b3881f1f7b5d0fd"
-        },
-        {
-            "date": 1733358490463,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-05.log",
-            "hash": "af6edeec3348cd5741f0d81c4708641c8ddeef1aa56496292b0d3de9f1ace936"
-        },
-        {
-            "date": 1733358646478,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-06.log",
-            "hash": "970fe4259bbaba76158fc3cced1bafbbf803d23c68e25d8ee83657bd1d93a0c7"
-        },
-        {
-            "date": 1733367524238,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-08.log",
-            "hash": "cfa79a4ee77e1ab8b7083d4d907a2ab559358a64e23125b6347354b78401b73e"
-        },
-        {
-            "date": 1733370905835,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-09.log",
-            "hash": "2c2fc45c522327741ad02e76bae976044d1af54353797c13dbdf491ef3bc95b2"
-        },
-        {
-            "date": 1733373304622,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-10.log",
-            "hash": "e7faacedc7a387c9de8631d78dd54d81f9a1303085d512830098c6ef64c03ef6"
-        },
-        {
-            "date": 1733376796246,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-11.log",
-            "hash": "fba8aaf8bc47fa01f7e5197ec8684e5a818e17357d299e06c4fa1fc3b4dc5e01"
-        },
-        {
-            "date": 1733403162276,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-18.log",
-            "hash": "4a770bc4bc7e407fb7ef6bd2d357b746fad7d4c6f9b02cbb81372f91fe8ef245"
-        },
-        {
-            "date": 1733410769684,
-            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-05-12-2024-20.log",
-            "hash": "a61f9d9de816b0c53559397223413ea5c52b115d887ce6c83253dddc91be0472"
+            "date": 1744799444034,
+            "name": "C:\\Users\\rinis\\Desktop\\New folder (2)\\escribir-backend\\logs\\application-16-04-2025-16.log",
+            "hash": "5214206b4f1ea836923ef96882eb815aa5855f4c105d3eab08f130440da9329e"
         }
     ],
     "hashType": "sha256"

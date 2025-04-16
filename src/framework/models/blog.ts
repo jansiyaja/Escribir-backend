@@ -14,6 +14,10 @@ const blogPostSchema = new Schema<IBlogPost>({
         type: String,
         required: true,
     },
+       viewedBy: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User',
+}],
     content: {
         type: Object,
         required: true,

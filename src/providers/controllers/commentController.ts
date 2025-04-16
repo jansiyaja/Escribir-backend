@@ -1,0 +1,96 @@
+import { Request, Response } from "express";
+import { ICommentController } from "../../interfaces/controllers/ICommentController";
+import { ICommentUseCase } from "../../interfaces/usecases/ICommentUseCase";
+
+
+
+export class CommentController implements ICommentController {
+    constructor(
+         private _commentseCase: ICommentUseCase,
+       
+    ) { }
+
+  async addComment(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+        const userId = (req as any).user.userId;
+        console.log(userId);
+        
+        const { comment, authorId } = req.body;
+        
+      console.log( authorId );
+
+      const newComment = await this._commentseCase.addComment(
+        id,
+        userId,
+        comment,
+        authorId
+      );
+      res
+        .status(201)
+        .json({ message: "Reaction added successfully", Comment: newComment });
+    } catch (error) {
+      console.error("Error in adding comments:", error);
+      res.status(500).json({ error: "Failed to add comments to the blog" });
+    }
+    }
+
+
+
+
+  async reactToComment(req: Request, res: Response): Promise<void> {
+    try {
+      const { commentId } = req.params;
+        const { emoji } = req.body;
+        
+
+        console.log(commentId,emoji);
+        
+
+      const updatedComment = await this._commentseCase.reactToComment(
+        commentId,
+        emoji
+        );
+        console.log(updatedComment);
+        
+
+      res.status(200).json({
+        message: "Reaction added successfully",
+        comment: updatedComment,
+      });
+    } catch (error) {
+      console.error("Error reacting to comment:", error);
+      res.status(500).json({ error: "Failed to react to comment" });
+    }
+  }
+
+  async replyToComment(req: Request, res: Response): Promise<void> {
+    try {
+      const { commentId } = req.params;
+      const userId = (req as any).user.userId;
+        const { content } = req.body;
+        console.log(commentId,content);
+        
+
+      const reply = await this._commentseCase.replyToComment(
+        commentId,
+        userId,
+        content
+        );
+        console.log(reply);
+        
+
+      res.status(201).json({
+        message: "Reply added successfully",
+        reply,
+      });
+    } catch (error) {
+      console.error("Error replying to comment:", error);
+      res.status(500).json({ error: "Failed to add reply" });
+    }
+  }
+
+
+
+    
+}

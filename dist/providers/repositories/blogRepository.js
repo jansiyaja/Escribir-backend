@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlogRepositroy = void 0;
+const mongoose_1 = require("mongoose");
 const Blog_1 = require("../../entities/Blog");
 const blog_1 = __importDefault(require("../../framework/models/blog"));
 const tag_1 = __importDefault(require("../../framework/models/tag"));
@@ -26,6 +27,10 @@ class BlogRepositroy {
             .populate('comments')
             .exec();
     }
+    async addView(blogId, userId) {
+        const userObjectId = new mongoose_1.Types.ObjectId(userId);
+        await blog_1.default.findByIdAndUpdate(blogId, { $addToSet: { viewedBy: userObjectId } }, { new: true });
+    }
     async update(id, blogPostData) {
         const updatedPost = await blog_1.default.findByIdAndUpdate(id, blogPostData, { new: true });
         if (!updatedPost) {
@@ -47,6 +52,10 @@ class BlogRepositroy {
     async createReport(report) {
         const newReport = new report_1.default(report);
         return await newReport.save();
+    }
+    async findBlogsByTag(tag) {
+        const blogs = await blog_1.default.find({ tag: tag }).exec();
+        return blogs;
     }
 }
 exports.BlogRepositroy = BlogRepositroy;

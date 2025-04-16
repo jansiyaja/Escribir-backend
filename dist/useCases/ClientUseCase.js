@@ -192,11 +192,7 @@ class ClientUseCase {
         const ad = await this._addRepository.create(advertisement);
         return ad;
     }
-    async listAdd(userId) {
-        const user = await this._userRepository.findById(userId);
-        if (!user) {
-            throw new Error("User not found");
-        }
+    async listAdd() {
         const ad = await this._addRepository.findAllAds();
         return ad;
     }

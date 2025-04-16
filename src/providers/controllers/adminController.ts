@@ -197,6 +197,7 @@ export class AdminController implements IAdminController {
         .json({ error: "Failed to list tags" });
     }
   }
+  
   async updateTag(req: Request, res: Response): Promise<void> {
     const { tagId } = req.params;
     const { name } = req.body;

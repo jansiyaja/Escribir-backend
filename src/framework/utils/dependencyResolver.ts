@@ -19,6 +19,8 @@ import { BlogPostUseCase } from "../../useCases/BlogUseCase";
 import { ChatUseCase } from "../../useCases/ChatUseCase";
 import { SocialUseCase } from "../../useCases/SocialUseCase";
 import { UserUseCase } from "../../useCases/UserUseCase";
+import { CommentUseCase } from "../../useCases/CommentUseCase";
+
 
 import { BcryptHashService } from "../services/hashService";
 import { SMTPService } from "../services/smtpService";
@@ -26,6 +28,9 @@ import { ClientUseCase } from "../../useCases/ClientUseCase";
 import { ClientController } from "../../providers/controllers/clientController";
 import { ClientRepository } from "../../providers/repositories/clientRepository";
 import { AdvertisementRepository } from "../../providers/repositories/AdvertisementRepository";
+import { TagController } from "../../providers/controllers/tagController";
+import { CommentController } from "../../providers/controllers/commentController";
+
 const s3 = new S3Client({});
 const userRepository=new UserRepository()
 const hashService = new  BcryptHashService()
@@ -56,12 +61,17 @@ const chatController = new ChatController(chatUseCase)
 const adminUseCase= new AdminUseCase(adminRepository,hashService ,userRepository);
 const adminController = new AdminController(adminUseCase);
 
-const blogUseCase= new BlogPostUseCase(blogRepository,s3,reactionReopository ,notificationRepository,commentRepository);
+const blogUseCase= new BlogPostUseCase(blogRepository,s3,reactionReopository ,notificationRepository);
 const blogController = new BlogController(blogUseCase)
+const tagController= new TagController(blogUseCase)
 
 
 const clientUseCase = new ClientUseCase(userRepository,emailService,clientRepository,advertisementRepository,s3);
 const clientController = new ClientController(clientUseCase);
+
+const commentUseCase = new CommentUseCase(blogRepository, notificationRepository, commentRepository)
+ 
+const commentController = new CommentController(commentUseCase);
 
 export {  
     userController,
@@ -69,7 +79,9 @@ export {
     blogController,
     socialController,
     chatController,
-    clientController
+    clientController,
+    tagController,
+    commentController
    
 
 }

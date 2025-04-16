@@ -245,12 +245,9 @@ async createAdvertisement(
 }
 
 
-    async listAdd(userId: string): Promise<IAdvertisement[]> {
+    async listAdd(): Promise<IAdvertisement[]> {
       
-        const user = await this._userRepository.findById(userId);
-        if (!user) {
-            throw new Error("User not found");
-        }
+  
 
         const ad = await this._addRepository.findAllAds();
 

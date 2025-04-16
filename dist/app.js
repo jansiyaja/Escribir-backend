@@ -13,23 +13,17 @@ const blogRouter_1 = require("./Routes/blogRouter");
 const socialRoutes_1 = require("./Routes/socialRoutes");
 const chatRoute_1 = require("./Routes/chatRoute");
 const clientRoutes_1 = require("./Routes/clientRoutes");
+const tagRoutes_1 = require("./Routes/tagRoutes");
+const commentRoutes_1 = require("./Routes/commentRoutes");
 const createApp = () => {
     const app = (0, express_1.default)();
     app.use(express_1.default.json());
     app.use((0, cookie_parser_1.default)());
-    app.use((req, res, next) => {
-        console.log('Origin:', req.headers.origin); // Log the Origin header
-        next(); // Continue with the request processing
-    });
     app.use((0, cors_1.default)({
-        origin: "https://escribir-frontend.vercel.app",
+        origin: "http://localhost:5000",
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
-    }));
-    app.options('*', (0, cors_1.default)({
-        origin: "https://escribir-frontend.vercel.app",
-        credentials: true,
     }));
     app.use('/users', userRoutes_1.userRouter);
     app.use('/admin', adminRoutes_1.adminRouter);
@@ -37,6 +31,8 @@ const createApp = () => {
     app.use('/blog', blogRouter_1.blogRouter);
     app.use('/chat', chatRoute_1.chatRoute);
     app.use('/client', clientRoutes_1.clienRoute);
+    app.use('/tag', tagRoutes_1.tagRoute);
+    app.use('/comment', commentRoutes_1.commentRoute);
     app.use(errorHandler_1.errorHandler);
     return app;
 };

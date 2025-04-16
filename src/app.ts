@@ -9,6 +9,8 @@ import { blogRouter } from './Routes/blogRouter';
 import { socialRoute } from './Routes/socialRoutes';
 import { chatRoute } from './Routes/chatRoute';
 import { clienRoute } from "./Routes/clientRoutes";
+import { tagRoute } from "./Routes/tagRoutes";
+import { commentRoute } from "./Routes/commentRoutes";
 
 
 
@@ -18,21 +20,17 @@ const createApp = () => {
 
   app.use(express.json());
   app.use(cookieParser());
-  app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin);  // Log the Origin header
-  next();  // Continue with the request processing
-});
+
+  
+
 
   app.use(cors({
-    origin:"https://escribir-frontend.vercel.app",
+    origin:"http://localhost:5000",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
-  app.options('*', cors({
-  origin: "https://escribir-frontend.vercel.app",
-  credentials: true,
-}));
+ 
 
 
  app.use('/users', userRouter);
@@ -41,6 +39,8 @@ const createApp = () => {
   app.use('/blog', blogRouter);
   app.use('/chat', chatRoute);
   app.use('/client',clienRoute);
+  app.use('/tag',tagRoute);
+  app.use('/comment',commentRoute);
 
   app.use(errorHandler)
 

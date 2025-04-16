@@ -112,13 +112,11 @@ async createAdd(req: Request, res: Response): Promise<void> {
 
 
     async listAd(req: Request, res: Response): Promise<void> {
-        const userId = (req as any).user.userId;
-         if ( !userId ) {
-        throw new UnauthorizedError("Plan and User ID are required.");
-        }
+        
+
         try {
 
-      const list_ad = await this._clientUseCase.listAdd(userId);
+      const list_ad = await this._clientUseCase.listAdd();
        res.status(HttpStatusCode.CREATED).json(list_ad);    
             
         } catch (error) {

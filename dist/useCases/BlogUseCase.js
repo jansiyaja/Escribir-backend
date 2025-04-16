@@ -13,12 +13,11 @@ const reactionEmojis = {
     love: '😍'
 };
 class BlogPostUseCase {
-    constructor(_blogRepository, _s3, _reactionRepository, _notificationRepo, _commentRepository) {
+    constructor(_blogRepository, _s3, _reactionRepository, _notificationRepo) {
         this._blogRepository = _blogRepository;
         this._s3 = _s3;
         this._reactionRepository = _reactionRepository;
         this._notificationRepo = _notificationRepo;
-        this._commentRepository = _commentRepository;
     }
     async createBlogPost(blogPostData) {
         return await this._blogRepository.create(blogPostData);
@@ -52,11 +51,9 @@ class BlogPostUseCase {
     async getAllBlogs() {
         return this._blogRepository.findAll();
     }
-    async getAllTags() {
-        return this._blogRepository.findAllTags();
-    }
-    async getsingleBlog(blogId) {
+    async getsingleBlog(blogId, userId) {
         const singleBlog = await this._blogRepository.findById(blogId);
+        await this._blogRepository.addView(blogId, userId);
         if (!singleBlog) {
             throw new customErrors_1.NotFoundError("Blog ID is invalid");
         }
@@ -145,17 +142,59 @@ class BlogPostUseCase {
         console.log(delet);
         await this._reactionRepository.removeReaction(reactionId, userId, reactionType.toString());
     }
-    async addComment(postId, userId, content, autherId) {
-        const blogPost = await this._blogRepository.findById(postId);
-        if (!blogPost) {
-            throw new Error('Blog post not found');
-        }
-        await this._notificationRepo.sendNotification(autherId, userId, `reacted to your post with ${blogPost.heading}`);
-        const aleradyExist = await this._commentRepository.findComment(postId, userId, content);
-        if (aleradyExist) {
-            console.log("this comment is already exist with same user");
-        }
-        return await this._commentRepository.addComment(postId, userId, content);
+    async getAllTags() {
+        return this._blogRepository.findAllTags();
+    }
+    async getTagBYBlogs(tag) {
+        const blogs = await this._blogRepository.findBlogsByTag(tag);
+        return blogs;
+    }
+    async getTrendingTags() {
+        const blogs = await this._blogRepository.findAll();
+        const tagViewCounts = {};
+        blogs.forEach(blog => {
+            const uniqueViews = new Set(blog.viewedBy);
+            uniqueViews.forEach(userId => {
+                if (tagViewCounts[blog.tag]) {
+                    tagViewCounts[blog.tag].add(userId);
+                }
+                else {
+                    tagViewCounts[blog.tag] = new Set([userId]);
+                }
+            });
+        });
+        const sortedTags = Object.entries(tagViewCounts)
+            .map(([tag, users]) => ({ tag, views: users.size }))
+            .sort((a, b) => b.views - a.views);
+        return sortedTags;
+    }
+    async getTrendingBlogs() {
+        const blogs = await this._blogRepository.findAll();
+        const blogViewCounts = {};
+        blogs.forEach(blog => {
+            const uniqueViews = new Set(blog.viewedBy);
+            uniqueViews.forEach(userId => {
+                if (blogViewCounts[blog._id]) {
+                    blogViewCounts[blog._id].add(userId);
+                }
+                else {
+                    blogViewCounts[blog._id] = new Set([userId]);
+                }
+            });
+        });
+        const sortedBlogs = Object.entries(blogViewCounts)
+            .map(([blogId, users]) => {
+            const blog = blogs.find(b => b._id.toString() === blogId);
+            if (!blog)
+                return null;
+            return {
+                ...blog,
+                views: users.size
+            };
+        })
+            .filter((b) => b !== null)
+            .sort((a, b) => b.views - a.views);
+        return sortedBlogs;
     }
 }
 exports.BlogPostUseCase = BlogPostUseCase;

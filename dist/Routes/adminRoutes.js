@@ -15,20 +15,20 @@ exports.adminRouter.get("/test", (req, res) => {
 exports.adminRouter.post('/login', (req, res) => dependencyResolver_1.adminController.login(req, res));
 exports.adminRouter.post('/logout', (req, res) => dependencyResolver_1.adminController.logout(req, res));
 exports.adminRouter.post('/verify-token', tokenValidator_1.authenticateAdminToken, (req, res) => dependencyResolver_1.adminController.verifyToken(req, res));
-exports.adminRouter.get('/users', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listUsers(req, res));
-exports.adminRouter.post('/blockUser', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.blockUser(req, res));
-exports.adminRouter.post('/unblockUser', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.unBlockUser(req, res));
+exports.adminRouter.get('/users', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.listUsers(req, res));
+exports.adminRouter.post('/blockUser', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.blockUser(req, res));
+exports.adminRouter.post('/unblockUser', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.unBlockUser(req, res));
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 //----------------------TagRouteHandel--------------------------------------------------------------------------------------------------------------------------//
-exports.adminRouter.post('/createtags', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.createTag(req, res));
-exports.adminRouter.get('/list-tags', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listTags(req, res));
-exports.adminRouter.put('/update-tag/:tagId', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.updateTag(req, res));
-exports.adminRouter.delete('/delete-tag/:tagId', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.deleteTag(req, res));
+exports.adminRouter.post('/createtags', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.createTag(req, res));
+exports.adminRouter.get('/list-tags', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.listTags(req, res));
+exports.adminRouter.put('/update-tag/:tagId', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.updateTag(req, res));
+exports.adminRouter.delete('/delete-tag/:tagId', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.deleteTag(req, res));
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------------------------------------------------------------------------//
-exports.adminRouter.get('/list-reportedBlog', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listOfReports(req, res));
-exports.adminRouter.get('/blogs', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listBlogs(req, res));
+exports.adminRouter.get('/list-reportedBlog', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.listOfReports(req, res));
+exports.adminRouter.get('/blogs', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.listBlogs(req, res));
 //------------------------------------------------------------------------------------------------------------------------------------------------//
 //------------------------------------------------------------------------------------------------------------------------------------------------//
-exports.adminRouter.get('/client', tokenValidator_1.authenticateToken, (req, res) => dependencyResolver_1.adminController.listClient(req, res));
+exports.adminRouter.get('/client', tokenValidator_1.authenticateToken, (0, tokenValidator_1.checkRole)(['admin']), (req, res) => dependencyResolver_1.adminController.listClient(req, res));
 //------------------------------------------------------------------------------------------------------------------------------------------------//

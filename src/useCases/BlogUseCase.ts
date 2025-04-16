@@ -10,8 +10,7 @@ import { IReport, ReportStatus } from '../entities/IReport';
 import { IReactionRepository } from '../interfaces/repositories/IReactionRepository';
 import { INotificationRepository } from '../interfaces/repositories/INotificationRepository';
 import { IReaction } from '../entities/IReaction';
-import { IComment } from '../entities/IComment';
-import { ICommentRepository } from '../interfaces/repositories/IRepository';
+import { ObjectId } from 'mongoose';
 
 
 
@@ -28,7 +27,7 @@ export class BlogPostUseCase implements IBlogUseCase {
         private _s3: S3Client,
         private _reactionRepository: IReactionRepository,
         private _notificationRepo: INotificationRepository,
-        private _commentRepository: ICommentRepository,
+   
 
     ) { }
 
@@ -38,7 +37,7 @@ export class BlogPostUseCase implements IBlogUseCase {
 
     async uploadImageToS3(buffer: Buffer, mimeType: string): Promise<string> {
         console.log("image uploader");
-        
+
         const key = this.generateRandomKey();
 
         const params = {
@@ -47,15 +46,15 @@ export class BlogPostUseCase implements IBlogUseCase {
             Body: buffer,
             ContentType: mimeType,
         };
-            console.log("image uploader PARAMS");
+        console.log("image uploader PARAMS");
         const command = new PutObjectCommand(params);
 
         try {
             await this._s3.send(command);
-              console.log("image  PARAMS");
+            console.log("image  PARAMS");
             const image = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
             console.log(image);
-            
+
             return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
         } catch (error) {
             console.error('Error uploading image to S3:', error);
@@ -71,12 +70,11 @@ export class BlogPostUseCase implements IBlogUseCase {
     async getAllBlogs(): Promise<IBlogPost[]> {
         return this._blogRepository.findAll()
     }
-    async getAllTags(): Promise<ITag[]> {
-        return this._blogRepository.findAllTags()
-    }
-    async getsingleBlog(blogId: string): Promise<{ blog: IBlogPost }> {
+
+    async getsingleBlog(blogId: string,userId:string): Promise<{ blog: IBlogPost }> {
 
         const singleBlog = await this._blogRepository.findById(blogId);
+ await this._blogRepository.addView(blogId,userId)
 
         if (!singleBlog) {
             throw new NotFoundError("Blog ID is invalid");
@@ -212,25 +210,79 @@ export class BlogPostUseCase implements IBlogUseCase {
         await this._reactionRepository.removeReaction(reactionId, userId, reactionType.toString());
 
     }
-    async  addComment(postId: string, userId: string, content: string ,autherId:string): Promise<IComment> {
-        const blogPost = await this._blogRepository.findById(postId);
-        
-        if (!blogPost) {
-            throw new Error('Blog post not found');
-        }
-      
-        await this._notificationRepo.sendNotification(autherId, userId, `reacted to your post with ${blogPost.heading}`,);
-        
-        const aleradyExist = await this._commentRepository.findComment(postId, userId, content)
-        if (aleradyExist) {
-            console.log("this comment is already exist with same user");
-            
-        } 
 
-        return await this._commentRepository.addComment(postId, userId, content);
 
-        
+  async getAllTags(): Promise<ITag[]> {
+        return this._blogRepository.findAllTags()
     }
+
+    async getTagBYBlogs(tag: string): Promise<IBlogPost[]> {
+        const blogs = await this._blogRepository.findBlogsByTag(tag);
+
+
+        return blogs;
+    }
+
+     async getTrendingTags(): Promise<{ tag: string, views: number }[]> {
+        
+        const blogs = await this._blogRepository.findAll();
+
+        const tagViewCounts: { [tag: string]: Set<ObjectId> } = {};
+
+        blogs.forEach(blog => {
+            const uniqueViews = new Set(blog.viewedBy);
+
+            uniqueViews.forEach(userId => {
+                if (tagViewCounts[blog.tag]) {
+                    tagViewCounts[blog.tag].add(userId);
+                } else {
+                    tagViewCounts[blog.tag] = new Set([userId]);
+                }
+            });
+        });
+
+        const sortedTags = Object.entries(tagViewCounts)
+            .map(([tag, users]) => ({ tag, views: users.size })) 
+            .sort((a, b) => b.views - a.views); 
+
+        return sortedTags;
+    }
+
+async getTrendingBlogs(): Promise<(IBlogPost & { views: number })[]> {
+  const blogs = await this._blogRepository.findAll();
+
+  const blogViewCounts: { [blogId: string]: Set<ObjectId> } = {};
+
+  blogs.forEach(blog => {
+    const uniqueViews = new Set(blog.viewedBy);
+
+    uniqueViews.forEach(userId => {
+      if (blogViewCounts[blog._id]) {
+        blogViewCounts[blog._id].add(userId);
+      } else {
+        blogViewCounts[blog._id] = new Set([userId]);
+      }
+    });
+  });
+
+  const sortedBlogs = Object.entries(blogViewCounts)
+    .map(([blogId, users]) => {
+      const blog = blogs.find(b => b._id.toString() === blogId);
+      if (!blog) return null;
+
+      return {
+        ...blog,
+        views: users.size
+      };
+    })
+    .filter((b): b is IBlogPost & { views: number } => b !== null)
+    .sort((a, b) => b.views - a.views);
+
+   
+    
+  return sortedBlogs;
+}
+
 
 
 

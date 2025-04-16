@@ -92,12 +92,8 @@ class ClientController {
         }
     }
     async listAd(req, res) {
-        const userId = req.user.userId;
-        if (!userId) {
-            throw new customErrors_1.UnauthorizedError("Plan and User ID are required.");
-        }
         try {
-            const list_ad = await this._clientUseCase.listAdd(userId);
+            const list_ad = await this._clientUseCase.listAdd();
             res.status(httpEnums_1.HttpStatusCode.CREATED).json(list_ad);
         }
         catch (error) {

@@ -1,15 +1,26 @@
 import mongoose, { Schema } from "mongoose";
 import { IComment } from "../../entities/IComment";
 
-const commentSchema = new Schema<IComment>({
-    content: { type: String, required: true },
-    userId: {type: mongoose.Types.ObjectId,ref: 'User'},
-    postId: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-    createdAt: { type: Date, default: Date.now },
-    parentCommentId: { type: Schema.Types.ObjectId, ref: 'Comment', default:null}
-},{
-timestamps:true
-}
-);
+const CommentSchema = new Schema<IComment>({
+  content: { type: String, required: true },
+  userId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
+  postId: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
+  createdAt: { type: Date, default: Date.now },
 
-export const Comment = mongoose.model<IComment>('Comment', commentSchema);
+
+  parentCommentId: { type: Schema.Types.ObjectId, ref: 'Comment', default: null },
+    replies: [{ type: Schema.Types.ObjectId, ref: 'Comment', default: [] }] ,
+
+  reactions: [
+    {
+      emoji: { type: String, required: true },
+      count: { type: Number, default: 1 },
+    },
+  ],
+}, {
+  timestamps: true
+});
+
+const Comment = mongoose.model<IComment>('Comment', CommentSchema);
+
+export default Comment;
