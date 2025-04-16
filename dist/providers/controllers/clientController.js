@@ -23,20 +23,7 @@ class ClientController {
             res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
         }
     }
-    async paymentSuccess(req, res) {
-        console.log("iam here payment sucess page");
-        try {
-            const { amount, orderId, customerEmail, businessName } = req.body;
-            console.log(req.body);
-            const userId = req.user.userId;
-            const paymentSuccess = await this._clientUseCase.upadateData(userId, orderId, amount, customerEmail, businessName);
-            res.status(httpEnums_1.HttpStatusCode.CREATED).json(paymentSuccess);
-        }
-        catch (error) {
-            logger_1.logger.error("Error in paymentSuccess:", error);
-            res.status(httpEnums_1.HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error });
-        }
-    }
+
     async createAdd(req, res) {
         const { textContent, format, title, targetAudience } = req.body;
         const userId = req.user.userId;
