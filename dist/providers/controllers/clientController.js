@@ -8,17 +8,6 @@ class ClientController {
     constructor(_clientUseCase) {
         this._clientUseCase = _clientUseCase;
     }
-
-
-
-
-
-
-    
-
-
-
-
     async makePayment(req, res) {
         try {
             const { email, businessName } = req.body;
